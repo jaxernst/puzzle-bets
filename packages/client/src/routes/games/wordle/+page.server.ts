@@ -1,9 +1,9 @@
 import { fail } from "@sveltejs/kit";
 import { Game } from "./game";
-import type { PageServerLoad, Actions } from "../../sverdle/$types";
+import type { PageServerLoad } from "./$types";
 
 export const load = (({ cookies }) => {
-  const game = new Game(cookies.get("sverdle"));
+  const game = new Game(cookies.get("wordle"));
 
   return {
     /**
@@ -30,7 +30,7 @@ export const actions = {
    * is available, this will happen in the browser instead of here
    */
   update: async ({ request, cookies }) => {
-    const game = new Game(cookies.get("sverdle"));
+    const game = new Game(cookies.get("wordle"));
 
     const data = await request.formData();
     const key = data.get("key");
@@ -43,7 +43,7 @@ export const actions = {
       game.guesses[i] += key;
     }
 
-    cookies.set("sverdle", game.toString(), { path: "" });
+    cookies.set("wordle", game.toString(), { path: "" });
   },
 
   /**
@@ -51,7 +51,7 @@ export const actions = {
    * the server, so that people can't cheat by peeking at the JavaScript
    */
   enter: async ({ request, cookies }) => {
-    const game = new Game(cookies.get("sverdle"));
+    const game = new Game(cookies.get("wordle"));
 
     const data = await request.formData();
     const guess = data.getAll("guess") as string[];
@@ -60,10 +60,10 @@ export const actions = {
       return fail(400, { badGuess: true });
     }
 
-    cookies.set("sverdle", game.toString(), { path: "" });
+    cookies.set("wordle", game.toString(), { path: "" });
   },
 
   restart: async ({ cookies }) => {
-    cookies.delete("sverdle", { path: "" });
+    cookies.delete("wordle", { path: "" });
   },
 } satisfies Actions;

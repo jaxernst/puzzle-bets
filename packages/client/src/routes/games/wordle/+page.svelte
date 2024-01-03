@@ -8,16 +8,13 @@
 
   export let form: ActionData;
 
-  /** Whether or not the user has won */
   $: won = data.answers.at(-1) === "xxxxx";
 
   /** The index of the current guess */
   $: i = won ? -1 : data.answers.length;
 
-  /** The current guess */
   $: currentGuess = data.guesses[i] || "";
 
-  /** Whether the current guess can be submitted */
   $: submittable = currentGuess.length === 5;
 
   /**
@@ -102,7 +99,7 @@
     };
   }}
 >
-  <a class="text-white how-to-play" href="/sverdle/how-to-play">How to play</a>
+  <a class="text-white how-to-play" href="/wordle/how-to-play">How to play</a>
 
   <div class="grid" class:playing={!won} class:bad-guess={form?.badGuess}>
     {#each Array.from(Array(6).keys()) as row (row)}

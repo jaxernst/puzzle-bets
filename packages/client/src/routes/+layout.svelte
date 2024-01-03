@@ -1,10 +1,13 @@
 <script>
   import { page } from "$app/stores";
+  import WalletConnector from "$lib/components/WalletConnector.svelte";
   import Header from "./Header.svelte";
   import "./styles.css";
 
   $: console.log($page.route.id, $page.route.id?.includes("wordle"));
 </script>
+
+<WalletConnector />
 
 <div class="app max-w-[40rem] mx-auto">
   <Header />

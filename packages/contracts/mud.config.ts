@@ -10,7 +10,6 @@ export default mudConfig({
       valueSchema: "uint32",
     },
 
-    // Generic components
     Creator: "address",
     Expiration: "uint256",
     StartTime: "uint256",

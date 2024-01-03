@@ -6,6 +6,8 @@ import { Counter } from "../codegen/index.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 
 contract PuzzleGameSystem is System {
+  using ECDSA for bytes32;
+
   function newGame(uint32 submissionWindow) public payable returns (uint32) {
     address creator = _msgSender();
     uint betAmount = msg.value;
@@ -49,5 +51,9 @@ contract PuzzleGameSystem is System {
 
     require(status == Status.Active, "Game is not active");
     require(block.timestamp > startTime + submissionWindow, "Submission window still open");
+  }
+
+  function _verify(bytes32 data, address account) pure returns (bool) {
+    return keccack256(data).toEthSignedMessageHash().recover(signature) == account;
   }
 }

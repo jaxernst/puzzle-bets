@@ -13,7 +13,9 @@
 
 <div class="flex flex-col gap-2">
   <div class="flex justify-between items-center">
-    <div class="font-mono text-lg">Wordle game with jaxer.eth</div>
+    <div class="font-mono text-lg text-gray-100">
+      Wordle game with jaxer.eth
+    </div>
     <div class="flex flex-col gap-2">
       <button class="bg-lime-500 rounded-full px-2 py-1 font-semibold">
         {#if gameActive}

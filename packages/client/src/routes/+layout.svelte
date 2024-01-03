@@ -1,7 +1,6 @@
 <script>
   import { page } from "$app/stores";
   import Header from "./Header.svelte";
-  import EthSymbol from "$lib/icons/EthSymbol.svelte";
   import "./styles.css";
 
   $: console.log($page.route.id, $page.route.id?.includes("wordle"));
@@ -11,10 +10,7 @@
   <Header />
 
   <main class="text-white flex-grow flex flex-col p-4 gap-5">
-    <section
-      class="flex flex-col gap-2 bg-gray-600 p-4 rounded-2xl shadow-inner"
-    >
-      <div class="font-mono">Puzzles</div>
+    <section class="flex flex-col gap-2">
       <div class="flex gap-2 items-center">
         {#each ["Wordle", "Tradle", "Crossword", "Jigsaw"] as game}
           <a
@@ -36,14 +32,16 @@
     <section
       class="flex flex-col gap-2 bg-gray-600 rounded-2xl p-4 shadow-inner"
     >
-      <div class="font-mono">Active Games</div>
+      <div class="font-mono text-gray-100">Active Games</div>
       <div class="flex gap-2 items-center">
-        {#each ["jaxer.eth"] as name}
+        {#each [{ name: "jaxer.eth", game: "Wordle" }] as { name, game }}
           <div
-            class="flex gap-2 px-3 py-2 self-start rounded-lg text-white bg-lime-500 font-semibold text-center transition-all"
+            class="flex items-center gap-2 px-3 py-2 self-start rounded-lg text-white bg-lime-500 font-semibold text-center transition-all"
           >
+            {game}
+            <span>|</span>
             {name}
-            <span class="font-bold"> $1.21</span>
+            <span class="font-bold text-lg"> $1.21</span>
           </div>
         {/each}
       </div>

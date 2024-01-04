@@ -1,6 +1,7 @@
 <script>
   import { page } from "$app/stores";
   import WalletConnector from "$lib/components/WalletConnector.svelte";
+  import ConnectUser from "./ConnectUser.svelte";
   import Header from "./Header.svelte";
   import "./styles.css";
 
@@ -10,9 +11,11 @@
 <WalletConnector />
 
 <div class="app max-w-[40rem] mx-auto">
-  <Header />
-
+  <!--
+   <Header />
+ -->
   <main class="text-white flex-grow flex flex-col p-4 gap-5">
+    <ConnectUser />
     <section class="flex flex-col gap-2">
       <div class="flex gap-2 items-center">
         {#each ["Wordle", "Tradle", "Crossword", "Jigsaw"] as game}

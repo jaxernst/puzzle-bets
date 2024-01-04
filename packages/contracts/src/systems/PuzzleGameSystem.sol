@@ -2,12 +2,17 @@
 pragma solidity >=0.8.21;
 
 import { System } from "@latticexyz/world/src/System.sol";
-import { Deposit, GameType, GamePlayer, GameStatus, SubmissionWindow, GameStartTime, Solved, OtherPlayer } from "../codegen/index.sol";
+import { Deposit, GameType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved } from "../codegen/index.sol";
 import { Status, Game } from "../codegen/common.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 
 contract PuzzleGameSystem is System {
-  function newGame(Game gameType, uint32 submissionWindow) public payable returns (uint32) {
+  modifier playerOnly(bytes32 gameId) {
+    require(_msgSender() == Player1.get(gameId) || _msgSender() == Player2.get(gameId), "Not game player");
+    _;
+  }
+
+  function newGame(Game gameType, uint32 submissionWindow) public payable {
     address creator = _msgSender();
     uint betAmount = msg.value;
 
@@ -17,15 +22,14 @@ contract PuzzleGameSystem is System {
     GameStatus.set(gameId, Status.Pending);
     SubmissionWindow.set(gameId, submissionWindow);
 
-    GamePlayer.set(gameId, creator);
+    Player1.set(gameId, creator);
     Deposit.set(gameId, creator, betAmount);
   }
 
-  function joinGame(bytes32 gameId, address otherPlayer) public {
+  function joinGame(bytes32 gameId) public payable {
     Status status = GameStatus.get(gameId);
     uint betAmount = Deposit.get(gameId, _msgSender());
 
-    require(GamePlayer.get(gameId, otherPlayer), "Other player invalid");
     require(status == Status.Pending, "Game is not pending");
     require(_msgValue() >= betAmount, "You must deposit to join the game");
 
@@ -33,48 +37,51 @@ contract PuzzleGameSystem is System {
     GameStartTime.set(gameId, block.timestamp);
 
     Deposit.set(gameId, _msgSender(), betAmount);
-    GamePlayer.set(gameId, _msgSender());
-
-    // Set player lookup indices
-    OtherPlayer.set(gameId, _msgSender(), otherPlayer);
-    OtherPlayer.set(gameId, otherPlayer, _msgSender());
+    Player2.set(gameId, _msgSender());
   }
 
-  function submitSolution(bytes32 gameId) public {
+  function submitSolution(bytes32 gameId) public playerOnly(gameId) {
     Status status = GameStatus.get(gameId);
     uint32 submissionWindow = SubmissionWindow.get(gameId);
     uint startTime = GameStartTime.get(gameId);
 
-    require(GamePlayer.get(gameId, _msgSender()), "You are not a GamePlayer");
     require(status == Status.Active, "Game is not active");
     require(block.timestamp <= startTime + submissionWindow, "Submission window closed");
 
     Solved.set(gameId, _msgSender(), true);
   }
 
-  function claim(bytes32 gameId) public {
+  function claim(bytes32 gameId) public playerOnly(gameId) {
     uint32 submissionWindow = SubmissionWindow.get(gameId);
     uint startTime = GameStartTime.get(gameId);
+
+    // Set game as complete only after the submissionWindow closes
     if (block.timestamp > startTime + submissionWindow) {
       GameStatus.set(gameId, Status.Complete);
     }
 
     require(GameStatus.get(gameId) == Status.Complete, "Game is not active");
-    require(block.timestamp > startTime + submissionWindow, "Submission window still open");
 
-    address me = _msgSender();
-    address otherPlayer = OtherPlayer.get(gameId, me);
+    address p1 = Player1.get(gameId);
+    address p2 = Player2.get(gameId);
+    if (p1 == _msgSender()) {
+      _claim(gameId, p1, p2);
+    } else {
+      _claim(gameId, p2, p1);
+    }
+  }
 
+  function _claim(bytes32 gameId, address me, address them) private {
     bool iSolved = Solved.get(gameId, me);
-    bool theySolved = Solved.get(gameId, OtherPlayer.get(gameId, me));
+    bool theySolved = Solved.get(gameId, them);
 
-    // Distribute funds
+    // Distribute funds to winner
     if (theySolved && !iSolved) {
-      return _payWinner(gameId, otherPlayer, me);
+      return _payWinner(gameId, them, me);
     }
 
     if (iSolved && !theySolved) {
-      return _payWinner(gameId, me, otherPlayer);
+      return _payWinner(gameId, me, them);
     }
 
     // Tie condition, each player can claim their deposit back

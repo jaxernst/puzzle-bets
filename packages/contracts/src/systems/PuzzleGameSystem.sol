@@ -70,11 +70,11 @@ contract PuzzleGameSystem is System {
 
     // Distribute funds
     if (theySolved && !iSolved) {
-      return _payWinner(gameId, otherPlayer);
+      return _payWinner(gameId, otherPlayer, me);
     }
 
     if (iSolved && !theySolved) {
-      return _payWinner(gameId, me);
+      return _payWinner(gameId, me, otherPlayer);
     }
 
     // Tie condition, each player can claim their deposit back

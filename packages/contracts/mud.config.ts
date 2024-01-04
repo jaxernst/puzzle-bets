@@ -10,15 +10,8 @@ export default mudConfig({
     GameStatus: "Status",
     SubmissionWindow: "uint32",
     GameStartTime: "uint256",
+    GamePlayer: "address",
 
-    // Per player components
-    GamePlayer: {
-      keySchema: {
-        gameId: "bytes32",
-        player: "address",
-      },
-      valueSchema: "bool",
-    },
     Solved: {
       keySchema: {
         gameId: "bytes32",

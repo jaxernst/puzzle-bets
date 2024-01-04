@@ -17,7 +17,7 @@ contract PuzzleGameSystem is System {
     GameStatus.set(gameId, Status.Pending);
     SubmissionWindow.set(gameId, submissionWindow);
 
-    GamePlayer.set(gameId, creator, true);
+    GamePlayer.set(gameId, creator);
     Deposit.set(gameId, creator, betAmount);
   }
 
@@ -33,7 +33,7 @@ contract PuzzleGameSystem is System {
     GameStartTime.set(gameId, block.timestamp);
 
     Deposit.set(gameId, _msgSender(), betAmount);
-    GamePlayer.set(gameId, _msgSender(), true);
+    GamePlayer.set(gameId, _msgSender());
 
     // Set player lookup indices
     OtherPlayer.set(gameId, _msgSender(), otherPlayer);

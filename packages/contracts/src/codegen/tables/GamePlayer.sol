@@ -26,7 +26,7 @@ ResourceId constant _tableId = ResourceId.wrap(
 ResourceId constant GamePlayerTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(
-  0x0001010001000000000000000000000000000000000000000000000000000000
+  0x0014010014000000000000000000000000000000000000000000000000000000
 );
 
 library GamePlayer {
@@ -43,9 +43,8 @@ library GamePlayer {
    * @return _keySchema The key schema for the table.
    */
   function getKeySchema() internal pure returns (Schema) {
-    SchemaType[] memory _keySchema = new SchemaType[](2);
+    SchemaType[] memory _keySchema = new SchemaType[](1);
     _keySchema[0] = SchemaType.BYTES32;
-    _keySchema[1] = SchemaType.ADDRESS;
 
     return SchemaLib.encode(_keySchema);
   }
@@ -56,7 +55,7 @@ library GamePlayer {
    */
   function getValueSchema() internal pure returns (Schema) {
     SchemaType[] memory _valueSchema = new SchemaType[](1);
-    _valueSchema[0] = SchemaType.BOOL;
+    _valueSchema[0] = SchemaType.ADDRESS;
 
     return SchemaLib.encode(_valueSchema);
   }
@@ -66,9 +65,8 @@ library GamePlayer {
    * @return keyNames An array of strings with the names of key fields.
    */
   function getKeyNames() internal pure returns (string[] memory keyNames) {
-    keyNames = new string[](2);
-    keyNames[0] = "gameId";
-    keyNames[1] = "player";
+    keyNames = new string[](1);
+    keyNames[0] = "key";
   }
 
   /**
@@ -97,58 +95,53 @@ library GamePlayer {
   /**
    * @notice Get value.
    */
-  function getValue(bytes32 gameId, address player) internal view returns (bool value) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function getValue(bytes32 key) internal view returns (address value) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (_toBool(uint8(bytes1(_blob))));
+    return (address(bytes20(_blob)));
   }
 
   /**
    * @notice Get value.
    */
-  function _getValue(bytes32 gameId, address player) internal view returns (bool value) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function _getValue(bytes32 key) internal view returns (address value) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (_toBool(uint8(bytes1(_blob))));
+    return (address(bytes20(_blob)));
   }
 
   /**
    * @notice Get value.
    */
-  function get(bytes32 gameId, address player) internal view returns (bool value) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function get(bytes32 key) internal view returns (address value) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (_toBool(uint8(bytes1(_blob))));
+    return (address(bytes20(_blob)));
   }
 
   /**
    * @notice Get value.
    */
-  function _get(bytes32 gameId, address player) internal view returns (bool value) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function _get(bytes32 key) internal view returns (address value) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (_toBool(uint8(bytes1(_blob))));
+    return (address(bytes20(_blob)));
   }
 
   /**
    * @notice Set value.
    */
-  function setValue(bytes32 gameId, address player, bool value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function setValue(bytes32 key, address value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -156,10 +149,9 @@ library GamePlayer {
   /**
    * @notice Set value.
    */
-  function _setValue(bytes32 gameId, address player, bool value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function _setValue(bytes32 key, address value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -167,10 +159,9 @@ library GamePlayer {
   /**
    * @notice Set value.
    */
-  function set(bytes32 gameId, address player, bool value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function set(bytes32 key, address value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -178,10 +169,9 @@ library GamePlayer {
   /**
    * @notice Set value.
    */
-  function _set(bytes32 gameId, address player, bool value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function _set(bytes32 key, address value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -189,10 +179,9 @@ library GamePlayer {
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(bytes32 gameId, address player) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function deleteRecord(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -200,10 +189,9 @@ library GamePlayer {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(bytes32 gameId, address player) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function _deleteRecord(bytes32 key) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -212,7 +200,7 @@ library GamePlayer {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(bool value) internal pure returns (bytes memory) {
+  function encodeStatic(address value) internal pure returns (bytes memory) {
     return abi.encodePacked(value);
   }
 
@@ -222,7 +210,7 @@ library GamePlayer {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dyanmic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(bool value) internal pure returns (bytes memory, PackedCounter, bytes memory) {
+  function encode(address value) internal pure returns (bytes memory, PackedCounter, bytes memory) {
     bytes memory _staticData = encodeStatic(value);
 
     PackedCounter _encodedLengths;
@@ -234,23 +222,10 @@ library GamePlayer {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(bytes32 gameId, address player) internal pure returns (bytes32[] memory) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function encodeKeyTuple(bytes32 key) internal pure returns (bytes32[] memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = key;
 
     return _keyTuple;
-  }
-}
-
-/**
- * @notice Cast a value to a bool.
- * @dev Boolean values are encoded as uint8 (1 = true, 0 = false), but Solidity doesn't allow casting between uint8 and bool.
- * @param value The uint8 value to convert.
- * @return result The boolean value.
- */
-function _toBool(uint8 value) pure returns (bool result) {
-  assembly {
-    result := value
   }
 }

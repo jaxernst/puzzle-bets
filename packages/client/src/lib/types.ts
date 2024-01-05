@@ -8,12 +8,7 @@ export type Game = {
   betAmount?: number;
 };
 
-export enum GameType {
-  Wordle,
-  Tradle,
-  Crossword,
-  Jigsaw,
-}
+export type GameType = "Worlde" | "Tradle";
 
 export enum GameStatus {
   Inactive,

@@ -3,8 +3,7 @@
   import { page } from "$app/stores";
   import WalletConnector from "$lib/components/WalletConnector.svelte";
   import ActiveGames from "./ActiveGames.svelte";
-  import ConnectUser from "./ConnectUser.svelte";
-  import Header from "./Header.svelte";
+  import ConnectUser from "./UserHeader.svelte";
   import "./styles.css";
 
   $: console.log($page.route.id, $page.route.id?.includes("wordle"));
@@ -13,9 +12,6 @@
 <WalletConnector />
 
 <div class="app max-w-[40rem] mx-auto">
-  <!--
-   <Header />
- -->
   <main class="text-white flex-grow flex flex-col p-4 gap-5">
     <ConnectUser />
     <section class="flex flex-col gap-2">
@@ -43,7 +39,9 @@
       <ActiveGames />
     </section>
 
-    <section class="flex-grow bg-gray-600 p-4 rounded-2xl shadow-inner">
+    <section
+      class="flex flex-col flex-grow bg-gray-600 p-4 rounded-2xl shadow-inner"
+    >
       <slot />
     </section>
   </main>

@@ -5,8 +5,15 @@
   import ActiveGames from "./ActiveGames.svelte";
   import ConnectUser from "./UserHeader.svelte";
   import "./styles.css";
+  import { onMount } from "svelte";
+  import { userWallet } from "$lib/mud/connectWallet";
+  import { goto } from "$app/navigation";
 
-  $: console.log($page.route.id, $page.route.id?.includes("wordle"));
+  onMount(() => {
+    if (!$userWallet) {
+      goto("/welcome");
+    }
+  });
 </script>
 
 <WalletConnector />

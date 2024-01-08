@@ -2,12 +2,6 @@
   import Modal from "$lib/components/Modal.svelte";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
   import type { GameType } from "$lib/types";
-  import {
-    Dialog,
-    DialogOverlay,
-    DialogDescription,
-    DialogTitle,
-  } from "@rgossiaux/svelte-headlessui";
 
   export let show = false;
   export let gameType: GameType;
@@ -49,7 +43,7 @@
     </div>
     <div class="p-2 flex justify-evenly items-center text-gray-400">
       <label class="p-2 flex flex-col gap-1 text-gray-200">
-        <span class="text-sm text-gray-400">Wager (Eth)</span>
+        <span class="text-sm text-gray-400">Wager (ETH)</span>
         <div class="flex items-center gap-1">
           <input
             type="number"

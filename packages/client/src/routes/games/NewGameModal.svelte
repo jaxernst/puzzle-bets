@@ -53,8 +53,8 @@
       the game, the puzzle will be revealed and the submission window clock will
       start ticking.
     </div>
-    <div class="p-2 flex justify-evenly items-center text-gray-400">
-      <label class="p-2 flex flex-col gap-1 text-gray-200">
+    <div class="py-2 px-6 flex justify-between items-center text-gray-400">
+      <label class="flex flex-col gap-1 text-gray-200">
         <span class="text-sm text-gray-400">Wager (ETH)</span>
         <div class="flex items-center gap-1">
           <input
@@ -71,8 +71,8 @@
           </div>
         </div>
       </label>
-      <div class="pr-2">or</div>
-      <label class="p-2 flex flex-col gap-1 text-gray-200">
+      <div class="">or</div>
+      <label class="flex flex-col gap-1 text-gray-200">
         <span class="text-sm text-gray-400">Wager (USD)</span>
         <div class="flex items-center gap-1">
           <input
@@ -88,12 +88,12 @@
         </div>
       </label>
     </div>
-    <div class="self-center flex flex-col gap-2">
+    <div class="py-2 px-6 flex flex-col gap-3">
       <div class="text-gray-400">
         Submission window:
         <input
           type="number"
-          class="bg-gray-500 text-gray-200 rounded-lg px-1 w-[50px]"
+          class="bg-gray-500 text-gray-200 rounded-lg w-[50px]"
           min="1"
           max="100000"
           bind:value={submissionWindowMinutes}
@@ -103,7 +103,7 @@
         Invite expires:
         <input
           type="number"
-          class="bg-gray-500 text-gray-200 rounded-lg px-1 w-[50px]"
+          class="bg-gray-500 text-gray-200 rounded-lg w-[50px]"
           min="1"
           max="100000"
           bind:value={inviteExpirationMinutes}

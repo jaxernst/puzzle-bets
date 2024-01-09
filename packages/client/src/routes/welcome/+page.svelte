@@ -17,7 +17,9 @@
     <div class="w-[50px] h-[50px] flex jutify-center">
       <img src={puzzly} alt="puzzly" />
     </div>
-    <div class="text-center text-2xl font-bold">Welcome to Puzzle Bets.</div>
+    <div class="p-6 text-center text-2xl font-bold">
+      Welcome to Puzzle Bets.
+    </div>
   </div>
   <div class="flex justify-center px-6">
     <div class="flex flex-col font-semibold">

@@ -1,6 +1,7 @@
 <script lang="ts">
   import Modal from "$lib/components/Modal.svelte";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
+  import { mud } from "$lib/mud/mudStore";
   import type { GameType } from "$lib/types";
 
   export let show = false;
@@ -15,10 +16,11 @@
 
   let ethPrice = 2300;
 
+  // Game params
   let wagerETH: number = 0.001;
   let wagerUSD: number = wagerETH * ethPrice;
-
-  let lastUpdated = "ETH"; // Tracks which field was last updated
+  let submissionWindowMinutes = 15;
+  let inviteExpirationMinutes = 20;
 
   function updateETH(value: number) {
     wagerETH = value;
@@ -28,6 +30,16 @@
   function updateUSD(value: number) {
     wagerUSD = value;
     wagerETH = wagerUSD / ethPrice;
+  }
+
+  async function createGame() {
+    console.log("Creating game with wager", wagerETH);
+    await $mud.systemCalls.newGame(
+      gameType,
+      wagerETH,
+      submissionWindowMinutes,
+      inviteExpirationMinutes
+    );
   }
 </script>
 
@@ -76,9 +88,34 @@
         </div>
       </label>
     </div>
-    <div class="text-gray-400 self-center">Submission window: 15 minutes</div>
+    <div class="self-center flex flex-col gap-2">
+      <div class="text-gray-400">
+        Submission window:
+        <input
+          type="number"
+          class="bg-gray-500 text-gray-200 rounded-lg px-1 w-[50px]"
+          min="1"
+          max="100000"
+          bind:value={submissionWindowMinutes}
+        /> minutes
+      </div>
+      <div class="text-gray-400">
+        Invite expires:
+        <input
+          type="number"
+          class="bg-gray-500 text-gray-200 rounded-lg px-1 w-[50px]"
+          min="1"
+          max="100000"
+          bind:value={inviteExpirationMinutes}
+        />
+        minutes
+      </div>
+    </div>
     <div class="self-center p-4">
-      <button class="bg-lime-500 rounded-lg font-bold px-3 py-2">
+      <button
+        class="bg-lime-500 hover:bg-lime-400 hover:shadow-lg transition-all active:bg-lime-600 rounded-lg font-bold px-3 py-2"
+        on:click={createGame}
+      >
         Create Game & Generate Invite
       </button>
     </div>

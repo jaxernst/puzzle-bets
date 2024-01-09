@@ -8,7 +8,17 @@ export type Game = {
   betAmount?: number;
 };
 
-export type GameType = "Worlde" | "Tradle";
+export type GameType = "wordle" | "tradle";
+
+export const gameTypeToNumber: Record<GameType, number> = {
+  wordle: 0,
+  tradle: 1,
+};
+
+export const gameNumberToType: Record<number, GameType> = {
+  0: "wordle",
+  1: "tradle",
+};
 
 export enum GameStatus {
   Inactive,

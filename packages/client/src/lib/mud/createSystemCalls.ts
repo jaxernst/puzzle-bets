@@ -5,7 +5,8 @@
 
 import type { Entity } from "@latticexyz/recs";
 import type { SetupNetworkResult } from "./setupNetwork";
-import type { GameType } from "../types";
+import { gameTypeToNumber, type GameType } from "../types";
+import { formatEther, parseEther } from "viem";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -15,10 +16,18 @@ export function createSystemCalls({
 }: SetupNetworkResult) {
   const newGame = async (
     gameType: GameType,
-    submissionWindow: number = 60 * 15
+    wagerEth: number,
+    submissionWindow: number,
+    inviteExpiration: number
   ) => {
-    const tx = await worldContract.write.newGame([gameType, submissionWindow]);
+    const tx = await worldContract.write.newGame(
+      [gameTypeToNumber[gameType], submissionWindow],
+      { value: parseEther(wagerEth.toString()) }
+    );
+
     await waitForTransaction(tx);
   };
-  return {};
+  return {
+    newGame,
+  };
 }

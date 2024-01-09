@@ -93,7 +93,7 @@
         Submission window:
         <input
           type="number"
-          class="bg-gray-500 text-gray-200 rounded-lg w-[50px]"
+          class="bg-gray-500 text-gray-200 px-1 rounded-lg w-[50px]"
           min="1"
           max="100000"
           bind:value={submissionWindowMinutes}
@@ -103,7 +103,7 @@
         Invite expires:
         <input
           type="number"
-          class="bg-gray-500 text-gray-200 rounded-lg w-[50px]"
+          class="bg-gray-500 text-gray-200 px-1 rounded-lg w-[50px]"
           min="1"
           max="100000"
           bind:value={inviteExpirationMinutes}

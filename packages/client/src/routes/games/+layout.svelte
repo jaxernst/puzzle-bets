@@ -1,5 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores";
+  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte";
+  import { mud, user } from "$lib/mud/mudStore";
   import { type GameType } from "$lib/types";
   import NewGameModal from "./NewGameModal.svelte";
 
@@ -8,6 +10,11 @@
   $: gameId = $page.params.gameId;
 
   let showNewGameModal = false;
+
+  const loginAndConnect = async () => {
+    const wallet = await promptConnectWallet();
+    await mud.setup(wallet);
+  };
 </script>
 
 <svelte:head>
@@ -27,7 +34,14 @@
       {/if}
     </div>
     <div class="flex flex-col gap-2">
-      {#if gameId}
+      {#if !$user}
+        <button
+          class="bg-lime-500 rounded-full px-2 py-1 font-semibold"
+          on:click={loginAndConnect}
+        >
+          Connect to play
+        </button>
+      {:else if gameId}
         <button class="bg-lime-500 rounded-full px-2 py-1 font-semibold">
           Submit
         </button>

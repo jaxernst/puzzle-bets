@@ -4,9 +4,7 @@
   import { GameStatus } from "$lib/types";
   import { shortenAddress } from "$lib/util";
 
-  $: activeGames = $userGames.filter(
-    (g) => g.status.value === GameStatus.Active
-  );
+  $: activeGames = $userGames;
 </script>
 
 <div class="font-mono text-gray-100">
@@ -20,9 +18,7 @@
       >
         {game}
         <span>|</span>
-        {$user === p1.value
-          ? shortenAddress(p2.value)
-          : shortenAddress(p1.value)}
+        {$user === p1 ? shortenAddress(p2 ?? "0x") : shortenAddress(p1)}
         <span class="font-bold text-lg"> $1.21</span>
       </div>
     {/each}

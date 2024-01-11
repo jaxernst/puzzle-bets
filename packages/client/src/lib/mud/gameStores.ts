@@ -31,6 +31,7 @@ export const userGames = derived([mud, user], ([$mud, $user]) => {
       ];
 
     return {
+      id: gameId,
       game: gameType,
       status: getComponentValueStrict($mud.components.GameStatus, gameId).value,
       p1: getComponentValueStrict($mud.components.Player1, gameId).value,

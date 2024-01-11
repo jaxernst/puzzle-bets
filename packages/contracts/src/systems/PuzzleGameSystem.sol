@@ -17,7 +17,6 @@ contract PuzzleGameSystem is System {
     uint betAmount = msg.value;
 
     bytes32 gameId = getUniqueEntity();
-
     GameType.set(gameId, gameType);
     GameStatus.set(gameId, Status.Pending);
     SubmissionWindow.set(gameId, submissionWindow);

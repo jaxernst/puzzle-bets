@@ -12,32 +12,15 @@
   };
 </script>
 
-<div class="flex flex-col gap-10 flex-grow">
-  <div class="flex justify-center items-center">
-    <div class="w-[50px] h-[50px] flex jutify-center">
-      <img src={puzzly} alt="puzzly" />
-    </div>
-    <div class="p-6 text-center text-2xl font-bold">
-      Welcome to Puzzle Bets.
-    </div>
+<div class="flex flex-col gap-6 items-center justify-center flex-grow">
+  <div class="w-[60px] flex jutify-center">
+    <img src={puzzly} alt="puzzly" />
   </div>
-  <div class="flex justify-center px-6">
-    <div class="flex flex-col font-semibold">
-      <div class="flex gap-3 items-center">
-        <div class="w-3 h-[.3rem] rounded-full bg-lime-500"></div>
-        <div>Challenge friends to puzzles</div>
-      </div>
-      <div class="flex gap-3 items-center">
-        <div class="w-3 h-[.3rem] rounded-full bg-lime-500"></div>
-        <div>Set your wager</div>
-      </div>
-      <div class="flex gap-3 items-center">
-        <div class="w-3 h-[.3rem] rounded-full bg-lime-500"></div>
-        <div>Solve the puzzle before the deadline to win.</div>
-      </div>
-    </div>
+  <div class="flex flex-col gap-1 items-center">
+    <div class="text-2xl font-bold">Welcome to Puzzle Bets.</div>
+    <div class=" text-gray-400">Play puzzles, bet with friends</div>
   </div>
-  <div class="flex flex-col items-center flex-grow justify-end p-6">
+  <div class="p-10 flex flex-col items-center">
     {#if !$user}
       <button
         on:click={loginAndConnect}
@@ -53,4 +36,5 @@
       </div>
     {/if}
   </div>
+  <div class="h-10"></div>
 </div>

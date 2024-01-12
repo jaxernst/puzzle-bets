@@ -1,18 +1,27 @@
 <script>
-  import { userGames } from "$lib/mud/gameStores";
+  import { userGames } from "$lib/gameStores";
   import { page } from "$app/stores";
-  import WalletConnector from "$lib/components/WalletConnector.svelte";
+  import WalletConnector, {
+    loginAndConnect,
+  } from "$lib/components/WalletConnector.svelte";
   import ActiveGames from "./ActiveGames.svelte";
   import ConnectUser from "./UserHeader.svelte";
   import "./styles.css";
   import { onMount } from "svelte";
   import { userWallet } from "$lib/mud/connectWallet";
   import { goto } from "$app/navigation";
+  import { walletActions } from "viem";
+  import { mud } from "$lib/mud/mudStore";
 
   onMount(() => {
     if (!$userWallet) {
       goto("/welcome");
     }
+  });
+
+  onMount(async () => {
+    const wallet = userWallet.tryConnect();
+    await mud.setup(wallet);
   });
 </script>
 

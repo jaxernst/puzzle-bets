@@ -1,10 +1,15 @@
+import type { Entity } from "@latticexyz/recs";
+
 export type EvmAddress = `0x${string}`;
 
 export type Game = {
-  user: EvmAddress;
+  id: Entity;
+  type: GameType;
+  status: GameStatus;
+  p1: EvmAddress;
+  p2: EvmAddress;
   gameType: GameType;
   duration: number;
-  status: GameStatus;
   betAmount?: number;
 };
 

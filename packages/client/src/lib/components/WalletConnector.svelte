@@ -1,10 +1,16 @@
 <script context="module">
   import { userWallet } from "$lib/mud/connectWallet";
+  import { mud } from "$lib/mud/mudStore";
   import { shortenAddress } from "$lib/util";
   import { get, writable } from "svelte/store";
   import { fade } from "svelte/transition";
 
   const showModal = writable(false);
+
+  export const loginAndConnect = async () => {
+    const wallet = await promptConnectWallet();
+    await mud.setup(wallet);
+  };
 
   export async function promptConnectWallet() {
     showModal.set(true);
@@ -24,7 +30,7 @@
 
   const connectWallet = async () => {
     const wallet = userWallet.tryConnect();
-    await new Promise((r) => setTimeout(r, 2000));
+    await new Promise((r) => setTimeout(r, 1000));
 
     if (wallet) {
       showModal.set(false);

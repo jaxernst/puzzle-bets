@@ -3,16 +3,10 @@
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
   import { mud } from "$lib/mud/mudStore";
   import type { GameType } from "$lib/types";
+  import { capitalized } from "$lib/util";
 
   export let show = false;
   export let gameType: GameType;
-
-  const capitalized = (str: string) => {
-    return str
-      .split(" ")
-      .map((s) => s[0].toUpperCase() + s.slice(1))
-      .join(" ");
-  };
 
   let ethPrice = 2300;
 

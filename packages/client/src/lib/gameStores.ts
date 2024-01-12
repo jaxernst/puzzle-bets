@@ -1,15 +1,15 @@
 import { derived, writable } from "svelte/store";
 
-import { mud, user } from "./mudStore";
+import { mud, user } from "./mud/mudStore";
 import {
-  type Entity,
   Has,
   HasValue,
   runQuery,
   getComponentValueStrict,
   getComponentValue,
+  type Entity,
 } from "@latticexyz/recs";
-import { gameNumberToType } from "$lib/types";
+import { gameNumberToType, type Game } from "$lib/types";
 
 export const userGames = derived([mud, user], ([$mud, $user]) => {
   if (!$mud || !$mud.ready || !$user) return [];
@@ -32,7 +32,7 @@ export const userGames = derived([mud, user], ([$mud, $user]) => {
 
     return {
       id: gameId,
-      game: gameType,
+      type: gameType,
       status: getComponentValueStrict($mud.components.GameStatus, gameId).value,
       p1: getComponentValueStrict($mud.components.Player1, gameId).value,
       p2: getComponentValue($mud.components.Player2, gameId)?.value,

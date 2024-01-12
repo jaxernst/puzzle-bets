@@ -275,7 +275,7 @@
     text-transform: lowercase;
     border: none;
     font-size: calc(0.08 * var(--width));
-    border-radius: 2px;
+    border-radius: 4px;
     background: white;
     margin: 0;
     color: rgba(0, 0, 0, 0.7);

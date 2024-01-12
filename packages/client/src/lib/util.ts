@@ -162,3 +162,10 @@ export const shortenAddress = (address: string, chars = 4) => {
     address.length - chars
   )}`;
 };
+
+export const capitalized = (str: string) => {
+  return str
+    .split(" ")
+    .map((s) => s[0].toUpperCase() + s.slice(1))
+    .join(" ");
+};

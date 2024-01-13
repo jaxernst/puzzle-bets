@@ -21,9 +21,9 @@
 <div class="flex justify-between items-center">
   <div class="font-mono text-lg text-gray-100">
     {#if gameId}
-      {capitalized(gameType)} | game with jaxer.eth
+      {capitalized(gameType)} game #{parseInt(gameId, 16)}
     {:else}
-      Wordle
+      {capitalized(gameType)}
     {/if}
   </div>
 

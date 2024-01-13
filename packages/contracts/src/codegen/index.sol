@@ -6,6 +6,7 @@ pragma solidity >=0.8.21;
 import { GameType, GameTypeTableId } from "./tables/GameType.sol";
 import { GameStatus, GameStatusTableId } from "./tables/GameStatus.sol";
 import { SubmissionWindow, SubmissionWindowTableId } from "./tables/SubmissionWindow.sol";
+import { InviteExpiration, InviteExpirationTableId } from "./tables/InviteExpiration.sol";
 import { GameStartTime, GameStartTimeTableId } from "./tables/GameStartTime.sol";
 import { Player1, Player1TableId } from "./tables/Player1.sol";
 import { Player2, Player2TableId } from "./tables/Player2.sol";

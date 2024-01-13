@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { System } from "@latticexyz/world/src/System.sol";
-import { Deposit, GameType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved } from "../codegen/index.sol";
+import { Deposit, GameType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration } from "../codegen/index.sol";
 import { Status, Game } from "../codegen/common.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 
@@ -12,14 +12,15 @@ contract PuzzleGameSystem is System {
     _;
   }
 
-  function newGame(Game gameType, uint32 submissionWindow) public payable {
+  function newGame(Game gameType, uint32 submissionWindowSeconds, uint inviteExpirationTimestamp) public payable {
     address creator = _msgSender();
     uint betAmount = msg.value;
 
     bytes32 gameId = getUniqueEntity();
     GameType.set(gameId, gameType);
     GameStatus.set(gameId, Status.Pending);
-    SubmissionWindow.set(gameId, submissionWindow);
+    SubmissionWindow.set(gameId, submissionWindowSeconds);
+    InviteExpiration.set(gameId, inviteExpirationTimestamp);
 
     Player1.set(gameId, creator);
     Deposit.set(gameId, creator, betAmount);
@@ -30,6 +31,7 @@ contract PuzzleGameSystem is System {
     uint betAmount = Deposit.get(gameId, _msgSender());
 
     require(status == Status.Pending, "Game is not pending");
+    require(InviteExpiration.get(gameId) > block.timestamp, "Invite expired");
     require(_msgValue() >= betAmount, "You must deposit to join the game");
 
     GameStatus.set(gameId, Status.Active);

@@ -9,6 +9,7 @@ export default mudConfig({
     GameType: "Game",
     GameStatus: "Status",
     SubmissionWindow: "uint32",
+    InviteExpiration: "uint256",
     GameStartTime: "uint256",
     Player1: "address",
     Player2: "address",

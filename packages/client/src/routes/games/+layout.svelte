@@ -2,7 +2,7 @@
   import { page } from "$app/stores";
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte";
   import { mud, user } from "$lib/mud/mudStore";
-  import { type GameType } from "$lib/types";
+  import { GameStatus, type GameType } from "$lib/types";
   import { encodeEntity } from "@latticexyz/store-sync/recs";
   import GameHeader from "./GameHeader.svelte";
   import {
@@ -13,15 +13,14 @@
   import GameHud from "./GameHud.svelte";
   import { numberToHex, padHex, toBytes } from "viem";
   import { userGames } from "$lib/gameStores";
+  import { urlGameIdToEntity } from "$lib/util";
 
-  const urlGameIdToEntity = (id: string) => {
-    return padHex(numberToHex(BigInt(id)), { size: 32 }) as Entity;
-  };
-
-  // $: Game = $page.params.game[0].toUpperCase() + $page.params.game.slice(1);
   $: gameType = $page.route.id?.split("/")[2] as GameType;
   $: gameId = urlGameIdToEntity($page.params.gameId);
-  $: gameStatus = getComponentValue($mud.components.GameStatus, gameId)?.value;
+
+  $: gameStatus =
+    gameId &&
+    getComponentValueStrict($mud.components.GameStatus, gameId)?.value;
 </script>
 
 <svelte:head>
@@ -29,7 +28,7 @@
   <meta name="description" content="Solve puzzles with friends" />
 </svelte:head>
 
-<div class="flex flex-col gap-2">
+<div class="flex flex-col flex-grow gap-3">
   <GameHeader {gameType} {gameId} />
 
   {#if gameId}
@@ -39,8 +38,19 @@
   {/if}
 
   {#key $page.route.id}
-    <div>
-      <slot />
-    </div>
+    {#if gameStatus === GameStatus.Pending}
+      <div
+        class="flex flex-col gap-4 grow text-center justify-center items-center font-bold px-6 pb-10"
+      >
+        The puzzle will reveal for both players once the invite is accepted
+        <div class="text-gray-300 text-sm italic">
+          Invites expire in 15 minutes...
+        </div>
+      </div>
+    {:else}
+      <div>
+        <slot />
+      </div>
+    {/if}
   {/key}
 </div>

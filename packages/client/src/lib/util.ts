@@ -1,3 +1,6 @@
+import type { Entity } from "@latticexyz/recs";
+import { numberToHex, padHex } from "viem";
+
 export const localTzOffsetHrs = () => {
   return -new Date().getTimezoneOffset() / 60;
 };
@@ -168,4 +171,15 @@ export const capitalized = (str: string) => {
     .split(" ")
     .map((s) => s[0].toUpperCase() + s.slice(1))
     .join(" ");
+};
+
+export const urlGameIdToEntity = <T extends boolean = false>(
+  id: string | undefined,
+  strict?: T
+): T extends true ? Entity : Entity | undefined => {
+  if (!id) {
+    if (strict) throw new Error("No game ID provided");
+    return undefined as T extends true ? Entity : Entity | undefined;
+  }
+  return padHex(numberToHex(BigInt(id)), { size: 32 }) as Entity;
 };

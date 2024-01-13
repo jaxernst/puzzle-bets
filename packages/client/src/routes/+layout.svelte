@@ -13,15 +13,15 @@
   import { walletActions } from "viem";
   import { mud } from "$lib/mud/mudStore";
 
-  onMount(() => {
-    if (!$userWallet) {
-      goto("/welcome");
-    }
-  });
+  onMount(() => {});
 
   onMount(async () => {
-    const wallet = userWallet.tryConnect();
-    await mud.setup(wallet);
+    try {
+      const wallet = userWallet.tryConnect();
+      await mud.setup(wallet);
+    } catch {
+      goto("/welcome");
+    }
   });
 </script>
 

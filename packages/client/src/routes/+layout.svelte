@@ -31,7 +31,7 @@
   <main class="text-white flex-grow flex flex-col p-4 gap-5">
     <ConnectUser />
     <section class="flex flex-col gap-2">
-      <div class="relative flex gap-2 items-center overflow-auto">
+      <div class="relative flex gap-2 items-center overflow-auto no-scrollbar">
         {#each ["Wordle", "Tradle", "Crossword", "Jigsaw"] as game}
           <a
             class={`px-3 py-2 self-start rounded-lg text-white font-semibold text-center transition-all whitespace-nowrap

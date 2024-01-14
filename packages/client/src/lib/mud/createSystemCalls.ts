@@ -18,13 +18,19 @@ export function createSystemCalls({
   const newGame = async (
     gameType: GameType,
     wagerEth: number,
-    submissionWindow: number,
-    inviteExpiration: number
+    submissionWindowMinutes: number,
+    inviteExpirationMinutes: number
   ) => {
-    const inviteExpirationTimestamp = BigInt(systemTimestamp() + 15 * 60);
+    const inviteExpirationTimestamp = BigInt(
+      systemTimestamp() + inviteExpirationMinutes * 60
+    );
 
     const tx = await worldContract.write.newGame(
-      [gameTypeToNumber[gameType], submissionWindow, inviteExpirationTimestamp],
+      [
+        gameTypeToNumber[gameType],
+        submissionWindowMinutes * 60,
+        inviteExpirationTimestamp,
+      ],
       { value: parseEther(wagerEth.toString()) }
     );
 

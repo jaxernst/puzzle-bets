@@ -9,7 +9,8 @@ import {
   getComponentValue,
   type Entity,
 } from "@latticexyz/recs";
-import { gameNumberToType, type Game } from "$lib/types";
+import { GameStatus, gameNumberToType, type Game } from "$lib/types";
+import { encodeEntity } from "@latticexyz/store-sync/recs";
 
 export const userGames = derived([mud, user], ([$mud, $user]) => {
   if (!$mud || !$mud.ready || !$user) return [];
@@ -31,15 +32,45 @@ export const userGames = derived([mud, user], ([$mud, $user]) => {
       ];
 
     const p1 = getComponentValueStrict($mud.components.Player1, gameId).value;
-    const p2 = getComponentValueStrict($mud.components.Player2, gameId).value;
+    const p2 = getComponentValue($mud.components.Player2, gameId)?.value;
+    const status = getComponentValueStrict($mud.components.GameStatus, gameId)
+      .value as GameStatus;
+
+    const betAmount =
+      getComponentValue(
+        $mud.components.Deposit,
+        encodeEntity(
+          { gameId: "bytes32", player: "address" },
+          { gameId: gameId as `0x${string}`, player: $user }
+        )
+      )?.value ?? 0n;
+
+    const startTime = getComponentValue(
+      $mud.components.GameStartTime,
+      gameId
+    )?.value;
+
+    const submissionWindow = getComponentValueStrict(
+      $mud.components.SubmissionWindow,
+      gameId
+    ).value;
+
+    const inviteExpiration = getComponentValueStrict(
+      $mud.components.InviteExpiration,
+      gameId
+    ).value;
 
     return {
       id: gameId,
       type: gameType,
-      status: getComponentValueStrict($mud.components.GameStatus, gameId).value,
+      status,
       opponent: $user === p2 ? p1 : p2,
+      betAmount,
       p1,
       p2,
+      startTime,
+      submissionWindow,
+      inviteExpiration,
     };
   });
 });

@@ -4,7 +4,7 @@
   import { userGames } from "$lib/gameStores";
   import { getComponentValueStrict, type Entity } from "@latticexyz/recs";
   import { type GameType } from "$lib/types";
-  import { capitalized } from "$lib/util";
+  import { capitalized, shortenAddress } from "$lib/util";
   import { mud } from "$lib/mud/mudStore";
   import { user } from "$lib/mud/mudStore";
   import { encodeEntity } from "@latticexyz/store-sync/recs";
@@ -44,21 +44,29 @@
   <span class="text-lime-400">{activeGames.length}</span> Active Games
 </div>
 {#if activeGames.length}
-  <div class="flex gap-2 items-center">
-    {#each activeGames as { type, p1, p2, id }}
+  <div class="flex flex-wrap gap-2 items-center">
+    {#each activeGames as { type, p1, p2, id, opponent }}
       {@const active = $page.params.gameId === parseInt(id, 16).toString()}
       <a
-        class={`flex gap-1 items-center px-3 py-2 self-start  rounded-lg text-white font-semibold text-center transition-all
+        class={`flex flex-col px-3 py-2 self-start rounded-lg text-white font-semibold font-mono  transition-all
           ${!active ? "" : "bg-lime-500"}
         `}
         href={gameRoute(id, type)}
       >
-        {capitalized(type)}
-        <span class={`text-sm ${active ? "text-lime-600" : "text-lime-500"}`}
-          >{@html "&#9670;"}</span
+        <div class="flex gap-1 items-center">
+          {capitalized(type)}
+          <span class={`text-sm ${active ? "text-lime-600" : "text-lime-500"}`}
+          ></span>
+          <span class={`${active ? "text-white" : "text-lime-500"}`}
+            >{betAmount(id)}</span
+          >
+        </div>
+        <div
+          class={`px-1 text-xs italic 
+          ${active ? "text-lime-600 " : "text-gray-200"}`}
         >
-        {betAmount(id)}
-        <span class="font-bold text-lg"></span>
+          waiting for {shortenAddress(opponent)}
+        </div>
       </a>
     {/each}
   </div>

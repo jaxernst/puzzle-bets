@@ -30,12 +30,16 @@ export const userGames = derived([mud, user], ([$mud, $user]) => {
         getComponentValueStrict($mud.components.GameType, gameId).value
       ];
 
+    const p1 = getComponentValueStrict($mud.components.Player1, gameId).value;
+    const p2 = getComponentValueStrict($mud.components.Player2, gameId).value;
+
     return {
       id: gameId,
       type: gameType,
       status: getComponentValueStrict($mud.components.GameStatus, gameId).value,
-      p1: getComponentValueStrict($mud.components.Player1, gameId).value,
-      p2: getComponentValue($mud.components.Player2, gameId)?.value,
+      opponent: $user === p2 ? p1 : p2,
+      p1,
+      p2,
     };
   });
 });

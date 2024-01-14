@@ -81,7 +81,13 @@
   }
 </script>
 
-<Modal {show} on:close={() => (show = false)}>
+<Modal
+  {show}
+  on:close={() => {
+    show = false;
+    gameCreated = false;
+  }}
+>
   <div class="bg-gray-600 p-5 rounded-xl flex flex-col gap-2 max-w-[450px]">
     <div class="font-semibold">
       Create a new <span class="text-lime-500">{capitalized(gameType)}</span> Game

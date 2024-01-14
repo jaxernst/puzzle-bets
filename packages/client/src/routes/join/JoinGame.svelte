@@ -23,7 +23,7 @@
   const dispatch = createEventDispatcher();
 </script>
 
-<div class="bg-gray-600 p-5 rounded-xl flex flex-col gap-2 max-w-[450px]">
+<div class="flex flex-col gap-2 max-w-[450px]">
   <div class="font-semibold">
     Join <span class="text-lime-500">{capitalized(gameType)}</span> Game #{parseInt(
       gameId,

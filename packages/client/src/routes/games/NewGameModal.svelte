@@ -1,10 +1,13 @@
 <script lang="ts">
+  import DotLoader from "$lib/components/DotLoader.svelte";
   import Modal from "$lib/components/Modal.svelte";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
-  import { mud } from "$lib/mud/mudStore";
+  import { mud, user } from "$lib/mud/mudStore";
   import type { GameType } from "$lib/types";
   import { capitalized } from "$lib/util";
-
+  import { Has, HasValue, runQuery } from "@latticexyz/recs";
+  import { slide } from "svelte/transition";
+  import { confetti } from "@neoconfetti/svelte";
   export let show = false;
   export let gameType: GameType;
 
@@ -26,14 +29,55 @@
     wagerETH = wagerUSD / ethPrice;
   }
 
+  let createGameLoading = false;
+  let gameCreated = false;
+  let createGameError = null;
   async function createGame() {
     console.log("Creating game with wager", wagerETH);
-    await $mud.systemCalls.newGame(
-      gameType,
-      wagerETH,
-      submissionWindowMinutes,
-      inviteExpirationMinutes
+    createGameError = null;
+    createGameLoading = true;
+    try {
+      await new Promise((r) => setTimeout(r, 800));
+      await $mud.systemCalls.newGame(
+        gameType,
+        wagerETH,
+        submissionWindowMinutes,
+        inviteExpirationMinutes
+      );
+      gameCreated = true;
+    } catch {
+      createGameError = "Game creation failed";
+    } finally {
+      createGameLoading = false;
+    }
+  }
+
+  let inviteUrl = "";
+  $: if (gameCreated) {
+    const entities = runQuery([
+      HasValue($mud.components.Player1, { value: $user }),
+    ]);
+
+    const sorted = Array.from(entities).sort(
+      (a, b) => parseInt(a, 16) - parseInt(b, 16)
     );
+
+    const newest = sorted[sorted.length - 1];
+
+    if (newest) {
+      inviteUrl = `${window.location.origin}/join/${parseInt(newest, 16)}`;
+    }
+  }
+
+  let inviteCopied = false;
+  async function copyInviteUrl() {
+    try {
+      await navigator.clipboard.writeText(inviteUrl);
+      inviteCopied = true;
+      setTimeout(() => (inviteCopied = false), 1800);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
   }
 </script>
 
@@ -106,12 +150,23 @@
       </div>
     </div>
     <div class="self-center p-4">
-      <button
-        class="bg-lime-500 hover:bg-lime-400 hover:shadow-lg transition-all active:bg-lime-600 rounded-lg font-bold px-3 py-2"
-        on:click={createGame}
-      >
-        Create Game & Generate Invite
-      </button>
+      {#key [createGameLoading, gameCreated, inviteCopied]}
+        <button
+          class="bg-lime-500 hover:bg-lime-400 whitespace-nowrap hover:shadow-lg transition-all active:bg-lime-600 rounded-lg font-bold px-3 py-2"
+          on:click={() => (!gameCreated ? createGame() : copyInviteUrl())}
+          in:slide={{ axis: "x" }}
+        >
+          {#if createGameLoading}
+            <DotLoader />
+          {:else if inviteCopied}
+            Invite Copied!
+          {:else if gameCreated}
+            <div>Success! Click to copy invite link</div>
+          {:else}
+            Create Game & Generate Invite
+          {/if}
+        </button>
+      {/key}
     </div>
   </div>
 </Modal>

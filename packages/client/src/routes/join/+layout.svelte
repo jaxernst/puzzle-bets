@@ -32,16 +32,22 @@
     goto("/welcome");
   }}
 >
-  {#if $userWallet && $mud.ready && gameType}
-    <JoinGame
-      {gameId}
-      on:joined={() => goto(`/games/${gameType}/${parseInt(gameId, 16)}`)}
-    />
-  {:else if gameType}
-    Game not found
-  {:else if !$userWallet}
-    Connect wallet bruh
-  {:else}
-    Something went wrong
-  {/if}
+  <div
+    class="relative bg-gray-600 text-gray-200 p-6 rounded-xl flex flex-col gap-2 max-w-[450px]"
+  >
+    {#if $userWallet && $mud.ready && gameType}
+      <JoinGame
+        {gameId}
+        on:joined={() => goto(`/games/${gameType}/${parseInt(gameId, 16)}`)}
+      />
+    {:else if !gameType}
+      Game not found
+    {:else if !$userWallet}
+      Connect wallet bruh
+    {:else}
+      Something went wrong
+    {/if}
+
+    <a class="absolute right-2 top-0 text-gray-400" href={"/welcome"}>x</a>
+  </div>
 </Modal>

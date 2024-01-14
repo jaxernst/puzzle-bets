@@ -3,7 +3,7 @@
  * for changes in the World state (using the System contracts).
  */
 
-import type { Entity } from "@latticexyz/recs";
+import { runQuery, type Entity } from "@latticexyz/recs";
 import type { SetupNetworkResult } from "./setupNetwork";
 import { gameTypeToNumber, type GameType } from "../types";
 import { formatEther, parseEther } from "viem";

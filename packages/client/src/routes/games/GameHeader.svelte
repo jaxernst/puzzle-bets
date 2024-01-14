@@ -9,10 +9,6 @@
   export let gameType: GameType;
   export let gameId: Entity | null = null;
 
-  $: game = gameId && {
-    type: getComponentValue($mud.components.GameType, gameId)?.value,
-  };
-
   let showNewGameModal = false;
 </script>
 

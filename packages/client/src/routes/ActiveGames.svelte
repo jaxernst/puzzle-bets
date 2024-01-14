@@ -62,7 +62,7 @@
           >
         </div>
         <div
-          class={`px-1 text-xs italic 
+          class={`px-1 text-[.7em] italic 
           ${active ? "text-lime-600 " : "text-gray-200"}`}
         >
           waiting for {shortenAddress(opponent)}

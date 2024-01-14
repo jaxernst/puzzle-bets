@@ -18,9 +18,13 @@
   $: gameType = $page.route.id?.split("/")[2] as GameType;
   $: gameId = urlGameIdToEntity($page.params.gameId);
 
-  $: gameStatus =
-    gameId &&
-    getComponentValueStrict($mud.components.GameStatus, gameId)?.value;
+  let gameStatus: number | undefined;
+  $: if (gameId && $mud.ready) {
+    gameStatus = getComponentValueStrict(
+      $mud.components.GameStatus,
+      gameId
+    )?.value;
+  }
 </script>
 
 <svelte:head>

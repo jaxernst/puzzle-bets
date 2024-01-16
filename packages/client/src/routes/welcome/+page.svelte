@@ -4,12 +4,15 @@
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte";
   import { userWallet } from "$lib/mud/connectWallet";
   import { mud, user } from "$lib/mud/mudStore";
+  import { onMount } from "svelte";
 
   const loginAndConnect = async () => {
     const wallet = await promptConnectWallet();
     await mud.setup(wallet);
     goto("/games/wordle");
   };
+
+  onMount(() => loginAndConnect);
 </script>
 
 <div class="flex flex-col gap-6 items-center justify-center flex-grow">

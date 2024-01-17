@@ -5,7 +5,6 @@
   import { reduced_motion } from "./reduced-motion";
 
   export let data: PageData;
-
   export let form: ActionData;
 
   $: won = data.answers.at(-1) === "xxxxx";
@@ -143,7 +142,7 @@
   <div class="controls">
     {#if won || data.answers.length >= 6}
       {#if !won && data.answer}
-        <p>the answer was "{data.answer}"</p>
+        <p>the answer was "{data.j}"</p>
       {/if}
       <button data-key="enter" class="restart selected" formaction="?/restart">
         {won ? "you won :)" : `game over :(`} play again?

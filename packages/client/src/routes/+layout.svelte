@@ -34,7 +34,7 @@
                   : "bg-red-500"
               }
             `}
-            href="/games/{game.toLowerCase()}"
+            href="/games/{game.toLowerCase()}/demo"
           >
             {game}
             <span class="text-xl"> + </span>

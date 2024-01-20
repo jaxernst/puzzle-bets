@@ -12,10 +12,6 @@
   import { goto } from "$app/navigation";
   import { walletActions } from "viem";
   import { mud } from "$lib/mud/mudStore";
-
-  onMount(() => {
-    goto("/welcome");
-  });
 </script>
 
 <WalletConnector />

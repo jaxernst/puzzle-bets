@@ -1,36 +1,69 @@
-import type { Game, GameType } from "$lib/types";
+import type { EvmAddress, Game, GameType } from "$lib/types";
 import { supabase } from "./supabaseClient";
 
 interface GameStore {
-  getGame: (gameType: GameType, gameId: string) => Promise<string>;
-  setGame: (
+  hasGame: (
     gameType: GameType,
     gameId: string,
-    game: string
+    user?: string
+  ) => Promise<boolean>;
+  getGame: (
+    gameType: GameType,
+    gameId: string,
+    user?: string
+  ) => Promise<string>;
+  setGame: (
+    gameState: string,
+    gameType: GameType,
+    gameId: string,
+    user?: string
   ) => Promise<boolean>;
 }
 
 export const supabaseGameStore: GameStore = (() => {
   return {
-    getGame: async (gameType: GameType, gameId: string) => {
+    hasGame: async (
+      gameType: GameType,
+      gameId: string,
+      user: string = "0x"
+    ) => {
       const res = await supabase
-        .from("Game State")
+        .from("game-state")
         .select("*") // selects all columns; replace with specific columns if needed
         .eq("game_type", gameType)
         .eq("game_id", gameId)
+        .eq("user_address", user)
         .single();
 
-      return res.data;
+      return Boolean(res.data);
     },
-    setGame: async (
+    getGame: async (
       gameType: GameType,
       gameId: string,
-      newGameState: string
+      user: string = "0x"
     ) => {
       const res = await supabase
-        .from("Game State")
-        .update({ game_state: newGameState })
-        .match({ game_type: gameType, game_id: gameId });
+        .from("game-state")
+        .select("*") // selects all columns; replace with specific columns if needed
+        .eq("game_type", gameType)
+        .eq("game_id", gameId)
+        .eq("user_address", user)
+        .single();
+
+      return res.data && res.data.game_state;
+    },
+    setGame: async (
+      newGameState: string,
+      gameType: GameType,
+      gameId: string,
+      user: string = "0x"
+    ) => {
+      const res = await supabase.from("game-state").upsert({
+        game_id: gameId,
+        game_type: gameType,
+        game_state: newGameState,
+        user_address: user,
+      });
 
       return Boolean(res.error);
     },

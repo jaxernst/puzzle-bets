@@ -33,7 +33,6 @@
   let gameCreated = false;
   let createGameError = null;
   async function createGame() {
-    console.log("Creating game with wager", wagerETH);
     createGameError = null;
     createGameLoading = true;
     try {

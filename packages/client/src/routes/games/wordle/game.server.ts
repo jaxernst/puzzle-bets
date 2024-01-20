@@ -29,9 +29,9 @@ export class Game {
    * Update game state based on a guess of a five-letter word. Returns
    * true if the guess was valid, false otherwise
    */
-  enter(letters: string[]) {
-    const word = letters.join("");
+  enter(word: string) {
     const valid = allowed.has(word);
+    const letters = word.split("");
 
     if (!valid) return false;
 

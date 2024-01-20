@@ -1,37 +1,44 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import WordleGame from "../WordleGame.svelte";
-  import { Game } from "../game";
+  import type { PageData } from "./$types";
 
-  let game: Game = new Game();
-  onMount(() => {
-    game = new Game();
-  });
+  export let data: PageData;
 
-  $: guesses = game?.guesses;
-  $: answers = game?.answers;
-  $: answer = game?.answer;
-  $: badGuess = false;
+  const enterGuess = async (guess: string) => {
+    const res = await fetch("/api/wordle/submit-guess", {
+      method: "POST",
+      body: JSON.stringify({ guess, gameId: data.gameId }),
+    });
 
-  console.log(game.answer);
+    if (!res.ok) return;
+
+    data = await res.json();
+  };
+
+  const reset = async () => {
+    const res = await fetch("/api/wordle/new-game", {
+      method: "POST",
+      body: JSON.stringify({ gameId: data.gameId }),
+    });
+
+    if (!res.ok) return;
+
+    data = await res.json();
+  };
 </script>
 
-<WordleGame
-  data={{
-    guesses,
-    answers,
-    answer,
-    badGuess,
-  }}
-  on:restart={() => {}}
-  on:submitGuess={(e) => {
-    // Will return bad guess or
-    console.log(e);
-    console.log(game.guesses);
-    let guessValid = game.enter(e.detail.guess.split());
-    badGuess = !guessValid;
-    guesses = game.guesses;
-    answers = game.answers;
-    if (guesses.length >= 6) answer = game.answer;
-  }}
-/>
+{#if data}
+  <WordleGame
+    data={{
+      guesses: data.guesses,
+      answers: data.answers,
+      answer: data.answer,
+      badGuess: data.badGuess,
+    }}
+    on:restart={reset}
+    on:submitGuess={(e) => {
+      enterGuess(e.detail.guess);
+    }}
+  />
+{/if}

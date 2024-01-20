@@ -27,11 +27,11 @@
   // TODO: Should only create a new game in the db if the game status is active
   $: canMakeNewGame = $userGames.some((g) => {
     return (
-      parseInt(g.id as string, 16).toString() === $page.params.gameId &&
+      parseInt(g.id, 16).toString() === $page.params.gameId &&
       g.status === GameStatus.Active
     );
   });
-  $: console.log(canMakeNewGame, $userGames);
+
   $: if (!gameState && canMakeNewGame) {
     console.log("creating new game");
     getOrCreateGame();
@@ -44,7 +44,6 @@
     });
 
     if (!res.ok) return;
-
     gameState = await res.json();
   };
 </script>

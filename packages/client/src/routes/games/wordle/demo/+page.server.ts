@@ -5,15 +5,21 @@ import { supabaseGameStore } from "$lib/server/gameStore";
 import { generateRandomID } from "$lib/util";
 
 export const load = (async ({ cookies }) => {
-  // The gameId for demo games is users IP address
   let gameId = cookies.get("gameId");
+
   let gameState = "";
   if (!gameId) {
     gameId = generateRandomID(32);
     cookies.set("gameId", gameId, { path: "" });
-    await supabaseGameStore.setGame("wordle", gameId, "");
+    await supabaseGameStore.setGame("", "wordle", gameId);
   } else {
-    gameState = (await supabaseGameStore.getGame("wordle", gameId)) ?? "";
+    // having a gameId set in cookies doesn't guarentee a gameId exists in the db
+    const hasGame = await supabaseGameStore.hasGame("wordle", gameId);
+    if (hasGame) {
+      gameState = (await supabaseGameStore.getGame("wordle", gameId)) ?? "";
+    } else {
+      await supabaseGameStore.setGame("", "wordle", gameId);
+    }
   }
 
   const game = new Game(gameState);

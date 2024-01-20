@@ -2,13 +2,19 @@ import { supabaseGameStore } from "$lib/server/gameStore";
 import { Game } from "../../../games/wordle/game.server";
 
 export const POST = async ({ request }): Promise<Response> => {
-  const params = await request.json();
-  const guess = params?.guess;
-  const gameId = params?.gameId;
-  const user = params.user;
+  const { guess, gameId, user } = (await request.json()) as {
+    guess: string;
+    gameId: string;
+    user?: string;
+  };
 
   if (!gameId || !guess) {
-    return new Response("Missing game ID or guess", { status: 400 });
+    return new Response("Missing params", { status: 400 });
+  }
+
+  const hasGame = await supabaseGameStore.hasGame("wordle", gameId, user);
+  if (!hasGame) {
+    return new Response("Game not found", { status: 404 });
   }
 
   const gameState = await supabaseGameStore.getGame("wordle", gameId, user);

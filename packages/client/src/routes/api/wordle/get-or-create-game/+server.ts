@@ -10,11 +10,13 @@ export const POST = async ({ request }): Promise<Response> => {
   if (!gameId) return new Response("Missing game ID", { status: 400 });
 
   const hasGame = await supabaseGameStore.hasGame("wordle", gameId, user);
+  let gameState = "";
   if (!hasGame) {
-    supabaseGameStore.setGame("", "wordle", gameId, user);
+    await supabaseGameStore.setGame("", "wordle", gameId, user);
+  } else {
+    gameState = await supabaseGameStore.getGame("wordle", gameId, user);
   }
 
-  const gameState = await supabaseGameStore.getGame("wordle", gameId, user);
   const game = new Game(gameState);
 
   return new Response(

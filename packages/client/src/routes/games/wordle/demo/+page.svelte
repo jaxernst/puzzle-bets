@@ -17,7 +17,7 @@
   };
 
   const reset = async () => {
-    const res = await fetch("/api/wordle/new-game", {
+    const res = await fetch("/api/wordle/reset-game", {
       method: "POST",
       body: JSON.stringify({ gameId: data.gameId }),
     });

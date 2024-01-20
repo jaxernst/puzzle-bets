@@ -5,7 +5,7 @@
   import type { PageData } from "./$types";
   import { user } from "$lib/mud/mudStore";
   import { userGames } from "$lib/gameStores";
-  import { GameStatus } from "$lib/types";
+  import { GameStatus, type EvmAddress } from "$lib/types";
 
   export let gameState: null | {
     guesses: string[];
@@ -14,27 +14,29 @@
     badGuess: boolean;
   } = null;
 
-  const getOrCreateGame = async () => {
+  const getOrCreateGame = async (user: string, opponent: string) => {
     const res = await fetch("/api/wordle/get-or-create-game", {
       method: "POST",
-      body: JSON.stringify({ gameId: $page.params.gameId, user: $user }),
+      body: JSON.stringify({ gameId: $page.params.gameId, user, opponent }),
     });
 
     if (!res.ok) return;
     gameState = await res.json();
   };
 
-  // TODO: Should only create a new game in the db if the game status is active
-  $: canMakeNewGame = $userGames.some((g) => {
-    return (
-      parseInt(g.id, 16).toString() === $page.params.gameId &&
-      g.status === GameStatus.Active
-    );
-  });
+  $: onchainGame = $userGames.find(
+    (g) => parseInt(g.id, 16).toString() === $page.params.gameId
+  );
 
-  $: if (!gameState && canMakeNewGame) {
+  $: if (
+    !gameState &&
+    $user &&
+    onchainGame &&
+    onchainGame.status === GameStatus.Active &&
+    onchainGame.opponent
+  ) {
     console.log("creating new game");
-    getOrCreateGame();
+    getOrCreateGame($user, onchainGame.opponent);
   }
 
   const enterGuess = async (guess: string) => {

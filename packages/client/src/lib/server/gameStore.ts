@@ -22,42 +22,29 @@ interface GameStore {
 
 export const supabaseGameStore: GameStore = (() => {
   return {
-    hasGame: async (
-      gameType: GameType,
-      gameId: string,
-      user: string = "0x"
-    ) => {
+    hasGame: async (gameType, gameId, user) => {
       const res = await supabase
         .from("game-state")
-        .select("*") // selects all columns; replace with specific columns if needed
+        .select("*")
         .eq("game_type", gameType)
         .eq("game_id", gameId)
-        .eq("user_address", user)
+        .eq("user_address", user ?? "NULL")
         .single();
 
       return Boolean(res.data);
     },
-    getGame: async (
-      gameType: GameType,
-      gameId: string,
-      user: string = "0x"
-    ) => {
+    getGame: async (gameType, gameId, user) => {
       const res = await supabase
         .from("game-state")
-        .select("*") // selects all columns; replace with specific columns if needed
+        .select("*")
         .eq("game_type", gameType)
         .eq("game_id", gameId)
-        .eq("user_address", user)
+        .eq("user_address", user ?? "NULL")
         .single();
 
       return res.data && res.data.game_state;
     },
-    setGame: async (
-      newGameState: string,
-      gameType: GameType,
-      gameId: string,
-      user: string = "0x"
-    ) => {
+    setGame: async (newGameState, gameType, gameId, user) => {
       const res = await supabase.from("game-state").upsert({
         game_id: gameId,
         game_type: gameType,

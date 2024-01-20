@@ -3,7 +3,7 @@
   <meta name="description" content="How to play Sverdle" />
 </svelte:head>
 
-<div class="text-column">
+<div class="text-column p-3">
   <h1>How to play Wordle</h1>
 
   <p>

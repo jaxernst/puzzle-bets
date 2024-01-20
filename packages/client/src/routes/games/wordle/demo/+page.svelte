@@ -3,7 +3,7 @@
   import WordleGame from "../WordleGame.svelte";
   import type { PageData } from "./$types";
 
-  export let data: PageData;
+  export let data: PageData & { badGuess?: boolean };
 
   const enterGuess = async (guess: string) => {
     const res = await fetch("/api/wordle/submit-guess", {
@@ -38,6 +38,7 @@
     }}
     on:restart={reset}
     on:submitGuess={(e) => {
+      console.log("enter guess");
       enterGuess(e.detail.guess);
     }}
   />

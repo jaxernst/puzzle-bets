@@ -95,7 +95,7 @@
     dispatch("submitGuess", { guess: currentGuess });
   }}
 >
-  <a class="text-white how-to-play" href="games/wordle/how-to-play"
+  <a class="text-white how-to-play" href="/games/wordle/how-to-play"
     >How to play</a
   >
 
@@ -146,7 +146,10 @@
       <button
         data-key="enter"
         class="restart selected"
-        on:click={() => dispatch("restart")}
+        on:click={(e) => {
+          e.preventDefault();
+          dispatch("restart");
+        }}
       >
         {won ? "you won :)" : `game over :(`} play again?
       </button>

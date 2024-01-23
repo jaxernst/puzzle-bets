@@ -43,10 +43,10 @@
     class="absolute h-screen w-screen flex justify-center items-center bg-black bg-opacity-20"
   >
     <div
-      class="relative z-10 min-w-[200px] min-h-[200px] bg-gray-50 flex flex-col gap-2 justify-evenly items-center rounded-lg p-6"
+      class="relative z-10 min-w-[200px] min-h-[200px] bg-gray-50 text-cyan-400 flex flex-col gap-2 justify-evenly items-center rounded-lg p-6"
     >
       {#if $userWallet}
-        <p transition:fade class={`text-lime-500 font-semibold`}>
+        <p transition:fade class={`font-semibold`}>
           Welcome {shortenAddress($userWallet?.account.address ?? "")}
         </p>
       {:else}
@@ -62,7 +62,7 @@
       {/if}
 
       <button
-        class="absolute right-2 top-2 text-lime-500 font-bold"
+        class="absolute right-2 top-2 text-zinc-400 font-bold"
         on:click={() => showModal.set(false)}
       >
         x

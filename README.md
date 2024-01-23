@@ -1,5 +1,5 @@
 # Puzzle Bets
+An onchain puzzle competition game. Solve puzzles, challenge friends, and wager on who wins
 
-Play puzzles, wager with friends.
+Currently in open development...
 
-(More coming soon) .

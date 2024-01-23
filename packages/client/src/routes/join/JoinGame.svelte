@@ -2,25 +2,27 @@
   import { page } from "$app/stores";
   import DotLoader from "$lib/components/DotLoader.svelte";
   import Modal from "$lib/components/Modal.svelte";
+  import { getGame } from "$lib/gameStores";
   import { mud } from "$lib/mud/mudStore";
   import { gameNumberToType, GameStatus, type GameType } from "$lib/types";
-  import { capitalized, urlGameIdToEntity } from "$lib/util";
+  import { ethPrice } from "$lib/ethPrice";
+  import {
+    capitalized,
+    formatTime,
+    shortenAddress,
+    systemTimestamp,
+    urlGameIdToEntity,
+  } from "$lib/util";
   import { getComponentValueStrict, type Entity } from "@latticexyz/recs";
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import { slide } from "svelte/transition";
 
   export let gameId: Entity;
 
   let show = true;
 
-  $: gameType =
-    gameNumberToType[
-      getComponentValueStrict($mud.components.GameType, gameId).value
-    ];
-
-  $: gameIsPending =
-    getComponentValueStrict($mud.components.GameStatus, gameId).value ===
-    GameStatus.Pending;
+  $: game = $getGame(gameId);
+  $: gameType = game.type;
 
   const dispatch = createEventDispatcher();
 
@@ -34,6 +36,16 @@
       joinGameLoading = false;
     }
   };
+
+  let inviteExpiry: number | undefined;
+  onMount(() =>
+    setInterval(() => {
+      if (!game) return;
+
+      const tDiff = Number(game.inviteExpiration) - systemTimestamp();
+      inviteExpiry = tDiff > 0 ? tDiff : 0;
+    }, 1000)
+  );
 </script>
 
 <div class="flex flex-col gap-2 max-w-[450px]">
@@ -43,8 +55,39 @@
       16
     )}
   </div>
-  <div class="text-sm text-gray-100"></div>
-  <div class="px-4 flex justify-center">
+
+  {#if inviteExpiry}
+    <div class="italic text-gray-400">
+      Invite expires in {formatTime(inviteExpiry)}...
+    </div>
+  {/if}
+
+  <div class="text-sm text-gray-100 p-1">
+    <div class="flex flex-col gap-1">
+      <div>
+        <div class="text-gray-400 text-xs">Game Creator</div>
+        <div class="text-gray-200">{shortenAddress(game.p1)}</div>
+      </div>
+      <div>
+        <div class="text-gray-400 text-xs">Bet Amount</div>
+        <div class="text-gray-200">
+          {#if $ethPrice}
+            ${Number(game.betAmount) * $ethPrice}
+          {:else}
+            {Number(game.betAmount) * $ethPrice} eth
+          {/if}
+        </div>
+      </div>
+      <div>
+        <div class="text-gray-400 text-xs">Submission Window</div>
+        <div class="text-gray-200">
+          {Math.round(game.submissionWindow / 60)}<span>{" "}minutes</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="px-4 flex justify-center mt-2">
     <button
       in:slide={{ axis: "x" }}
       class="bg-lime-500 text-white rounded-lg p-2 whitespace-nowrap hover:bg-lime-400 hover:shadow transition-all"

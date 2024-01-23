@@ -10,7 +10,6 @@
     //const wallet = await promptConnectWallet();
     const wallet = userWallet.tryConnect();
     await mud.setup(wallet);
-    goto("/games/wordle/demo");
   };
 
   onMount(loginAndConnect);
@@ -33,11 +32,12 @@
         Connect to Play
       </button>
     {:else}
-      <div
+      <a
         class="p-3 font-semibold border-2 border-lime-500 hover:bg-lime-500 hover:shadow transition-all duration-300 rounded-xl text-white"
+        href="/games/wordle/demo"
       >
         Choose a game to play
-      </div>
+      </a>
     {/if}
   </div>
   <div class="h-10"></div>

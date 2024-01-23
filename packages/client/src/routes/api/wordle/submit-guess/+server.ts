@@ -1,4 +1,4 @@
-import { supabaseGameStore } from "$lib/server/gameStore";
+import { supabaseGameStore } from "$lib/server/gameStateStorage";
 import { Game } from "../../../games/wordle/game.server";
 
 export const POST = async ({ request }): Promise<Response> => {

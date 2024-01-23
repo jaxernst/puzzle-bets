@@ -1,4 +1,4 @@
-import { supabaseGameStore } from "$lib/server/gameStore.js";
+import { supabaseGameStore } from "$lib/server/gameStateStorage.js";
 
 /** @type {import('./$types').RequestHandler} */
 export const POST = async ({ request }) => {

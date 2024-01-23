@@ -2,6 +2,7 @@
   import { page } from "$app/stores";
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte";
   import { mud, user } from "$lib/mud/mudStore";
+  import { getGame } from "$lib/gameStores";
   import { GameStatus, type GameType } from "$lib/types";
   import { encodeEntity } from "@latticexyz/store-sync/recs";
   import GameHeader from "./GameHeader.svelte";
@@ -19,7 +20,6 @@
 
   $: gameType = $page.route.id?.split("/")[2] as GameType;
   $: gameId = urlGameIdToEntity($page.params.gameId);
-
   $: game = $userGames.find((g) => g.id === gameId);
 
   $: if (gameId && $mud.ready && $user && !game) {

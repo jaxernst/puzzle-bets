@@ -1,7 +1,7 @@
 import { fail } from "@sveltejs/kit";
 import { Game } from "../game.server";
 import type { PageServerLoad } from "./$types";
-import { supabaseGameStore } from "$lib/server/gameStore";
+import { supabaseGameStore } from "$lib/server/gameStateStorage";
 
 /*
 export const load = (async ({ params }) => {

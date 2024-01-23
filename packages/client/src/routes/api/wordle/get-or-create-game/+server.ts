@@ -1,4 +1,4 @@
-import { supabaseGameStore } from "$lib/server/gameStore";
+import { supabaseGameStore } from "$lib/server/gameStateStorage";
 import { gameTypeToNumber } from "$lib/types";
 import { Game } from "../../../games/wordle/game.server";
 import { getOrCreateDemo, getOrCreateLiveGame } from "./getOrCreate";

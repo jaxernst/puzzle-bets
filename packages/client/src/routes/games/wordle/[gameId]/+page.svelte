@@ -10,7 +10,7 @@
   export let gameState: null | {
     guesses: string[];
     answers: string[];
-    answer: string;
+    answer: string | null;
     badGuess: boolean;
   } = null;
 

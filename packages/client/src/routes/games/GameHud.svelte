@@ -38,26 +38,23 @@
 </script>
 
 {#if game}
-  <div class="flex flex-wrap gap-2">
-    {#if game.opponent}
-      <div class=" text-gray-100 rounded-lg px-2 py-1">
-        <div class="text-sm text-lime-500 font-bold">Opponent</div>
-        <div class="text-gray-300 font-semibold">
-          {shortenAddress(game?.opponent)}
-        </div>
+  <div class="text-gray-400 font-semibold italic mb-3">
+    {statusLabels[game.status]}...
+  </div>
+  <div class="flex gap-4 items-stretch">
+    <div class="flex flex-col justify-evenly gap-1 font-semibold text-lime-500">
+      <div class="">Opponent</div>
+      <div class="">Wager</div>
+    </div>
+    <div class="flex flex-col justify-evenly gap-1 text-gray-100">
+      <div class="text-gray-300">
+        {shortenAddress(game?.opponent)}
       </div>
-    {/if}
-    <div class=" text-gray-100 rounded-lg px-2 py-1">
-      <div class="text-sm text-lime-500 font-bold">Wager</div>
-      <div class="text-gray-300 font-semibold">
+      <div class="text-gray-300">
         ${betAmountUsd}
         {@html "&#9670"}
         {formatEther(game?.betAmount)} eth
       </div>
-    </div>
-    <div class=" text-gray-100 rounded-lg px-2 py-1">
-      <div class="text-sm text-lime-500 font-bold">Status</div>
-      <div class="text-gray-300 font-semibold">{statusLabels[game.status]}</div>
     </div>
   </div>
 {/if}

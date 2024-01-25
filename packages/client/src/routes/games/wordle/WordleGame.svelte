@@ -151,7 +151,9 @@
           dispatch("restart");
         }}
       >
-        {won ? "you won :)" : `game over :(`} play again?
+        {won
+          ? "you solved the puzzle. Wait for the deadline to view results :)"
+          : `game over :(`} play again?
       </button>
     {:else}
       <div class="keyboard">

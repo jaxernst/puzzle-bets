@@ -48,7 +48,7 @@
   );
 </script>
 
-<div class="flex flex-col gap-2 max-w-[450px]">
+<div class="flex flex-col max-w-[450px]">
   <div class="font-semibold">
     Join <span class="text-lime-500">{capitalized(gameType)}</span> Game #{parseInt(
       gameId,
@@ -63,24 +63,22 @@
   {/if}
 
   <div class="text-sm text-gray-100 p-1">
-    <div class="flex flex-col gap-1">
-      <div>
-        <div class="text-gray-400 text-xs">Game Creator</div>
-        <div class="text-gray-200">{shortenAddress(game.p1)}</div>
+    <div class="flex gap-4 py-4">
+      <div class="flex flex-col gap-1 text-gray-400">
+        <div class="">Game Creator</div>
+        <div class="">Bet Amount</div>
+        <div class="">Submission Window</div>
       </div>
-      <div>
-        <div class="text-gray-400 text-xs">Bet Amount</div>
-        <div class="text-gray-200">
+      <div class="flex flex-col gap-1 text-gray-100">
+        <div class="">{shortenAddress(game.p1)}</div>
+        <div class="">
           {#if $ethPrice}
             ${Number(game.betAmount) * $ethPrice}
           {:else}
             {Number(game.betAmount) * $ethPrice} eth
           {/if}
         </div>
-      </div>
-      <div>
-        <div class="text-gray-400 text-xs">Submission Window</div>
-        <div class="text-gray-200">
+        <div class="">
           {Math.round(game.submissionWindow / 60)}<span>{" "}minutes</span>
         </div>
       </div>

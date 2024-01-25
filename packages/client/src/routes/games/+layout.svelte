@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte";
+
   import { mud, user } from "$lib/mud/mudStore";
   import { getGame } from "$lib/gameStores";
   import { GameStatus, type GameType } from "$lib/types";
@@ -22,9 +22,11 @@
   $: gameId = urlGameIdToEntity($page.params.gameId);
   $: game = $userGames.find((g) => g.id === gameId);
 
-  $: if (gameId && $mud.ready && $user && !game) {
-    goto("/welcome");
-  }
+  onMount(() => {
+    if (gameId && !game) {
+      goto("/welcome");
+    }
+  });
 
   let inviteExpiry: number | undefined;
   onMount(() =>
@@ -46,7 +48,7 @@
   <GameHeader {gameType} {gameId} />
 
   {#if gameId}
-    <div class="self-start">
+    <div class="w-full">
       <GameHud {gameId} />
     </div>
   {/if}

@@ -58,9 +58,9 @@
       answer: gameState.answer,
       badGuess: gameState.badGuess,
     }}
-    on:restart={() => {}}
     on:submitGuess={(e) => {
       enterGuess(e.detail.guess);
     }}
+    on:gameOver
   />
 {/if}

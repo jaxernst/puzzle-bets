@@ -17,8 +17,6 @@
 
   let show = true;
 
-  $: console.log(show, $user);
-
   onMount(() => {
     if (!$user) {
       loginAndConnect();

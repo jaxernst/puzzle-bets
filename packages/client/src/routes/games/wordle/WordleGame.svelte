@@ -14,6 +14,7 @@
 
   $: won = data.answers.at(-1) === "xxxxx";
 
+  $: gameOver = won || data.answers.length >= 6;
   $: i = won ? -1 : data.answers.length; // Row index of current guess
   $: currentGuess = data.guesses[i] || "";
   $: submittable = currentGuess.length === 5;
@@ -77,6 +78,15 @@
   }
 
   const dispatch = createEventDispatcher();
+
+  $: if (won) {
+    console.log("dispatch gameOver");
+    dispatch("gameOver", { won: true });
+  }
+
+  $: if (data.answers.length >= 6 && !won) {
+    dispatch("gameOver", { won: false });
+  }
 </script>
 
 <svelte:window on:keydown={keydown} />
@@ -138,11 +148,12 @@
     {/each}
   </div>
 
-  <div class="controls">
-    {#if won || data.answers.length >= 6}
-      {#if !won && data.answer}
-        <p>the answer was "{data.answer}"</p>
-      {/if}
+  <div class={`controls ${!gameOver ? "controls-playing" : ""}`}>
+    {#if won}
+      <p>You solvedF it!</p>
+    {:else if data.answers.length >= 6}
+      <p>the answer was "{data.answer}"!</p>
+      <!--
       <button
         data-key="enter"
         class="restart selected"
@@ -154,7 +165,7 @@
         {won
           ? "you solved the puzzle. Wait for the deadline to view results :)"
           : `game over :(`} play again?
-      </button>
+      </button>-->
     {:else}
       <div class="keyboard">
         <button
@@ -307,6 +318,9 @@
   .controls {
     text-align: center;
     justify-content: center;
+  }
+
+  .controls-playing {
     height: min(18vh, 10rem);
   }
 

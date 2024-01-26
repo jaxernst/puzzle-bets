@@ -48,12 +48,16 @@
     </div>
     <div class="flex flex-col justify-evenly gap-1 text-gray-100">
       <div class="text-gray-300">
-        {shortenAddress(game?.opponent)}
-      </div>
-      <div class="text-gray-300">
         ${betAmountUsd}
         {@html "&#9670"}
         {formatEther(game?.betAmount)} eth
+      </div>
+      <div class="text-gray-300">
+        {#if game.opponent}
+          {shortenAddress(game?.opponent)}
+        {:else}
+          ???
+        {/if}
       </div>
     </div>
   </div>

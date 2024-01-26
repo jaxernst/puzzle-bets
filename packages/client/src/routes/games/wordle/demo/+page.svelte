@@ -26,6 +26,10 @@
 
     data = await res.json();
   };
+
+  let showRestart = false;
+
+  $: gameOver = data.answers.length >= 6 || data.answers.at(-1) === "xxxxx";
 </script>
 
 {#if data}
@@ -36,10 +40,25 @@
       answer: data.answer,
       badGuess: data.badGuess,
     }}
-    on:restart={reset}
     on:submitGuess={(e) => {
-      console.log("enter guess");
       enterGuess(e.detail.guess);
     }}
+    on:gameOver={(e) => {
+      showRestart = true;
+    }}
   />
+{/if}
+
+{#if showRestart || gameOver}
+  <div class="w-ful flex justify-center py-4">
+    <button
+      class="rounded-lg p-2 bg-lime-500 font-semibold"
+      on:click={() => {
+        reset();
+        showRestart = false;
+      }}
+    >
+      Restart Demo Game
+    </button>
+  </div>
 {/if}

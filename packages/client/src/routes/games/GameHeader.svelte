@@ -33,7 +33,7 @@
       </button>
     {:else if gameId}
       <button class="bg-lime-500 rounded-full px-2 py-1 font-semibold">
-        Submit
+        View Results
       </button>
     {:else}
       <button

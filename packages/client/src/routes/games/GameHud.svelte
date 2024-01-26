@@ -38,13 +38,13 @@
 </script>
 
 {#if game}
-  <div class="text-gray-400 font-semibold italic mb-3">
+  <div class="text-gray-400 font-semibold italic px- mb-4">
     {statusLabels[game.status]}...
   </div>
-  <div class="flex gap-4 items-stretch">
+  <div class="flex gap-4 items-stretch px-2">
     <div class="flex flex-col justify-evenly gap-1 font-semibold text-lime-500">
-      <div class="">Opponent</div>
       <div class="">Wager</div>
+      <div class="">Opponent</div>
     </div>
     <div class="flex flex-col justify-evenly gap-1 text-gray-100">
       <div class="text-gray-300">

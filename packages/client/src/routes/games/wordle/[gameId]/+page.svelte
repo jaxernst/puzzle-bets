@@ -61,6 +61,5 @@
     on:submitGuess={(e) => {
       enterGuess(e.detail.guess);
     }}
-    on:gameOver
   />
 {/if}

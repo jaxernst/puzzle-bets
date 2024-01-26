@@ -16,13 +16,14 @@
   import { getComponentValueStrict, type Entity } from "@latticexyz/recs";
   import { createEventDispatcher, onMount } from "svelte";
   import { slide } from "svelte/transition";
+  import { cubicInOut } from "svelte/easing";
 
   export let gameId: Entity;
 
   let show = true;
 
   $: game = $getGame(gameId);
-  $: gameType = game.type;
+  $: gameType = game?.type;
 
   const dispatch = createEventDispatcher();
 
@@ -57,7 +58,10 @@
   </div>
 
   {#if inviteExpiry}
-    <div class="italic text-gray-400">
+    <div
+      class="italic text-gray-400 whitespace-nowrap min-w-[270px]"
+      in:slide={{ axis: "x", easing: cubicInOut }}
+    >
       Invite expires in {formatTime(inviteExpiry)}...
     </div>
   {/if}

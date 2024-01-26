@@ -36,7 +36,12 @@ export const userGames = derived([mud, user], ([$mud, $user]) => {
 });
 
 export const getGame = derived(mud, ($mud) => {
-  return (gameId: Entity) => gameIdToGame(gameId, $mud.components);
+  return (gameId: Entity) => {
+    if (!$mud?.ready) return;
+    if (!getComponentValue($mud.components.GameType, gameId)) return;
+
+    return gameIdToGame(gameId, $mud.components);
+  };
 });
 
 const gameIdToGame = (

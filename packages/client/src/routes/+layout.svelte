@@ -27,7 +27,7 @@
               ${
                 $page.route.id?.includes(game.toLocaleLowerCase())
                   ? "bg-lime-500 shadow-lg"
-                  : "bg-yellow-500"
+                  : "bg-pb-yellow"
               }
             `}
             href="/games/{game.toLowerCase()}/demo"

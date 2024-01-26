@@ -16,6 +16,11 @@
   onMount(loginAndConnect);
 </script>
 
+<svelte:head>
+  <title>Puzzle Bets | Welcome</title>
+  <meta name="description" content="Solve puzzles with friends" />
+</svelte:head>
+
 <div class="flex flex-col gap-6 items-center justify-center flex-grow">
   <div class="w-[60px] flex jutify-center">
     <div class="w-[100px]"></div>

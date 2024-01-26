@@ -39,11 +39,6 @@
   );
 </script>
 
-<svelte:head>
-  <title>Puzzle Bets: {$page}</title>
-  <meta name="description" content="Solve puzzles with friends" />
-</svelte:head>
-
 <div class="flex flex-col flex-grow gap-4">
   <GameHeader {gameType} {gameId} />
 

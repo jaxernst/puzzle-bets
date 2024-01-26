@@ -41,7 +41,7 @@
 </script>
 
 <div class="font-mono text-gray-100">
-  <span class="text-lime-400">{activeGames.length}</span> Active Games
+  <span class="text-lime-400">{activeGames.length}</span> Live Games
 </div>
 {#if activeGames.length}
   <div class="flex overflow-auto gap-1 no-scrollbar items-center">

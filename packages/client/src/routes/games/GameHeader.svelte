@@ -40,7 +40,7 @@
         class="bg-lime-500 rounded-full px-2 py-1 font-semibold"
         on:click={() => (showNewGameModal = true)}
       >
-        Start new game
+        Start live game
       </button>
     {/if}
   </div>

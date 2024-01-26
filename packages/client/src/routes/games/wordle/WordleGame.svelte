@@ -150,7 +150,7 @@
 
   <div class={`controls ${!gameOver ? "controls-playing" : ""}`}>
     {#if won}
-      <p>You solvedF it!</p>
+      <p>You solved it!</p>
     {:else if data.answers.length >= 6}
       <p>the answer was "{data.answer}"!</p>
       <!--

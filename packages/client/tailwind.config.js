@@ -5,7 +5,7 @@ export default {
     extend: {
       colors: {
         "off-black": "#3e3e3e",
-        "pb-yellow": "#EFCD1A",
+        "pb-yellow": "#EACB28",
       },
     },
   },

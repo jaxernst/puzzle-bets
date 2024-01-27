@@ -72,4 +72,8 @@ export class Game {
   toString() {
     return `${this.index}-${this.guesses.join(" ")}-${this.answers.join(" ")}`;
   }
+
+  won() {
+    return this.answers.at(-1) === "xxxxx";
+  }
 }

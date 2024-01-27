@@ -9,9 +9,16 @@ import {
   getComponentValue,
   type Entity,
 } from "@latticexyz/recs";
-import { GameStatus, gameNumberToType, type Game } from "$lib/types";
+import {
+  GameStatus,
+  gameNumberToType,
+  type Game,
+  type StartedGame,
+  type EvmAddress,
+} from "$lib/types";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
 import type { SetupNetworkResult } from "./mud/setupNetwork";
+import { systemTimestamp, timeRemaining } from "./util";
 
 export const userGames = derived([mud, user], ([$mud, $user]) => {
   if (!$mud || !$mud.ready || !$user) return [];
@@ -36,13 +43,89 @@ export const userGames = derived([mud, user], ([$mud, $user]) => {
 });
 
 export const getGame = derived(mud, ($mud) => {
-  return (gameId: Entity) => {
-    if (!$mud?.ready) return;
-    if (!getComponentValue($mud.components.GameType, gameId)) return;
+  return <T extends boolean>(
+    gameId: Entity,
+    opts?: { expectStarted?: boolean }
+  ) => {
+    if (!$mud?.ready) return undefined;
+    if (!getComponentValue($mud.components.GameType, gameId)) return undefined;
 
-    return gameIdToGame(gameId, $mud.components);
+    const game = gameIdToGame(gameId, $mud.components);
+
+    if (opts?.expectStarted && !game.startTime) {
+      throw new Error("Game not started");
+    }
+
+    return game;
   };
 });
+
+export type LiveStatus = {
+  gameId: Entity;
+  status: GameStatus;
+  submissionTimeLeft?: number;
+  inviteTimeLeft?: number;
+};
+
+/**
+ * Get an auto-updating game status store with countdown timers for invite deadlines
+ * and puzzle submission deadlines
+ 
+ * @notice Game status will auto update after the submission window
+ * closes, even though the smart contract state will not update until either
+ * user claims the pot
+ **/
+export function liveGameStatus(initialGameState: Game) {
+  const gameId = initialGameState.id;
+  const submissionWindow = initialGameState.submissionWindow;
+  const gameInviteExpiration = initialGameState.inviteExpiration;
+
+  // Can be undefined, but will be set once the game starts
+  let gameStartTime = initialGameState.startTime;
+
+  const store = writable<LiveStatus>({
+    gameId,
+    status: initialGameState.status,
+    submissionTimeLeft: undefined,
+    inviteTimeLeft: undefined,
+  });
+
+  // Listen for status updates to the onchain game state
+  const unsubscribe = mud.subscribe(($mud) => {
+    if (!$mud?.ready) return undefined;
+
+    const game = gameIdToGame(gameId, $mud.components);
+    gameStartTime = game.startTime;
+    store.update((g) => ({ ...g, status: game.status }));
+  });
+
+  // Decrement timers and mark game as complete when time runs out
+  const clearTimer = setInterval(() => {
+    store.update((g) => {
+      if (g.status === GameStatus.Pending) {
+        return { ...g, inviteTimeLeft: timeRemaining(gameInviteExpiration) };
+      } else if (g.status === GameStatus.Active) {
+        if (!gameStartTime) throw new Error("Invariant error");
+
+        const timeLeft = timeRemaining(
+          Number(gameStartTime) + submissionWindow
+        );
+
+        if (timeLeft === 0) {
+          // Final game state, clear all subscriptions + timers
+          unsubscribe();
+          clearInterval(clearTimer);
+          return { ...g, submissionTimeLeft: 0, status: GameStatus.Complete };
+        }
+
+        return { ...g, submissionTimeLeft: timeLeft };
+      }
+      return g;
+    });
+  }, 1000);
+
+  return store;
+}
 
 const gameIdToGame = (
   gameId: Entity,
@@ -53,8 +136,13 @@ const gameIdToGame = (
       getComponentValueStrict(mudComponents.GameType, gameId).value
     ];
 
-  const p1 = getComponentValueStrict(mudComponents.Player1, gameId).value;
-  const p2 = getComponentValue(mudComponents.Player2, gameId)?.value;
+  const p1 = getComponentValueStrict(mudComponents.Player1, gameId)
+    .value as EvmAddress;
+
+  const p2 = getComponentValue(mudComponents.Player2, gameId)?.value as
+    | EvmAddress
+    | undefined;
+
   const status = getComponentValueStrict(mudComponents.GameStatus, gameId)
     .value as GameStatus;
 
@@ -86,9 +174,9 @@ const gameIdToGame = (
     id: gameId,
     type: gameType,
     status,
-    betAmount,
     p1,
     p2,
+    betAmount,
     startTime,
     submissionWindow,
     inviteExpiration,

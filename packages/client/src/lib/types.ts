@@ -7,10 +7,23 @@ export type Game = {
   type: GameType;
   status: GameStatus;
   p1: EvmAddress;
+  p2?: EvmAddress;
+  betAmount?: bigint;
+  startTime?: bigint;
+  submissionWindow: number;
+  inviteExpiration: bigint;
+};
+
+export type StartedGame = {
+  id: Entity;
+  type: GameType;
+  status: GameStatus.Active | GameStatus.Complete;
+  p1: EvmAddress;
   p2: EvmAddress;
-  gameType: GameType;
-  duration: number;
-  betAmount?: number;
+  betAmount: bigint;
+  startTime: bigint;
+  submissionWindow: number;
+  inviteExpiration: bigint;
 };
 
 export type GameType = "wordle" | "tradle";

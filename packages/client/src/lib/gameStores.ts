@@ -60,6 +60,22 @@ export const getGame = derived(mud, ($mud) => {
   };
 });
 
+export const userSolvedGame = derived([mud, user], ([$mud, $user]) => {
+  return (gameId: Entity) => {
+    if (!$mud?.ready || !$user) return false;
+
+    const solved = getComponentValue(
+      $mud.components.Solved,
+      encodeEntity(
+        { gameId: "bytes32", player: "address" },
+        { gameId: gameId as `0x${string}`, player: $user }
+      )
+    );
+
+    return solved?.value ?? false;
+  };
+});
+
 export type LiveStatus = {
   gameId: Entity;
   status: GameStatus;

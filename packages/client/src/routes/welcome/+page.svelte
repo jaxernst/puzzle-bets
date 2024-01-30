@@ -13,7 +13,7 @@
     await mud.setup(wallet);
   };
 
-  onMount(loginAndConnect);
+  // onMount(loginAndConnect);
 </script>
 
 <svelte:head>

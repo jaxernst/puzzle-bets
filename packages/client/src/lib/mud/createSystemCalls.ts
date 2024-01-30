@@ -42,8 +42,16 @@ export function createSystemCalls({
     await waitForTransaction(tx);
   };
 
+  const submitSolution = async (gameId: Entity, solutionSignature: string) => {
+    const tx = await worldContract.write.submitSolution([
+      gameId as `0x${string}`,
+    ]);
+    await waitForTransaction(tx);
+  };
+
   return {
     newGame,
     joinGame,
+    submitSolution,
   };
 }

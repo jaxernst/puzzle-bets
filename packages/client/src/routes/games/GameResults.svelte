@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getGame } from "$lib/gameStores";
+  import { getGame, liveGameStatus, userSolvedGame } from "$lib/gameStores";
   import { user } from "$lib/mud/mudStore";
   import type { StartedGame } from "$lib/types";
   import { formatTime, shortenAddress } from "$lib/util";
@@ -12,6 +12,8 @@
     | StartedGame
     | undefined;
 
+  $: liveStatus = liveGameStatus(gameId);
+
   let timeLeft: number | null = null;
   onMount(() => {
     if (!(game?.startTime && game.submissionWindow)) return;
@@ -21,11 +23,22 @@
     timeLeft = Math.max(0, end - now);
   });
 
-  let p1Solved = false;
-  let p2Solved = true;
+  $: p1Solved = $userSolvedGame(gameId, game?.p1);
+  $: p2Solved = $userSolvedGame(gameId, game?.p2);
+
+  $: p1Results = p1Solved
+    ? "✅"
+    : ($liveStatus?.submissionTimeLeft ?? 0) > 0
+      ? "(pending)"
+      : "❌";
+
+  $: p2Results = p2Solved
+    ? "✅"
+    : ($liveStatus?.submissionTimeLeft ?? 0) > 0
+      ? "(pending)"
+      : "❌";
+
   let gameOutcome: "won" | "tied" | "lost" | null = "won";
-  $: if (timeLeft === 0) {
-  }
 </script>
 
 <div class="bg-gray-600 p-5 rounded-xl flex flex-col gap-2 max-w-[450px]">
@@ -33,13 +46,15 @@
     {#if timeLeft > 0}
       {formatTime(timeLeft)}
     {:else}
-      <div class="flex flex-col gap-2 font-semibold">
-        <div class="text-lime-500">Game #{parseInt(gameId, 16)} results:</div>
-        <div class="grid grid-cols-2 gap-2 p-1">
+      <div class="flex flex-col gap-4 font-semibold">
+        <div class="text-lime-500">Game #{parseInt(gameId, 16)} Results</div>
+        <div
+          class="grid grid-cols-2 gap-2 p-1 justify-center w-fit self-center"
+        >
           <div>{shortenAddress(game.p1)}</div>
-          <div>{p1Solved ? "✅" : "❌"}</div>
+          <div class="justify-self-end">{p1Results}</div>
           <div>{shortenAddress(game.p2)}</div>
-          <div>{p2Solved ? "✅" : "❌"}</div>
+          <div class="justify-self-end">{p2Results}</div>
         </div>
         <div class="p-1">
           {#if gameOutcome}

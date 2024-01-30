@@ -31,7 +31,7 @@
 
   let submitting = false;
   let submitError: null | string = null;
-  $: submitted = gameId && $userSolvedGame(gameId);
+  $: submitted = gameId && $userSolvedGame(gameId, $user);
   const verifyAndSubmitSolution = async () => {
     if (!gameId) return;
 
@@ -72,6 +72,11 @@
   }
 
   $: console.log($liveStatus);
+
+  $: canViewResult =
+    $liveStatus?.status === GameStatus.Complete ||
+    $liveStatus?.submissionTimeLeft === 0 ||
+    submitted;
 </script>
 
 <Modal
@@ -119,36 +124,30 @@
         >
           Start live game
         </button>
-      {:else if $liveStatus?.status}
-        {#if $liveStatus?.status === GameStatus.Complete}
-          <button
-            on:click={() => {
-              showResultsModal = true;
-            }}
-            class="bg-lime-500 rounded-full px-2 py-1 font-semibold"
-          >
-            View Results + Claim
-          </button>
-        {:else if $liveStatus.status && $liveStatus?.status === GameStatus.Active}
-          {#if !submitted}
-            <button
-              class={`${
-                submitError ? "bg-red-500 italicx" : "bg-lime-500"
-              } rounded-full px-2 py-1 font-semibold min-w-[70px] flex justify-center transition-all`}
-              on:click={verifyAndSubmitSolution}
-            >
-              {#if submitting}
-                <DotLoader />
-              {:else if submitError}
-                {submitError}
-              {:else}
-                Submit
-              {/if}
-            </button>
+      {:else if canViewResult}
+        <button
+          on:click={() => {
+            showResultsModal = true;
+          }}
+          class="bg-lime-500 rounded-full px-2 py-1 font-semibold"
+        >
+          View Results + Claim
+        </button>
+      {:else}
+        <button
+          class={`${
+            submitError ? "bg-red-500 italicx" : "bg-lime-500"
+          } rounded-full px-2 py-1 font-semibold min-w-[70px] flex justify-center transition-all`}
+          on:click={verifyAndSubmitSolution}
+        >
+          {#if submitting}
+            <DotLoader />
+          {:else if submitError}
+            {submitError}
           {:else}
-            <div class="text-lime-500 font-bold">Solution Received!</div>
+            Submit
           {/if}
-        {/if}
+        </button>
       {/if}
     </div>
   </div>

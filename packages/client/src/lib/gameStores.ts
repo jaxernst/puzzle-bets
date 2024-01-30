@@ -43,10 +43,7 @@ export const userGames = derived([mud, user], ([$mud, $user]) => {
 });
 
 export const getGame = derived(mud, ($mud) => {
-  return <T extends boolean>(
-    gameId: Entity,
-    opts?: { expectStarted?: boolean }
-  ) => {
+  return (gameId: Entity, opts?: { expectStarted?: boolean }) => {
     if (!$mud?.ready) return undefined;
     if (!getComponentValue($mud.components.GameType, gameId)) return undefined;
 
@@ -60,15 +57,15 @@ export const getGame = derived(mud, ($mud) => {
   };
 });
 
-export const userSolvedGame = derived([mud, user], ([$mud, $user]) => {
-  return (gameId: Entity) => {
-    if (!$mud?.ready || !$user) return false;
+export const userSolvedGame = derived(mud, ($mud) => {
+  return (gameId: Entity, user: EvmAddress | undefined) => {
+    if (!$mud?.ready || !user) return false;
 
     const solved = getComponentValue(
       $mud.components.Solved,
       encodeEntity(
         { gameId: "bytes32", player: "address" },
-        { gameId: gameId as `0x${string}`, player: $user }
+        { gameId: gameId as `0x${string}`, player: user }
       )
     );
 

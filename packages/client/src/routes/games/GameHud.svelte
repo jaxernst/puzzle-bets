@@ -6,6 +6,7 @@
   import { formatEther } from "viem";
   import { ethPrice } from "$lib/ethPrice";
   import { onMount } from "svelte";
+  import { user } from "$lib/mud/mudStore";
 
   export let gameId: Entity;
 
@@ -24,10 +25,18 @@
     0: () => "",
     1: () => "Invite Pending",
     2: () => {
-      if ($userSolvedGame(gameId)) {
-        return "Solution Received!";
-      } else {
+      if ($userSolvedGame(gameId, $user)) {
+        if (dueIn > 0) {
+          return `Solution Received! Check back in ${formatTime(
+            dueIn
+          )} to claim rewards`;
+        } else {
+          return "Solution received!";
+        }
+      } else if (dueIn > 0) {
         return `Puzzle due in ${formatTime(dueIn)}`;
+      } else {
+        return "Time's up. No solution received";
       }
     },
     3: () => "Completed",

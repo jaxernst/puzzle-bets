@@ -91,61 +91,73 @@ export type LiveStatus = {
  * closes, even though the smart contract state will not update until either
  * user claims the pot
  **/
-export function liveGameStatus(initialGameState: Game) {
-  const gameId = initialGameState.id;
-  const submissionWindow = initialGameState.submissionWindow;
-  const gameInviteExpiration = initialGameState.inviteExpiration;
+export function liveGameStatus(gameId: Entity) {
+  const store = writable<LiveStatus | null>(null);
 
-  // Can be undefined, but will be set once the game starts
-  let gameStartTime = initialGameState.startTime;
+  // Decrement timers and mark game as complete when time runs out
+  const updateStatusTimers = (
+    { inviteExpiration, submissionWindow, startTime }: Game,
+    onGameFinalized: () => void
+  ) => {
+    store.update((g) => {
+      if (!g) return g;
 
-  const store = writable<LiveStatus>({
-    gameId,
-    status: initialGameState.status,
-    submissionTimeLeft: undefined,
-    inviteTimeLeft: undefined,
-  });
+      if (g.status === GameStatus.Pending) {
+        return { ...g, inviteTimeLeft: timeRemaining(inviteExpiration) };
+      } else if (g.status === GameStatus.Active) {
+        if (!startTime) throw new Error("Invariant error");
+
+        const timeLeft = timeRemaining(Number(startTime) + submissionWindow);
+
+        if (timeLeft === 0) {
+          onGameFinalized();
+          return { ...g, submissionTimeLeft: 0 };
+        }
+
+        return { ...g, submissionTimeLeft: timeLeft };
+      } else if (g.status === GameStatus.Complete) {
+        onGameFinalized();
+      }
+
+      return g;
+    });
+  };
+
+  let timersStarted = false;
 
   // Listen for status updates to the onchain game state
   const unsubscribe = mud.subscribe(($mud) => {
     if (!$mud?.ready) return undefined;
 
     const game = gameIdToGame(gameId, $mud.components);
-    gameStartTime = game.startTime;
-    store.update((g) => ({ ...g, status: game.status }));
-  });
 
-  // Decrement timers and mark game as complete when time runs out
-  const updateStatusTimers = (onGameFinalized: () => void) => {
-    store.update((g) => {
-      if (g.status === GameStatus.Pending) {
-        return { ...g, inviteTimeLeft: timeRemaining(gameInviteExpiration) };
-      } else if (g.status === GameStatus.Active) {
-        if (!gameStartTime) throw new Error("Invariant error");
+    const startTimers = (game: Game) => {
+      updateStatusTimers(game, () => {});
+      const clearTimer = setInterval(() => {
+        updateStatusTimers(game, () => {
+          clearInterval(clearTimer);
+          unsubscribe();
+        });
+      }, 1000);
+    };
 
-        const timeLeft = timeRemaining(
-          Number(gameStartTime) + submissionWindow
-        );
-
-        if (timeLeft === 0) {
-          onGameFinalized();
-          return { ...g, submissionTimeLeft: 0, status: GameStatus.Complete };
-        }
-
-        return { ...g, submissionTimeLeft: timeLeft };
+    store.update((state) => {
+      if (!state) {
+        return {
+          gameId,
+          status: game.status,
+          submissionTimeLeft: undefined,
+          inviteTimeLeft: undefined,
+        };
+      } else {
+        return { ...state, status: game.status };
       }
-      return g;
     });
-  };
 
-  updateStatusTimers(() => {});
-
-  const clearTimer = setInterval(() => {
-    updateStatusTimers(() => {
-      clearInterval(clearTimer);
-      unsubscribe();
-    });
-  }, 1000);
+    if (!timersStarted) {
+      startTimers(game);
+    }
+  });
 
   return store;
 }

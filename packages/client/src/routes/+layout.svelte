@@ -1,17 +1,9 @@
 <script>
-  import { userGames } from "$lib/gameStores";
   import { page } from "$app/stores";
-  import WalletConnector, {
-    loginAndConnect,
-  } from "$lib/components/WalletConnector.svelte";
+  import WalletConnector from "$lib/components/WalletConnector.svelte";
   import ActiveGames from "./ActiveGames.svelte";
   import ConnectUser from "./UserHeader.svelte";
   import "./styles.css";
-  import { onMount } from "svelte";
-  import { userWallet } from "$lib/mud/connectWallet";
-  import { goto } from "$app/navigation";
-  import { walletActions } from "viem";
-  import { mud } from "$lib/mud/mudStore";
 </script>
 
 <WalletConnector />
@@ -33,7 +25,7 @@
             href="/games/{game.toLowerCase()}/demo"
           >
             {game}
-            <span class="text-xl"> + </span>
+            <span class="text-xl"></span>
           </a>
         {/each}
       </div>

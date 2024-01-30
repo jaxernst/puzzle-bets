@@ -116,7 +116,7 @@ export function liveGameStatus(initialGameState: Game) {
   });
 
   // Decrement timers and mark game as complete when time runs out
-  const clearTimer = setInterval(() => {
+  const updateStatusTimers = (onGameFinalized: () => void) => {
     store.update((g) => {
       if (g.status === GameStatus.Pending) {
         return { ...g, inviteTimeLeft: timeRemaining(gameInviteExpiration) };
@@ -128,15 +128,22 @@ export function liveGameStatus(initialGameState: Game) {
         );
 
         if (timeLeft === 0) {
-          // Final game state, clear all subscriptions + timers
-          unsubscribe();
-          clearInterval(clearTimer);
+          onGameFinalized();
           return { ...g, submissionTimeLeft: 0, status: GameStatus.Complete };
         }
 
         return { ...g, submissionTimeLeft: timeLeft };
       }
       return g;
+    });
+  };
+
+  updateStatusTimers(() => {});
+
+  const clearTimer = setInterval(() => {
+    updateStatusTimers(() => {
+      clearInterval(clearTimer);
+      unsubscribe();
     });
   }, 1000);
 

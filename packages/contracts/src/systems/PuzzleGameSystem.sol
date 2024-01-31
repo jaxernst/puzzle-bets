@@ -2,7 +2,7 @@
 pragma solidity >=0.8.21;
 
 import { System } from "@latticexyz/world/src/System.sol";
-import { Deposit, GameType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration } from "../codegen/index.sol";
+import { Balance, BuyIn, GameType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration } from "../codegen/index.sol";
 import { Status, Game } from "../codegen/common.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 
@@ -23,12 +23,13 @@ contract PuzzleGameSystem is System {
     InviteExpiration.set(gameId, inviteExpirationTimestamp);
 
     Player1.set(gameId, creator);
-    Deposit.set(gameId, creator, betAmount);
+    Balance.set(gameId, creator, betAmount);
+    BuyIn.set(gameId, betAmount);
   }
 
   function joinGame(bytes32 gameId) public payable {
     Status status = GameStatus.get(gameId);
-    uint betAmount = Deposit.get(gameId, _msgSender());
+    uint betAmount = Balance.get(gameId, _msgSender());
 
     require(status == Status.Pending, "Game is not pending");
     require(InviteExpiration.get(gameId) > block.timestamp, "Invite expired");
@@ -37,7 +38,7 @@ contract PuzzleGameSystem is System {
     GameStatus.set(gameId, Status.Active);
     GameStartTime.set(gameId, block.timestamp);
 
-    Deposit.set(gameId, _msgSender(), betAmount);
+    Balance.set(gameId, _msgSender(), betAmount);
     Player2.set(gameId, _msgSender());
   }
 
@@ -90,17 +91,17 @@ contract PuzzleGameSystem is System {
   }
 
   function _payWinner(bytes32 gameId, address winner, address loser) private {
-    uint depositWinner = Deposit.get(gameId, winner);
-    uint depositLoser = Deposit.get(gameId, loser);
-    Deposit.set(gameId, winner, 0);
-    Deposit.set(gameId, loser, 0);
+    uint depositWinner = Balance.get(gameId, winner);
+    uint depositLoser = Balance.get(gameId, loser);
+    Balance.set(gameId, winner, 0);
+    Balance.set(gameId, loser, 0);
     payable(winner).transfer(depositLoser + depositWinner);
   }
 
   function _returnDeposit(bytes32 gameId) private {
     address me = _msgSender();
-    uint deposit = Deposit.get(gameId, me);
-    Deposit.set(gameId, me, 0);
+    uint deposit = Balance.get(gameId, me);
+    Balance.set(gameId, me, 0);
     payable(me).transfer(deposit);
   }
 }

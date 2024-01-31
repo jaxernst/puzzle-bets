@@ -8,6 +8,7 @@ export default mudConfig({
   tables: {
     GameType: "Game",
     GameStatus: "Status",
+    BuyIn: "uint256",
     SubmissionWindow: "uint32",
     InviteExpiration: "uint256",
     GameStartTime: "uint256",
@@ -21,7 +22,7 @@ export default mudConfig({
       },
       valueSchema: "bool",
     },
-    Deposit: {
+    Balance: {
       keySchema: {
         gameId: "bytes32",
         player: "address",

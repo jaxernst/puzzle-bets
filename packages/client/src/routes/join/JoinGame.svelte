@@ -17,6 +17,7 @@
   import { createEventDispatcher, onMount } from "svelte";
   import { slide } from "svelte/transition";
   import { cubicInOut } from "svelte/easing";
+  import { formatEther } from "viem";
 
   export let gameId: Entity;
 
@@ -49,57 +50,59 @@
   );
 </script>
 
-<div class="flex flex-col max-w-[450px]">
-  <div class="font-semibold">
-    Join <span class="text-lime-500">{capitalized(gameType)}</span> Game #{parseInt(
-      gameId,
-      16
-    )}
-  </div>
-
-  {#if inviteExpiry}
-    <div
-      class="italic text-gray-400 whitespace-nowrap min-w-[270px]"
-      in:slide={{ axis: "x", easing: cubicInOut }}
-    >
-      Invite expires in {formatTime(inviteExpiry)}...
+{#if game && gameType}
+  <div class="flex flex-col max-w-[450px]">
+    <div class="font-semibold">
+      Join <span class="text-lime-500">{capitalized(gameType)}</span> Game #{parseInt(
+        gameId,
+        16
+      )}
     </div>
-  {/if}
 
-  <div class="text-sm text-gray-100 p-1">
-    <div class="flex gap-4 py-4">
-      <div class="flex flex-col gap-1 text-gray-400">
-        <div class="">Game Creator</div>
-        <div class="">Bet Amount</div>
-        <div class="">Submission Window</div>
+    {#if inviteExpiry}
+      <div
+        class="italic text-gray-400 whitespace-nowrap min-w-[270px]"
+        in:slide={{ axis: "x", easing: cubicInOut }}
+      >
+        Invite expires in {formatTime(inviteExpiry)}...
       </div>
-      <div class="flex flex-col gap-1 text-gray-100">
-        <div class="">{shortenAddress(game.p1)}</div>
-        <div class="">
-          {#if $ethPrice}
-            ${Number(game.betAmount) * $ethPrice}
-          {:else}
-            {Number(game.betAmount) * $ethPrice} eth
-          {/if}
+    {/if}
+
+    <div class="text-sm text-gray-100 p-1">
+      <div class="flex gap-4 py-4">
+        <div class="flex flex-col gap-1 text-gray-400">
+          <div class="">Game Creator</div>
+          <div class="">Bet Amount</div>
+          <div class="">Submission Window</div>
         </div>
-        <div class="">
-          {Math.round(game.submissionWindow / 60)}<span>{" "}minutes</span>
+        <div class="flex flex-col gap-1 text-gray-100">
+          <div class="">{shortenAddress(game.p1)}</div>
+          <div class="">
+            {#if $ethPrice}
+              ${Number(formatEther(game.buyInAmount)) * $ethPrice}
+            {:else}
+              {formatEther(game.buyInAmount)} eth
+            {/if}
+          </div>
+          <div class="">
+            {Math.round(game.submissionWindow / 60)}<span>{" "}minutes</span>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="px-4 flex justify-center mt-2">
-    <button
-      in:slide={{ axis: "x" }}
-      class="bg-lime-500 text-white rounded-lg p-2 whitespace-nowrap hover:bg-lime-400 hover:shadow transition-all"
-      on:click={joinGame}
-    >
-      {#if joinGameLoading}
-        <DotLoader />
-      {:else}
-        Join to Reveal Puzzle
-      {/if}
-    </button>
+    <div class="px-4 flex justify-center mt-2">
+      <button
+        in:slide={{ axis: "x" }}
+        class="bg-lime-500 text-white rounded-lg p-2 whitespace-nowrap hover:bg-lime-400 hover:shadow transition-all"
+        on:click={joinGame}
+      >
+        {#if joinGameLoading}
+          <DotLoader />
+        {:else}
+          Join to Reveal Puzzle
+        {/if}
+      </button>
+    </div>
   </div>
-</div>
+{/if}

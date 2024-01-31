@@ -16,7 +16,7 @@
 
   const liveStatus = liveGameStatus(gameId);
 
-  $: betAmountEth = Number(formatEther(game?.betAmount ?? 0n));
+  $: betAmountEth = Number(formatEther(game?.buyInAmount ?? 0n));
   $: betAmountUsd = betAmountEth * $ethPrice;
 
   $: dueIn = $liveStatus?.submissionTimeLeft ?? 0;
@@ -56,7 +56,7 @@
       <div class="text-gray-300">
         ${betAmountUsd}
         {@html "&#9670"}
-        {formatEther(game?.betAmount)} eth
+        {formatEther(game?.buyInAmount)} eth
       </div>
       <div class="text-gray-300">
         {#if game.opponent}

@@ -80,7 +80,6 @@
   const dispatch = createEventDispatcher();
 
   $: if (won) {
-    console.log("dispatch gameOver");
     dispatch("gameOver", { won: true });
   }
 

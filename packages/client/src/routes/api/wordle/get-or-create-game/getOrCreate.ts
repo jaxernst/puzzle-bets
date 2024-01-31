@@ -9,7 +9,6 @@ export const getOrCreateDemo = async (gameId: string) => {
     return new Game(gameState);
   } else {
     const game = new Game();
-    console.log(game.toString());
     await supabaseGameStore.setGame(game.toString(), "wordle", gameId);
     return game;
   }

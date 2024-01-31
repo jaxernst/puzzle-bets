@@ -178,14 +178,28 @@ const gameIdToGame = (
   const status = getComponentValueStrict(mudComponents.GameStatus, gameId)
     .value as GameStatus;
 
-  const betAmount =
+  const buyInAmount =
+    getComponentValue(mudComponents.BuyIn, gameId)?.value ?? 0n;
+
+  const p1Balance =
     getComponentValue(
-      mudComponents.Deposit,
+      mudComponents.Balance,
       encodeEntity(
         { gameId: "bytes32", player: "address" },
         { gameId: gameId as `0x${string}`, player: p1 as `0x${string}` }
       )
     )?.value ?? 0n;
+
+  const p2Balance =
+    (p2 &&
+      getComponentValue(
+        mudComponents.Balance,
+        encodeEntity(
+          { gameId: "bytes32", player: "address" },
+          { gameId: gameId as `0x${string}`, player: p2 as `0x${string}` }
+        )
+      )?.value) ??
+    0n;
 
   const startTime = getComponentValue(
     mudComponents.GameStartTime,
@@ -208,7 +222,9 @@ const gameIdToGame = (
     status,
     p1,
     p2,
-    betAmount,
+    buyInAmount,
+    p1Balance,
+    p2Balance,
     startTime,
     submissionWindow,
     inviteExpiration,

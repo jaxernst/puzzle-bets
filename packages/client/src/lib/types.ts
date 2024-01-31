@@ -20,7 +20,9 @@ export type StartedGame = {
   status: GameStatus.Active | GameStatus.Complete;
   p1: EvmAddress;
   p2: EvmAddress;
-  betAmount: bigint;
+  buyInAmount: bigint;
+  p1Balance: bigint;
+  p2Balance: bigint;
   startTime: bigint;
   submissionWindow: number;
   inviteExpiration: bigint;

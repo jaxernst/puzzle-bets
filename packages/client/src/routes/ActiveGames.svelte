@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { userGames } from "$lib/gameStores";
+  import { getGame, userGames } from "$lib/gameStores";
   import { getComponentValueStrict, type Entity } from "@latticexyz/recs";
   import { type GameType, GameStatus } from "$lib/types";
 
@@ -26,16 +26,7 @@
   };
 
   $: betAmount = (id: string) => {
-    if (!$user) throw "Invariant error";
-
-    const weiValue = getComponentValueStrict(
-      $mud.components.Deposit,
-      encodeEntity(
-        { gameId: "bytes32", player: "address" },
-        { gameId: id as `0x${string}`, player: $user }
-      )
-    ).value;
-
+    const weiValue = $getGame(id as Entity)?.buyInAmount ?? 0n;
     return formatAsDollar(Number(formatEther(weiValue * BigInt(ethPrice))));
   };
 </script>

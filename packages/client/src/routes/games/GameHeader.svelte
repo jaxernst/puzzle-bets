@@ -71,8 +71,6 @@
     }, 3000);
   }
 
-  $: console.log($liveStatus);
-
   $: canViewResult =
     $liveStatus?.status === GameStatus.Complete ||
     $liveStatus?.submissionTimeLeft === 0 ||

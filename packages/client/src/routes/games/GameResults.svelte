@@ -3,18 +3,19 @@
   import { ethPrice } from "$lib/ethPrice";
   import { getGame, liveGameStatus, userSolvedGame } from "$lib/gameStores";
   import { user, mud } from "$lib/mud/mudStore";
-  import type { StartedGame } from "$lib/types";
+  import { GameStatus, type StartedGame } from "$lib/types";
   import { capitalized, formatTime, shortenAddress } from "$lib/util";
   import type { Entity } from "@latticexyz/recs";
-  import { onMount } from "svelte";
   import { slide } from "svelte/transition";
   import { formatEther } from "viem";
 
   export let gameId: Entity;
+  export let onClaimed = () => {};
 
   $: game = $getGame(gameId, { expectStarted: true }) as StartedGame;
 
-  $: potSizeUsd = Number(formatEther(game.betAmount)) * $ethPrice;
+  $: potSizeUsd = Number(formatEther(game.buyInAmount * 2n)) * $ethPrice;
+
   $: liveStatus = liveGameStatus(gameId);
 
   $: p1Solved = $userSolvedGame(gameId, game?.p1);
@@ -40,6 +41,13 @@
     return null;
   })();
 
+  $: userBalance = $user === game.p1 ? game.p1Balance : game.p2Balance;
+
+  $: claimed =
+    gameOutcome !== "lost" &&
+    game.status === GameStatus.Complete &&
+    userBalance === 0n;
+
   let claimLoading = false;
   let claimError: string | null = null;
   $: claim = async () => {
@@ -47,6 +55,7 @@
     claimError = null;
     try {
       await $mud.systemCalls.claim(gameId);
+      onClaimed();
     } catch (e: any) {
       claimError = e.shortMessage ?? "error occurred";
     } finally {
@@ -74,18 +83,21 @@
     <div class="flex justify-center">
       {#if gameActive}
         <div class="text-gray-400 text-sm italic">
-          {formatTime($liveStatus?.submissionTimeLeft ?? 0)} left...
+          {formatTime($liveStatus?.submissionTimeLeft ?? 0)} remaining...
         </div>
       {:else if gameOutcome === "lost"}
         You lost :( Your opponent won the pot
       {:else}
         <button
           class="bg-lime-500 rounded-lg p-2 self-center"
+          disabled={claimed}
           on:click={claim}
           in:slide={{ axis: "x" }}
         >
           {#if claimLoading}
             <DotLoader />
+          {:else if claimed}
+            ${gameOutcome === "won" ? potSizeUsd : potSizeUsd / 2} claimed
           {:else if gameOutcome === "won"}
             You won! Click to claim your winnings
           {:else if gameOutcome === "tied"}

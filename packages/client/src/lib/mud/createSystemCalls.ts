@@ -49,9 +49,15 @@ export function createSystemCalls({
     await waitForTransaction(tx);
   };
 
+  const claim = async (gameId: Entity) => {
+    const tx = await worldContract.write.claim([gameId as `0x${string}`]);
+    await waitForTransaction(tx);
+  };
+
   return {
     newGame,
     joinGame,
     submitSolution,
+    claim,
   };
 }

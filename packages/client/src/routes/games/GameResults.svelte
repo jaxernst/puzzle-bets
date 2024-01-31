@@ -89,7 +89,9 @@
         You lost :( Your opponent won the pot
       {:else}
         <button
-          class="bg-lime-500 rounded-lg p-2 self-center whitespace-nowrap"
+          class={`bg-lime-500 rounded-lg p-2 self-center whitespace-nowrap ${
+            claimed ? "opacity-40" : ""
+          }`}
           disabled={claimed}
           on:click={claim}
           in:slide={{ axis: "x" }}
@@ -97,7 +99,7 @@
           {#if claimLoading}
             <DotLoader />
           {:else if claimed}
-            ${gameOutcome === "won" ? potSizeUsd : potSizeUsd / 2} claimed
+            ${gameOutcome === "won" ? potSizeUsd : potSizeUsd / 2} claimed!
           {:else if gameOutcome === "won"}
             You won! Click to claim your winnings
           {:else if gameOutcome === "tied"}

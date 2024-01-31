@@ -89,7 +89,7 @@
         You lost :( Your opponent won the pot
       {:else}
         <button
-          class="bg-lime-500 rounded-lg p-2 self-center"
+          class="bg-lime-500 rounded-lg p-2 self-center whitespace-nowrap"
           disabled={claimed}
           on:click={claim}
           in:slide={{ axis: "x" }}

@@ -62,4 +62,7 @@
       enterGuess(e.detail.guess);
     }}
   />
+  <div class="w-full text-center text-gray-400">
+    Submit your solution before the deadline
+  </div>
 {/if}

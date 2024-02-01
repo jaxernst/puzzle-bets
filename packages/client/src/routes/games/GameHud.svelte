@@ -44,7 +44,7 @@
 </script>
 
 {#if game}
-  <div class="text-gray-400 font-semibold italic px- mb-4">
+  <div class="text-gray-400 font-semibold italic px-2 mb-4">
     {statusLabels[game.status]()}...
   </div>
   <div class="flex gap-4 items-stretch px-2">

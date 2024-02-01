@@ -1,7 +1,7 @@
 <script>
   import { page } from "$app/stores";
   import WalletConnector from "$lib/components/WalletConnector.svelte";
-  import ActiveGames from "./ActiveGames.svelte";
+  import GameSelector from "./GameSelector.svelte";
   import ConnectUser from "./UserHeader.svelte";
   import "./styles.css";
 </script>
@@ -33,7 +33,7 @@
     <section
       class="flex flex-col gap-2 bg-gray-600 rounded-2xl p-4 shadow-inner"
     >
-      <ActiveGames />
+      <GameSelector />
     </section>
 
     <section

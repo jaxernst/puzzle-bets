@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { mud, user } from "$lib/mud/mudStore";
   import WalletIcon from "$lib/icons/Wallet.svelte";
   import { userWallet } from "$lib/mud/connectWallet";
@@ -6,9 +6,14 @@
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte";
   import Puzzly from "$lib/icons/puzzly.svelte";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
+  import { formatEther } from "viem";
 
-  $: userBalance =
-    $user && $mud.network.publicClient.getBalance({ address: $user });
+  let userBalance: string;
+  $: if ($user && $mud?.ready) {
+    $mud.network.publicClient.getBalance({ address: $user }).then((balance) => {
+      userBalance = formatEther(balance);
+    });
+  }
 
   const loginAndConnect = async () => {
     const wallet = await promptConnectWallet();
@@ -33,14 +38,14 @@
     </div>
   </a>
   <div class="flex gap-3 justify-end items-center">
-    {#await userBalance then balance}
+    {#if userBalance}
       <div class="flex gap-1 items-center">
-        <div class="text-gray-600">{balance}</div>
+        <div class="text-gray-600">{userBalance}</div>
         <div class="fill-gray-600 w-4 h-4">
           <EthSymbol />
         </div>
       </div>
-    {/await}
+    {/if}
     <button class="flex" on:click={() => loginAndConnect()}>
       <div class="w-7 h-7 stroke-off-black">
         <WalletIcon />

@@ -63,7 +63,7 @@
         </div>
       </div>
     {:else}
-      <div class="py-2 flex flex-col flex-grow">
+      <div class="py-2">
         <slot />
       </div>
     {/if}

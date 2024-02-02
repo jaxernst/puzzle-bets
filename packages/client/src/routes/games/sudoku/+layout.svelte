@@ -1,0 +1,5 @@
+<div
+  class="flex-grow flex flex-col justify-center items-center font-mono text-gray-200 pb-12"
+>
+  Coming soon...
+</div>

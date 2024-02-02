@@ -28,11 +28,13 @@ export type StartedGame = {
   inviteExpiration: bigint;
 };
 
-export type GameType = "wordle" | "tradle";
+export type GameType = "wordle" | "tradle" | "crossword" | "sudoku";
 
 export const gameTypeToNumber: Record<GameType, number> = {
   wordle: 0,
   tradle: 1,
+  crossword: 2,
+  sudoku: 3,
 };
 
 export const gameNumberToType: Record<number, GameType> = {

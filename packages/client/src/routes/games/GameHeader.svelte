@@ -17,6 +17,7 @@
   import { readable, writable, type Readable } from "svelte/store";
   import DotLoader from "$lib/components/DotLoader.svelte";
   import { slide } from "svelte/transition";
+  import { SUPPORTED_GAME_TYPES } from "$lib/constants";
 
   export let gameType: GameType;
   export let gameId: Entity | null = null;
@@ -117,7 +118,8 @@
         </button>
       {:else if !gameId}
         <button
-          class="bg-lime-500 rounded-full px-2 py-1 font-semibold"
+          class="bg-lime-500 rounded-full px-2 py-1 font-semibold disabled:opacity-50"
+          disabled={!SUPPORTED_GAME_TYPES.includes(gameType)}
           on:click={() => (showNewGameModal = true)}
         >
           Start live game

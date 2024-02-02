@@ -4,6 +4,7 @@
   import { shortenAddress } from "$lib/util";
   import { get, writable } from "svelte/store";
   import { fade } from "svelte/transition";
+  import Modal from "./Modal.svelte";
 
   const showModal = writable(false);
 
@@ -38,35 +39,31 @@
   };
 </script>
 
-{#if $showModal}
+<Modal show={$showModal} on:close={() => ($showModal = false)}>
   <div
-    class="absolute h-screen w-screen flex justify-center items-center bg-black bg-opacity-20"
+    class="relative z-10 min-w-[200px] min-h-[200px] bg-gray-50 text-cyan-400 flex flex-col gap-2 justify-evenly items-center rounded-lg p-6"
   >
-    <div
-      class="relative z-10 min-w-[200px] min-h-[200px] bg-gray-50 text-cyan-400 flex flex-col gap-2 justify-evenly items-center rounded-lg p-6"
-    >
-      {#if $userWallet}
-        <p transition:fade class={`font-semibold`}>
-          Welcome {shortenAddress($userWallet?.account.address ?? "")}
-        </p>
-      {:else}
-        <div class="font-semibold text-lg text-zinc-400">
-          Sign in to Puzzle Bets
-        </div>
-        <button
-          on:click={connectWallet}
-          class="bg-cyan-400 rounded-full px-2 py-1 text-white font-bold"
-        >
-          Connect
-        </button>
-      {/if}
-
+    {#if $userWallet}
+      <p transition:fade class={`font-semibold`}>
+        Welcome {shortenAddress($userWallet?.account.address ?? "")}
+      </p>
+    {:else}
+      <div class="font-semibold text-lg text-zinc-400">
+        Sign in to Puzzle Bets
+      </div>
       <button
-        class="absolute right-2 top-2 text-zinc-400 font-bold"
-        on:click={() => showModal.set(false)}
+        on:click={connectWallet}
+        class="bg-cyan-400 rounded-full px-2 py-1 text-white font-bold"
       >
-        x
+        Connect
       </button>
-    </div>
+    {/if}
+
+    <button
+      class="absolute right-2 top-2 text-zinc-400 font-bold"
+      on:click={() => showModal.set(false)}
+    >
+      x
+    </button>
   </div>
-{/if}
+</Modal>

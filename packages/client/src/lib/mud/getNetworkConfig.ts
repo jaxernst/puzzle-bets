@@ -4,16 +4,6 @@
  */
 
 /*
- * By default the template just creates a temporary wallet
- * (called a burner wallet) and uses a faucet (on our test net)
- * to get ETH for it.
- *
- * See https://mud.dev/tutorials/minimal/deploy#wallet-managed-address
- * for how to use the user's own address instead.
- */
-import { getBurnerPrivateKey } from "@latticexyz/common";
-
-/*
  * Import the addresses of the World, possibly on multiple chains,
  * from packages/contracts/worlds.json. When the contracts package
  * deploys a new `World`, it updates this file.
@@ -40,10 +30,9 @@ export function getNetworkConfig() {
   const params = new URLSearchParams(""); // window.location.search);
 
   /*
-   * The chain ID is the first item available from this list:
-   * 1. chainId query parameter
-   * 2. chainid query parameter
-   * 3. The VITE_CHAIN_ID environment variable set when the
+   * The chain ID source:
+   * 1. chainId/chainid query parameter
+   * 2. The VITE_CHAIN_ID environment variable set when the
    *    vite dev server was started or client was built
    * 4. The default, 31337 (anvil)
    */

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.21;
+pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
 import { Balance, BuyIn, GameType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration } from "../codegen/index.sol";
@@ -14,7 +14,7 @@ contract PuzzleGameSystem is System {
 
   function newGame(Game gameType, uint32 submissionWindowSeconds, uint inviteExpirationTimestamp) public payable {
     address creator = _msgSender();
-    uint betAmount = msg.value;
+    uint betAmount = _msgValue();
 
     bytes32 gameId = getUniqueEntity();
     GameType.set(gameId, gameType);

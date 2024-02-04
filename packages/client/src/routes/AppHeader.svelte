@@ -7,13 +7,20 @@
   import Puzzly from "$lib/icons/puzzly.svelte";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
   import { formatEther } from "viem";
+  import { onMount } from "svelte";
 
   let userBalance: string;
-  $: if ($user && $mud?.ready) {
-    $mud.network.publicClient.getBalance({ address: $user }).then((balance) => {
-      userBalance = formatEther(balance);
-    });
-  }
+  onMount(() => {
+    setInterval(async () => {
+      if (!$user || !$mud?.ready) return;
+
+      const balance = await $mud.network.publicClient.getBalance({
+        address: $user,
+      });
+
+      userBalance = Number(formatEther(balance)).toFixed(4);
+    }, 4000);
+  });
 
   const loginAndConnect = async () => {
     const wallet = await promptConnectWallet();
@@ -40,7 +47,7 @@
   <div class="flex gap-3 justify-end items-center">
     {#if userBalance}
       <div class="flex gap-1 items-center">
-        <div class="text-gray-600">{userBalance}</div>
+        <div class="text-gray-600 font-mono">{userBalance}</div>
         <div class="fill-gray-600 w-4 h-4">
           <EthSymbol />
         </div>

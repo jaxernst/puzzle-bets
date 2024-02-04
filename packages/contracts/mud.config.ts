@@ -1,6 +1,7 @@
 import { mudConfig } from "@latticexyz/world/register";
 
 export default mudConfig({
+  namespace: "games",
   enums: {
     Status: ["Inactive", "Pending", "Active", "Complete"],
     Game: ["Wordle"],

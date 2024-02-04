@@ -25,7 +25,7 @@ export function createSystemCalls({
       systemTimestamp() + inviteExpirationMinutes * 60
     );
 
-    const tx = await worldContract.write.newGame(
+    const tx = await worldContract.write.games__newGame(
       [
         gameTypeToNumber[gameType],
         submissionWindowMinutes * 60,
@@ -38,19 +38,23 @@ export function createSystemCalls({
   };
 
   const joinGame = async (gameId: Entity) => {
-    const tx = await worldContract.write.joinGame([gameId as `0x${string}`]);
+    const tx = await worldContract.write.games__joinGame([
+      gameId as `0x${string}`,
+    ]);
     await waitForTransaction(tx);
   };
 
   const submitSolution = async (gameId: Entity, solutionSignature: string) => {
-    const tx = await worldContract.write.submitSolution([
+    const tx = await worldContract.write.games__submitSolution([
       gameId as `0x${string}`,
     ]);
     await waitForTransaction(tx);
   };
 
   const claim = async (gameId: Entity) => {
-    const tx = await worldContract.write.claim([gameId as `0x${string}`]);
+    const tx = await worldContract.write.games__claim([
+      gameId as `0x${string}`,
+    ]);
     await waitForTransaction(tx);
   };
 

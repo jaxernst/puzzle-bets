@@ -22,8 +22,8 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 // Import user types
 import { Game } from "./../common.sol";
 
-// Hex below is the result of `WorldResourceIdLib.encode({ namespace: "", name: "GameType", typeId: RESOURCE_TABLE });`
-ResourceId constant _tableId = ResourceId.wrap(0x7462000000000000000000000000000047616d65547970650000000000000000);
+// Hex below is the result of `WorldResourceIdLib.encode({ namespace: "games", name: "GameType", typeId: RESOURCE_TABLE });`
+ResourceId constant _tableId = ResourceId.wrap(0x746267616d657300000000000000000047616d65547970650000000000000000);
 ResourceId constant GameTypeTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(

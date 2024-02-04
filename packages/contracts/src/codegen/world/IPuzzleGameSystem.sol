@@ -10,11 +10,15 @@ import { Game } from "./../common.sol";
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
 interface IPuzzleGameSystem {
-  function newGame(Game gameType, uint32 submissionWindowSeconds, uint inviteExpirationTimestamp) external payable;
+  function games__newGame(
+    Game gameType,
+    uint32 submissionWindowSeconds,
+    uint inviteExpirationTimestamp
+  ) external payable;
 
-  function joinGame(bytes32 gameId) external payable;
+  function games__joinGame(bytes32 gameId) external payable;
 
-  function submitSolution(bytes32 gameId) external;
+  function games__submitSolution(bytes32 gameId) external;
 
-  function claim(bytes32 gameId) external;
+  function games__claim(bytes32 gameId) external;
 }

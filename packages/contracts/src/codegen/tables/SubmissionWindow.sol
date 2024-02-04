@@ -19,8 +19,8 @@ import { Schema, SchemaLib } from "@latticexyz/store/src/Schema.sol";
 import { PackedCounter, PackedCounterLib } from "@latticexyz/store/src/PackedCounter.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
-// Hex below is the result of `WorldResourceIdLib.encode({ namespace: "", name: "SubmissionWindow", typeId: RESOURCE_TABLE });`
-ResourceId constant _tableId = ResourceId.wrap(0x746200000000000000000000000000005375626d697373696f6e57696e646f77);
+// Hex below is the result of `WorldResourceIdLib.encode({ namespace: "games", name: "SubmissionWindow", typeId: RESOURCE_TABLE });`
+ResourceId constant _tableId = ResourceId.wrap(0x746267616d65730000000000000000005375626d697373696f6e57696e646f77);
 ResourceId constant SubmissionWindowTableId = _tableId;
 
 FieldLayout constant _fieldLayout = FieldLayout.wrap(

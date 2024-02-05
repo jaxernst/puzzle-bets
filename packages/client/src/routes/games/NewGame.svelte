@@ -34,7 +34,6 @@
     createGameError = null;
     createGameLoading = true;
     try {
-      await new Promise((r) => setTimeout(r, 800));
       await $mud.systemCalls.newGame(
         gameType,
         wagerETH,

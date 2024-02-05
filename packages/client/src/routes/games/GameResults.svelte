@@ -57,6 +57,7 @@
       await $mud.systemCalls.claim(gameId);
       onClaimed();
     } catch (e: any) {
+      console.error(e);
       claimError = e.shortMessage ?? "error occurred";
     } finally {
       claimLoading = false;
@@ -106,10 +107,10 @@
             It's a tie! Click to withdraw your wager
           {/if}
         </button>
-        {#if claimError}
-          <div class="text-red-500 text-sm">{claimError}</div>
-        {/if}
       {/if}
     </div>
+    {#if claimError}
+      <div class="text-red-500 text-sm">{claimError}</div>
+    {/if}
   </div>
 </div>

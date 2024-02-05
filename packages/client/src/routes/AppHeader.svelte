@@ -6,6 +6,7 @@
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte";
   import Puzzly from "$lib/icons/puzzly.svelte";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
+  import CopyableAddress from "$lib/components/CopyableAddress.svelte";
   import { formatEther } from "viem";
   import { onMount } from "svelte";
 
@@ -29,21 +30,20 @@
 </script>
 
 <div class="w-full flex justify-between items-center">
-  <a
+  <div
     class="flex gap-2 items-center text-off-black fill-off-black stroke-red-500 font-bold text-xl tracking-wider"
-    href="/welcome"
   >
-    <div class="h-11 w-11">
+    <a href="/welcome" class="h-11 w-11">
       <Puzzly />
-    </div>
+    </a>
     <div style="line-height: 1em">
       {#if $user}
-        {shortenAddress($user)}
+        <CopyableAddress address={$user}></CopyableAddress>
       {:else}
-        Puzzle Bets
+        <a href="/welcome"> Puzzle Bets </a>
       {/if}
     </div>
-  </a>
+  </div>
   <div class="flex gap-3 justify-end items-center">
     {#if userBalance}
       <div class="flex gap-1 items-center">

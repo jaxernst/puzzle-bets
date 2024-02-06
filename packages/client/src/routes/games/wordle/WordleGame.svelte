@@ -4,6 +4,7 @@
   import type { PageData, ActionData } from "./$types";
   import { reduced_motion } from "./reduced-motion";
   import { createEventDispatcher } from "svelte";
+  import { capitalized } from "$lib/util";
 
   export let data: {
     answers: string[];
@@ -287,7 +288,7 @@
     justify-content: center;
     text-align: center;
     box-sizing: border-box;
-    text-transform: lowercase;
+    text-transform: uppercase;
     border: none;
     font-size: calc(0.08 * var(--width));
     border-radius: 4px;

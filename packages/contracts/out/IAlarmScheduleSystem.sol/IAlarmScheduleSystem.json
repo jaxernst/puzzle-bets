@@ -1,0 +1,243 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "challengeEntity",
+          "type": "bytes32"
+        }
+      ],
+      "name": "nextDeadlineTimestamp",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "nextDeadlineTimestamp(bytes32)": "c4b792c4"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.21+commit.d9974bed\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"challengeEntity\",\"type\":\"bytes32\"}],\"name\":\"nextDeadlineTimestamp\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"This interface is automatically generated from the corresponding system contract. Do not edit manually.\",\"kind\":\"dev\",\"methods\":{},\"title\":\"IAlarmScheduleSystem\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/codegen/world/IAlarmScheduleSystem.sol\":\"IAlarmScheduleSystem\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":3000},\"remappings\":[\":@latticexyz/=node_modules/@latticexyz/\",\":ds-test/=node_modules/ds-test/src/\",\":forge-std/=node_modules/forge-std/src/\"]},\"sources\":{\"src/codegen/world/IAlarmScheduleSystem.sol\":{\"keccak256\":\"0xad8e0b6f02370e640c26cc968494eba9118673311856deb5b00d89876c806e71\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://9d378a2a0e143d8abb2d88e40e3f31c2c308b6529e73f9844358f9a0c21b5633\",\"dweb:/ipfs/QmcVjijatSYA4ZFiMZ9oAfBDvkg5vJNLpx1LREgMJnXW3Z\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.21+commit.d9974bed"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "challengeEntity",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "view",
+          "type": "function",
+          "name": "nextDeadlineTimestamp",
+          "outputs": [
+            {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+            }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@latticexyz/=node_modules/@latticexyz/",
+        "ds-test/=node_modules/ds-test/src/",
+        "forge-std/=node_modules/forge-std/src/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 3000
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "src/codegen/world/IAlarmScheduleSystem.sol": "IAlarmScheduleSystem"
+      },
+      "libraries": {}
+    },
+    "sources": {
+      "src/codegen/world/IAlarmScheduleSystem.sol": {
+        "keccak256": "0xad8e0b6f02370e640c26cc968494eba9118673311856deb5b00d89876c806e71",
+        "urls": [
+          "bzz-raw://9d378a2a0e143d8abb2d88e40e3f31c2c308b6529e73f9844358f9a0c21b5633",
+          "dweb:/ipfs/QmcVjijatSYA4ZFiMZ9oAfBDvkg5vJNLpx1LREgMJnXW3Z"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "src/codegen/world/IAlarmScheduleSystem.sol",
+    "id": 93705,
+    "exportedSymbols": {
+      "IAlarmScheduleSystem": [
+        93704
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:350:166",
+    "nodes": [
+      {
+        "id": 93695,
+        "nodeType": "PragmaDirective",
+        "src": "32:25:166",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".21"
+        ]
+      },
+      {
+        "id": 93704,
+        "nodeType": "ContractDefinition",
+        "src": "259:122:166",
+        "nodes": [
+          {
+            "id": 93703,
+            "nodeType": "FunctionDefinition",
+            "src": "294:85:166",
+            "nodes": [],
+            "functionSelector": "c4b792c4",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "nextDeadlineTimestamp",
+            "nameLocation": "303:21:166",
+            "parameters": {
+              "id": 93699,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 93698,
+                  "mutability": "mutable",
+                  "name": "challengeEntity",
+                  "nameLocation": "333:15:166",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 93703,
+                  "src": "325:23:166",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 93697,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "325:7:166",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "324:25:166"
+            },
+            "returnParameters": {
+              "id": 93702,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 93701,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 93703,
+                  "src": "373:4:166",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 93700,
+                    "name": "uint",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "373:4:166",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "372:6:166"
+            },
+            "scope": 93704,
+            "stateMutability": "view",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IAlarmScheduleSystem",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 93696,
+          "nodeType": "StructuredDocumentation",
+          "src": "108:150:166",
+          "text": " @title IAlarmScheduleSystem\n @dev This interface is automatically generated from the corresponding system contract. Do not edit manually."
+        },
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          93704
+        ],
+        "name": "IAlarmScheduleSystem",
+        "nameLocation": "269:20:166",
+        "scope": 93705,
+        "usedErrors": [],
+        "usedEvents": []
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 166
+}

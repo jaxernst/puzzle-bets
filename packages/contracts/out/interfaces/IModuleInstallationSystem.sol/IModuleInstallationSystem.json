@@ -1,0 +1,294 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "contract IModule",
+          "name": "module",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "args",
+          "type": "bytes"
+        }
+      ],
+      "name": "installModule",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "installModule(address,bytes)": "8da798da"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.21+commit.d9974bed\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"contract IModule\",\"name\":\"module\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"args\",\"type\":\"bytes\"}],\"name\":\"installModule\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"This interface is automatically generated from the corresponding system contract. Do not edit manually.\",\"kind\":\"dev\",\"methods\":{},\"title\":\"IModuleInstallationSystem\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/codegen/interfaces/IModuleInstallationSystem.sol\":\"IModuleInstallationSystem\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":3000},\"remappings\":[\":@latticexyz/=node_modules/@latticexyz/\",\":ds-test/=node_modules/ds-test/src/\",\":forge-std/=node_modules/forge-std/src/\"]},\"sources\":{\"/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/IERC165.sol\":{\"keccak256\":\"0x7997ebbdee6a2493f28e7032c7a8b906ade40f807d95734e2653c8f1b023ff47\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://c8ca41bb2619bf27e5bf886d1322f0e2dffd096c49f7ae6e716541dd1e1ddce5\",\"dweb:/ipfs/Qmb8zATUWWTtiWaSLjbAe6PGnJPes9ANvEyk7pYoWR3P3Y\"]},\"/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/IModule.sol\":{\"keccak256\":\"0x4535542ceb57e77096f24b943285bc158c48ef5291999f9c1e27f5682f8a9581\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://ec670524d19c50c659e385bc4dcb4757b065e1b5fe14160244537a7cd7a4b883\",\"dweb:/ipfs/QmT7NSWFSQ6MxYefe665srKMT2GTWomrPRZAHLjrFhQzV6\"]},\"/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/codegen/interfaces/IModuleInstallationSystem.sol\":{\"keccak256\":\"0x5be1d1ee90a7a03258e8c4fce7542453332c637a51b015e0cc29151ef2792263\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://df6d97356b2ca9d97b7593f4c0772742529fea73f1665e55a879a368b399cae0\",\"dweb:/ipfs/QmXCs5X4Z95isKRzjP4TQjQxwiB7773tHiJWLWkjLv3SLj\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.21+commit.d9974bed"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "contract IModule",
+              "name": "module",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes",
+              "name": "args",
+              "type": "bytes"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "installModule"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@latticexyz/=node_modules/@latticexyz/",
+        "ds-test/=node_modules/ds-test/src/",
+        "forge-std/=node_modules/forge-std/src/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 3000
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/codegen/interfaces/IModuleInstallationSystem.sol": "IModuleInstallationSystem"
+      },
+      "libraries": {}
+    },
+    "sources": {
+      "/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/IERC165.sol": {
+        "keccak256": "0x7997ebbdee6a2493f28e7032c7a8b906ade40f807d95734e2653c8f1b023ff47",
+        "urls": [
+          "bzz-raw://c8ca41bb2619bf27e5bf886d1322f0e2dffd096c49f7ae6e716541dd1e1ddce5",
+          "dweb:/ipfs/Qmb8zATUWWTtiWaSLjbAe6PGnJPes9ANvEyk7pYoWR3P3Y"
+        ],
+        "license": "MIT"
+      },
+      "/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/IModule.sol": {
+        "keccak256": "0x4535542ceb57e77096f24b943285bc158c48ef5291999f9c1e27f5682f8a9581",
+        "urls": [
+          "bzz-raw://ec670524d19c50c659e385bc4dcb4757b065e1b5fe14160244537a7cd7a4b883",
+          "dweb:/ipfs/QmT7NSWFSQ6MxYefe665srKMT2GTWomrPRZAHLjrFhQzV6"
+        ],
+        "license": "MIT"
+      },
+      "/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/codegen/interfaces/IModuleInstallationSystem.sol": {
+        "keccak256": "0x5be1d1ee90a7a03258e8c4fce7542453332c637a51b015e0cc29151ef2792263",
+        "urls": [
+          "bzz-raw://df6d97356b2ca9d97b7593f4c0772742529fea73f1665e55a879a368b399cae0",
+          "dweb:/ipfs/QmXCs5X4Z95isKRzjP4TQjQxwiB7773tHiJWLWkjLv3SLj"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/codegen/interfaces/IModuleInstallationSystem.sol",
+    "id": 22147,
+    "exportedSymbols": {
+      "IModule": [
+        21237
+      ],
+      "IModuleInstallationSystem": [
+        22146
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:390:50",
+    "nodes": [
+      {
+        "id": 22134,
+        "nodeType": "PragmaDirective",
+        "src": "32:25:50",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".21"
+        ]
+      },
+      {
+        "id": 22136,
+        "nodeType": "ImportDirective",
+        "src": "108:46:50",
+        "nodes": [],
+        "absolutePath": "/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/IModule.sol",
+        "file": "./../../IModule.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 22147,
+        "sourceUnit": 21238,
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 22135,
+              "name": "IModule",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 21237,
+              "src": "117:7:50",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "id": 22146,
+        "nodeType": "ContractDefinition",
+        "src": "312:109:50",
+        "nodes": [
+          {
+            "id": 22145,
+            "nodeType": "FunctionDefinition",
+            "src": "352:67:50",
+            "nodes": [],
+            "functionSelector": "8da798da",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "installModule",
+            "nameLocation": "361:13:50",
+            "parameters": {
+              "id": 22143,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 22140,
+                  "mutability": "mutable",
+                  "name": "module",
+                  "nameLocation": "383:6:50",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 22145,
+                  "src": "375:14:50",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_contract$_IModule_$21237",
+                    "typeString": "contract IModule"
+                  },
+                  "typeName": {
+                    "id": 22139,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 22138,
+                      "name": "IModule",
+                      "nameLocations": [
+                        "375:7:50"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 21237,
+                      "src": "375:7:50"
+                    },
+                    "referencedDeclaration": 21237,
+                    "src": "375:7:50",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_contract$_IModule_$21237",
+                      "typeString": "contract IModule"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 22142,
+                  "mutability": "mutable",
+                  "name": "args",
+                  "nameLocation": "404:4:50",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 22145,
+                  "src": "391:17:50",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes_memory_ptr",
+                    "typeString": "bytes"
+                  },
+                  "typeName": {
+                    "id": 22141,
+                    "name": "bytes",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "391:5:50",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes_storage_ptr",
+                      "typeString": "bytes"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "374:35:50"
+            },
+            "returnParameters": {
+              "id": 22144,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "418:0:50"
+            },
+            "scope": 22146,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IModuleInstallationSystem",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 22137,
+          "nodeType": "StructuredDocumentation",
+          "src": "156:155:50",
+          "text": " @title IModuleInstallationSystem\n @dev This interface is automatically generated from the corresponding system contract. Do not edit manually."
+        },
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          22146
+        ],
+        "name": "IModuleInstallationSystem",
+        "nameLocation": "322:25:50",
+        "scope": 22147,
+        "usedErrors": [],
+        "usedEvents": []
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 50
+}

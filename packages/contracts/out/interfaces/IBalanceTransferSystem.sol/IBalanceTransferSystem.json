@@ -1,0 +1,500 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "ResourceId",
+          "name": "fromNamespaceId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "toAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferBalanceToAddress",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "ResourceId",
+          "name": "fromNamespaceId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "ResourceId",
+          "name": "toNamespaceId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transferBalanceToNamespace",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "transferBalanceToAddress(bytes32,address,uint256)": "45afd199",
+    "transferBalanceToNamespace(bytes32,bytes32,uint256)": "c9c85a60"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.21+commit.d9974bed\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"ResourceId\",\"name\":\"fromNamespaceId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"toAddress\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transferBalanceToAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"ResourceId\",\"name\":\"fromNamespaceId\",\"type\":\"bytes32\"},{\"internalType\":\"ResourceId\",\"name\":\"toNamespaceId\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"transferBalanceToNamespace\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"This interface is automatically generated from the corresponding system contract. Do not edit manually.\",\"kind\":\"dev\",\"methods\":{},\"title\":\"IBalanceTransferSystem\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/codegen/interfaces/IBalanceTransferSystem.sol\":\"IBalanceTransferSystem\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":3000},\"remappings\":[\":@latticexyz/=node_modules/@latticexyz/\",\":ds-test/=node_modules/ds-test/src/\",\":forge-std/=node_modules/forge-std/src/\"]},\"sources\":{\"/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/codegen/interfaces/IBalanceTransferSystem.sol\":{\"keccak256\":\"0xf04594c29c5c5b3110453ac189a8008735753de864ab4a7dfa97ccd3ae5f4a55\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://4a3061f72b969a294dc96c3b2e59277e762ce6571cedcc7e280412431453dde5\",\"dweb:/ipfs/QmWB9aboakrCH9AmzGiZ1mCceh9atF4ks5ndEYFzUVbaHT\"]},\"node_modules/@latticexyz/store/src/ResourceId.sol\":{\"keccak256\":\"0x40983c580b8958e55db4520095934a535e98544ffe8228327e598973eb6647ed\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://839d658fa2bb2b1f09a08149d2bf0c26a26c301ad2dda8154fc99458085a695d\",\"dweb:/ipfs/Qmd5jHHYrgqraPqF8bjzT4xyjsoPk8K7pkxXLLfz6MRT6d\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.21+commit.d9974bed"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "ResourceId",
+              "name": "fromNamespaceId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "address",
+              "name": "toAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "transferBalanceToAddress"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "ResourceId",
+              "name": "fromNamespaceId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "ResourceId",
+              "name": "toNamespaceId",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "transferBalanceToNamespace"
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@latticexyz/=node_modules/@latticexyz/",
+        "ds-test/=node_modules/ds-test/src/",
+        "forge-std/=node_modules/forge-std/src/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 3000
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/codegen/interfaces/IBalanceTransferSystem.sol": "IBalanceTransferSystem"
+      },
+      "libraries": {}
+    },
+    "sources": {
+      "/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/codegen/interfaces/IBalanceTransferSystem.sol": {
+        "keccak256": "0xf04594c29c5c5b3110453ac189a8008735753de864ab4a7dfa97ccd3ae5f4a55",
+        "urls": [
+          "bzz-raw://4a3061f72b969a294dc96c3b2e59277e762ce6571cedcc7e280412431453dde5",
+          "dweb:/ipfs/QmWB9aboakrCH9AmzGiZ1mCceh9atF4ks5ndEYFzUVbaHT"
+        ],
+        "license": "MIT"
+      },
+      "node_modules/@latticexyz/store/src/ResourceId.sol": {
+        "keccak256": "0x40983c580b8958e55db4520095934a535e98544ffe8228327e598973eb6647ed",
+        "urls": [
+          "bzz-raw://839d658fa2bb2b1f09a08149d2bf0c26a26c301ad2dda8154fc99458085a695d",
+          "dweb:/ipfs/Qmd5jHHYrgqraPqF8bjzT4xyjsoPk8K7pkxXLLfz6MRT6d"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "/Users/jacksonernst/Documents/GitHub/puzzle-bets/node_modules/.pnpm/@latticexyz+world@2.0.0-next.14_typescript@5.1.6/node_modules/@latticexyz/world/src/codegen/interfaces/IBalanceTransferSystem.sol",
+    "id": 22102,
+    "exportedSymbols": {
+      "IBalanceTransferSystem": [
+        22101
+      ],
+      "ResourceId": [
+        65281
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:562:47",
+    "nodes": [
+      {
+        "id": 22076,
+        "nodeType": "PragmaDirective",
+        "src": "32:25:47",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".21"
+        ]
+      },
+      {
+        "id": 22078,
+        "nodeType": "ImportDirective",
+        "src": "108:66:47",
+        "nodes": [],
+        "absolutePath": "node_modules/@latticexyz/store/src/ResourceId.sol",
+        "file": "@latticexyz/store/src/ResourceId.sol",
+        "nameLocation": "-1:-1:-1",
+        "scope": 22102,
+        "sourceUnit": 65353,
+        "symbolAliases": [
+          {
+            "foreign": {
+              "id": 22077,
+              "name": "ResourceId",
+              "nodeType": "Identifier",
+              "overloadedDeclarations": [],
+              "referencedDeclaration": 65281,
+              "src": "117:10:47",
+              "typeDescriptions": {}
+            },
+            "nameLocation": "-1:-1:-1"
+          }
+        ],
+        "unitAlias": ""
+      },
+      {
+        "id": 22101,
+        "nodeType": "ContractDefinition",
+        "src": "329:264:47",
+        "nodes": [
+          {
+            "id": 22090,
+            "nodeType": "FunctionDefinition",
+            "src": "366:115:47",
+            "nodes": [],
+            "functionSelector": "c9c85a60",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "transferBalanceToNamespace",
+            "nameLocation": "375:26:47",
+            "parameters": {
+              "id": 22088,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 22082,
+                  "mutability": "mutable",
+                  "name": "fromNamespaceId",
+                  "nameLocation": "413:15:47",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 22090,
+                  "src": "402:26:47",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_userDefinedValueType$_ResourceId_$65281",
+                    "typeString": "ResourceId"
+                  },
+                  "typeName": {
+                    "id": 22081,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 22080,
+                      "name": "ResourceId",
+                      "nameLocations": [
+                        "402:10:47"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 65281,
+                      "src": "402:10:47"
+                    },
+                    "referencedDeclaration": 65281,
+                    "src": "402:10:47",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_userDefinedValueType$_ResourceId_$65281",
+                      "typeString": "ResourceId"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 22085,
+                  "mutability": "mutable",
+                  "name": "toNamespaceId",
+                  "nameLocation": "441:13:47",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 22090,
+                  "src": "430:24:47",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_userDefinedValueType$_ResourceId_$65281",
+                    "typeString": "ResourceId"
+                  },
+                  "typeName": {
+                    "id": 22084,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 22083,
+                      "name": "ResourceId",
+                      "nameLocations": [
+                        "430:10:47"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 65281,
+                      "src": "430:10:47"
+                    },
+                    "referencedDeclaration": 65281,
+                    "src": "430:10:47",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_userDefinedValueType$_ResourceId_$65281",
+                      "typeString": "ResourceId"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 22087,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "464:6:47",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 22090,
+                  "src": "456:14:47",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 22086,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "456:7:47",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "401:70:47"
+            },
+            "returnParameters": {
+              "id": 22089,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "480:0:47"
+            },
+            "scope": 22101,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 22100,
+            "nodeType": "FunctionDefinition",
+            "src": "485:106:47",
+            "nodes": [],
+            "functionSelector": "45afd199",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "transferBalanceToAddress",
+            "nameLocation": "494:24:47",
+            "parameters": {
+              "id": 22098,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 22093,
+                  "mutability": "mutable",
+                  "name": "fromNamespaceId",
+                  "nameLocation": "530:15:47",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 22100,
+                  "src": "519:26:47",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_userDefinedValueType$_ResourceId_$65281",
+                    "typeString": "ResourceId"
+                  },
+                  "typeName": {
+                    "id": 22092,
+                    "nodeType": "UserDefinedTypeName",
+                    "pathNode": {
+                      "id": 22091,
+                      "name": "ResourceId",
+                      "nameLocations": [
+                        "519:10:47"
+                      ],
+                      "nodeType": "IdentifierPath",
+                      "referencedDeclaration": 65281,
+                      "src": "519:10:47"
+                    },
+                    "referencedDeclaration": 65281,
+                    "src": "519:10:47",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_userDefinedValueType$_ResourceId_$65281",
+                      "typeString": "ResourceId"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 22095,
+                  "mutability": "mutable",
+                  "name": "toAddress",
+                  "nameLocation": "555:9:47",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 22100,
+                  "src": "547:17:47",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 22094,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "547:7:47",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 22097,
+                  "mutability": "mutable",
+                  "name": "amount",
+                  "nameLocation": "574:6:47",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 22100,
+                  "src": "566:14:47",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 22096,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "566:7:47",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "518:63:47"
+            },
+            "returnParameters": {
+              "id": 22099,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "590:0:47"
+            },
+            "scope": 22101,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "IBalanceTransferSystem",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 22079,
+          "nodeType": "StructuredDocumentation",
+          "src": "176:152:47",
+          "text": " @title IBalanceTransferSystem\n @dev This interface is automatically generated from the corresponding system contract. Do not edit manually."
+        },
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          22101
+        ],
+        "name": "IBalanceTransferSystem",
+        "nameLocation": "339:22:47",
+        "scope": 22102,
+        "usedErrors": [],
+        "usedEvents": []
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 47
+}

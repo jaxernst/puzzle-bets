@@ -1,0 +1,490 @@
+{
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "entity",
+          "type": "bytes32"
+        }
+      ],
+      "name": "SunStakedCheckIn_complete",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "entity",
+          "type": "bytes32"
+        }
+      ],
+      "name": "SunStakedCheckIn_confirmWakeup",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "wakeupObjective",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint32",
+          "name": "numWeeks",
+          "type": "uint32"
+        },
+        {
+          "internalType": "uint8[]",
+          "name": "challengeDays",
+          "type": "uint8[]"
+        }
+      ],
+      "name": "SunStakedCheckIn_enter",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "deployedBytecode": {
+    "object": "0x",
+    "sourceMap": "",
+    "linkReferences": {}
+  },
+  "methodIdentifiers": {
+    "SunStakedCheckIn_complete(bytes32)": "e8ee31f9",
+    "SunStakedCheckIn_confirmWakeup(bytes32)": "36304bef",
+    "SunStakedCheckIn_enter(bytes32,uint32,uint8[])": "7324a1ea"
+  },
+  "rawMetadata": "{\"compiler\":{\"version\":\"0.8.21+commit.d9974bed\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"entity\",\"type\":\"bytes32\"}],\"name\":\"SunStakedCheckIn_complete\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"entity\",\"type\":\"bytes32\"}],\"name\":\"SunStakedCheckIn_confirmWakeup\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"wakeupObjective\",\"type\":\"bytes32\"},{\"internalType\":\"uint32\",\"name\":\"numWeeks\",\"type\":\"uint32\"},{\"internalType\":\"uint8[]\",\"name\":\"challengeDays\",\"type\":\"uint8[]\"}],\"name\":\"SunStakedCheckIn_enter\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"This interface is automatically generated from the corresponding system contract. Do not edit manually.\",\"kind\":\"dev\",\"methods\":{},\"title\":\"ISunStakedCheckInSystem\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/codegen/world/ISunStakedCheckInSystem.sol\":\"ISunStakedCheckInSystem\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":true,\"runs\":3000},\"remappings\":[\":@latticexyz/=node_modules/@latticexyz/\",\":ds-test/=node_modules/ds-test/src/\",\":forge-std/=node_modules/forge-std/src/\"]},\"sources\":{\"src/codegen/world/ISunStakedCheckInSystem.sol\":{\"keccak256\":\"0x9fea7517b1a30c964cb3f61e0d19d38575646640dfb884cb444783138c8e4c06\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://a1645c86e92ed3fc2c9029544bb2893cea18b1df41e4ed8ff9912277118e7d96\",\"dweb:/ipfs/QmNzrx743yCseub7AcxE7iFu5FCGrCtDxvDn1dNRyeHMQr\"]}},\"version\":1}",
+  "metadata": {
+    "compiler": {
+      "version": "0.8.21+commit.d9974bed"
+    },
+    "language": "Solidity",
+    "output": {
+      "abi": [
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "entity",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "SunStakedCheckIn_complete"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "entity",
+              "type": "bytes32"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "SunStakedCheckIn_confirmWakeup"
+        },
+        {
+          "inputs": [
+            {
+              "internalType": "bytes32",
+              "name": "wakeupObjective",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "numWeeks",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint8[]",
+              "name": "challengeDays",
+              "type": "uint8[]"
+            }
+          ],
+          "stateMutability": "nonpayable",
+          "type": "function",
+          "name": "SunStakedCheckIn_enter",
+          "outputs": [
+            {
+              "internalType": "bytes32",
+              "name": "",
+              "type": "bytes32"
+            }
+          ]
+        }
+      ],
+      "devdoc": {
+        "kind": "dev",
+        "methods": {},
+        "version": 1
+      },
+      "userdoc": {
+        "kind": "user",
+        "methods": {},
+        "version": 1
+      }
+    },
+    "settings": {
+      "remappings": [
+        "@latticexyz/=node_modules/@latticexyz/",
+        "ds-test/=node_modules/ds-test/src/",
+        "forge-std/=node_modules/forge-std/src/"
+      ],
+      "optimizer": {
+        "enabled": true,
+        "runs": 3000
+      },
+      "metadata": {
+        "bytecodeHash": "ipfs"
+      },
+      "compilationTarget": {
+        "src/codegen/world/ISunStakedCheckInSystem.sol": "ISunStakedCheckInSystem"
+      },
+      "libraries": {}
+    },
+    "sources": {
+      "src/codegen/world/ISunStakedCheckInSystem.sol": {
+        "keccak256": "0x9fea7517b1a30c964cb3f61e0d19d38575646640dfb884cb444783138c8e4c06",
+        "urls": [
+          "bzz-raw://a1645c86e92ed3fc2c9029544bb2893cea18b1df41e4ed8ff9912277118e7d96",
+          "dweb:/ipfs/QmNzrx743yCseub7AcxE7iFu5FCGrCtDxvDn1dNRyeHMQr"
+        ],
+        "license": "MIT"
+      }
+    },
+    "version": 1
+  },
+  "ast": {
+    "absolutePath": "src/codegen/world/ISunStakedCheckInSystem.sol",
+    "id": 93787,
+    "exportedSymbols": {
+      "ISunStakedCheckInSystem": [
+        93786
+      ]
+    },
+    "nodeType": "SourceUnit",
+    "src": "32:553:170",
+    "nodes": [
+      {
+        "id": 93762,
+        "nodeType": "PragmaDirective",
+        "src": "32:25:170",
+        "nodes": [],
+        "literals": [
+          "solidity",
+          ">=",
+          "0.8",
+          ".21"
+        ]
+      },
+      {
+        "id": 93786,
+        "nodeType": "ContractDefinition",
+        "src": "262:322:170",
+        "nodes": [
+          {
+            "id": 93775,
+            "nodeType": "FunctionDefinition",
+            "src": "300:149:170",
+            "nodes": [],
+            "functionSelector": "7324a1ea",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "SunStakedCheckIn_enter",
+            "nameLocation": "309:22:170",
+            "parameters": {
+              "id": 93771,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 93765,
+                  "mutability": "mutable",
+                  "name": "wakeupObjective",
+                  "nameLocation": "345:15:170",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 93775,
+                  "src": "337:23:170",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 93764,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "337:7:170",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 93767,
+                  "mutability": "mutable",
+                  "name": "numWeeks",
+                  "nameLocation": "373:8:170",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 93775,
+                  "src": "366:15:170",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint32",
+                    "typeString": "uint32"
+                  },
+                  "typeName": {
+                    "id": 93766,
+                    "name": "uint32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "366:6:170",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint32",
+                      "typeString": "uint32"
+                    }
+                  },
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 93770,
+                  "mutability": "mutable",
+                  "name": "challengeDays",
+                  "nameLocation": "404:13:170",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 93775,
+                  "src": "387:30:170",
+                  "stateVariable": false,
+                  "storageLocation": "calldata",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint8_$dyn_calldata_ptr",
+                    "typeString": "uint8[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 93768,
+                      "name": "uint8",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "387:5:170",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint8",
+                        "typeString": "uint8"
+                      }
+                    },
+                    "id": 93769,
+                    "nodeType": "ArrayTypeName",
+                    "src": "387:7:170",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint8_$dyn_storage_ptr",
+                      "typeString": "uint8[]"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "331:90:170"
+            },
+            "returnParameters": {
+              "id": 93774,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 93773,
+                  "mutability": "mutable",
+                  "name": "",
+                  "nameLocation": "-1:-1:-1",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 93775,
+                  "src": "440:7:170",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 93772,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "440:7:170",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "439:9:170"
+            },
+            "scope": 93786,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 93780,
+            "nodeType": "FunctionDefinition",
+            "src": "453:65:170",
+            "nodes": [],
+            "functionSelector": "36304bef",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "SunStakedCheckIn_confirmWakeup",
+            "nameLocation": "462:30:170",
+            "parameters": {
+              "id": 93778,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 93777,
+                  "mutability": "mutable",
+                  "name": "entity",
+                  "nameLocation": "501:6:170",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 93780,
+                  "src": "493:14:170",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 93776,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "493:7:170",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "492:16:170"
+            },
+            "returnParameters": {
+              "id": 93779,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "517:0:170"
+            },
+            "scope": 93786,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "id": 93785,
+            "nodeType": "FunctionDefinition",
+            "src": "522:60:170",
+            "nodes": [],
+            "functionSelector": "e8ee31f9",
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "SunStakedCheckIn_complete",
+            "nameLocation": "531:25:170",
+            "parameters": {
+              "id": 93783,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 93782,
+                  "mutability": "mutable",
+                  "name": "entity",
+                  "nameLocation": "565:6:170",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 93785,
+                  "src": "557:14:170",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 93781,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "557:7:170",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "visibility": "internal"
+                }
+              ],
+              "src": "556:16:170"
+            },
+            "returnParameters": {
+              "id": 93784,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "581:0:170"
+            },
+            "scope": 93786,
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          }
+        ],
+        "abstract": false,
+        "baseContracts": [],
+        "canonicalName": "ISunStakedCheckInSystem",
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": {
+          "id": 93763,
+          "nodeType": "StructuredDocumentation",
+          "src": "108:153:170",
+          "text": " @title ISunStakedCheckInSystem\n @dev This interface is automatically generated from the corresponding system contract. Do not edit manually."
+        },
+        "fullyImplemented": false,
+        "linearizedBaseContracts": [
+          93786
+        ],
+        "name": "ISunStakedCheckInSystem",
+        "nameLocation": "272:23:170",
+        "scope": 93787,
+        "usedErrors": [],
+        "usedEvents": []
+      }
+    ],
+    "license": "MIT"
+  },
+  "id": 170
+}

@@ -67,12 +67,12 @@
 
 <div class="bg-gray-600 p-5 rounded-xl flex flex-col gap-2 max-w-[450px]">
   <div class="flex flex-col gap-4 font-semibold">
-    <div class="flex justify-between items-center">
+    <div class="flex justify-between items-center gap-5">
       <div class="">Game #{parseInt(gameId, 16)} Results</div>
       <div
         class="self-center py-1 px-3 text-lime-500 border border-lime-500 rounded-xl"
       >
-        ${potSizeUsd} pot
+        ${potSizeUsd.toFixed(2)} pot
       </div>
     </div>
     <div class="grid grid-cols-2 gap-2 px-4 py-3 w-fit">

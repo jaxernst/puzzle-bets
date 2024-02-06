@@ -2,8 +2,13 @@
 pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
+import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
+import { RESOURCE_NAMESPACE } from "@latticexyz/world/src/worldResourceTypes.sol";
+import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
+import { ResourceIdLib } from "@latticexyz/store/src/ResourceId.sol";
 import { Balance, BuyIn, GameType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration } from "../codegen/index.sol";
 import { Status, Game } from "../codegen/common.sol";
+import { IWorld } from "../codegen/world/IWorld.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 
 contract PuzzleGameSystem is System {
@@ -29,7 +34,7 @@ contract PuzzleGameSystem is System {
 
   function joinGame(bytes32 gameId) public payable {
     Status status = GameStatus.get(gameId);
-    uint betAmount = Balance.get(gameId, _msgSender());
+    uint betAmount = BuyIn.get(gameId);
 
     require(status == Status.Pending, "Game is not pending");
     require(InviteExpiration.get(gameId) > block.timestamp, "Invite expired");
@@ -79,7 +84,7 @@ contract PuzzleGameSystem is System {
 
     // Distribute funds to winner
     if (theySolved && !iSolved) {
-      return _payWinner(gameId, them, me);
+      revert("Nothing to claim");
     }
 
     if (iSolved && !theySolved) {
@@ -95,13 +100,17 @@ contract PuzzleGameSystem is System {
     uint depositLoser = Balance.get(gameId, loser);
     Balance.set(gameId, winner, 0);
     Balance.set(gameId, loser, 0);
-    payable(winner).transfer(depositLoser + depositWinner);
+    _transfer(winner, depositWinner + depositLoser);
   }
 
   function _returnDeposit(bytes32 gameId) private {
     address me = _msgSender();
     uint deposit = Balance.get(gameId, me);
     Balance.set(gameId, me, 0);
-    payable(me).transfer(deposit);
+    _transfer(me, deposit);
+  }
+
+  function _transfer(address to, uint amount) private {
+    IWorld(_world()).transferBalanceToAddress(ResourceIdLib.encode(RESOURCE_NAMESPACE, "games"), to, amount);
   }
 }

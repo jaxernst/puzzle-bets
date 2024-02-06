@@ -37,10 +37,11 @@ export function createSystemCalls({
     await waitForTransaction(tx);
   };
 
-  const joinGame = async (gameId: Entity) => {
-    const tx = await worldContract.write.games__joinGame([
-      gameId as `0x${string}`,
-    ]);
+  const joinGame = async (gameId: Entity, wagerEth: number) => {
+    const tx = await worldContract.write.games__joinGame(
+      [gameId as `0x${string}`],
+      { value: parseEther(wagerEth.toString()) }
+    );
     await waitForTransaction(tx);
   };
 

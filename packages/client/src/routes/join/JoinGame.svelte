@@ -8,6 +8,7 @@
   import { ethPrice } from "$lib/ethPrice";
   import {
     capitalized,
+    formatAsDollar,
     formatTime,
     shortenAddress,
     systemTimestamp,
@@ -83,7 +84,9 @@
           <div class="">{shortenAddress(game.p1)}</div>
           <div class="">
             {#if $ethPrice}
-              ${Number(formatEther(game.buyInAmount)) * $ethPrice}
+              {formatAsDollar(
+                Number(formatEther(game.buyInAmount)) * $ethPrice
+              )}
             {:else}
               {formatEther(game.buyInAmount)} eth
             {/if}

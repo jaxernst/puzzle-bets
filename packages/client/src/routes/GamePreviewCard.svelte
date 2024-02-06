@@ -27,8 +27,6 @@
 
     return formatAsDollar(ethValue * $ethPrice);
   };
-
-  $: console.log(solved);
 </script>
 
 <a

@@ -49,7 +49,7 @@
   <div
     bind:this={modal}
     tabindex="-1"
-    class="z-50 fixed w-screen h-screen inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+    class="z-50 top-0 left-0 fixed w-screen h-[100lvh] inset-0 bg-black bg-opacity-50 flex justify-center items-center"
     on:click={clickOutside}
     aria-modal="true"
     role="dialog"

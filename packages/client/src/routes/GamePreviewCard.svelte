@@ -27,6 +27,8 @@
 
     return formatAsDollar(ethValue * $ethPrice);
   };
+
+  $: console.log(solved);
 </script>
 
 <a
@@ -53,7 +55,7 @@
     {:else if solved}
       successfully solved!
     {:else if status === GameStatus.Active}
-      ready to solve...
+      waiting for submission...
     {/if}
   </div>
 </a>

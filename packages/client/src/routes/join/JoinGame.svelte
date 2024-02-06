@@ -30,9 +30,13 @@
 
   let joinGameLoading = false;
   const joinGame = async () => {
+    if (!game) return;
     joinGameLoading = true;
     try {
-      await $mud.systemCalls.joinGame(gameId);
+      await $mud.systemCalls.joinGame(
+        gameId,
+        Number(formatEther(game?.buyInAmount))
+      );
       dispatch("joined");
     } finally {
       joinGameLoading = false;

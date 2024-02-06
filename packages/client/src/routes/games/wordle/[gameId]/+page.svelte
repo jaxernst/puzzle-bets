@@ -32,7 +32,7 @@
     !gameState &&
     $user &&
     onchainGame &&
-    onchainGame.status !== GameStatus.Active &&
+    onchainGame.status === GameStatus.Active &&
     onchainGame.opponent
   ) {
     console.log("creating new game");

@@ -14,7 +14,7 @@
   // Game params
   let wagerETH: number = 0.001;
   let wagerUSD: number = wagerETH * ethPrice;
-  let submissionWindowMinutes = 15;
+  let submissionWindowMinutes = 8;
   let inviteExpirationMinutes = 20;
 
   function updateETH(value: number) {
@@ -128,7 +128,7 @@
       Puzzle deadline:
       <input
         type="number"
-        class="bg-gray-500 text-gray-200 px-1 rounded-lg w-[50px]"
+        class="bg-gray-500 text-gray-200 px-2 rounded-lg w-[50px]"
         min="1"
         max="100000"
         bind:value={submissionWindowMinutes}
@@ -138,7 +138,7 @@
       Invite expires:
       <input
         type="number"
-        class="bg-gray-500 text-gray-200 px-1 rounded-lg w-[50px]"
+        class="bg-gray-500 text-gray-200 px-2 rounded-lg w-[50px]"
         min="1"
         max="100000"
         bind:value={inviteExpirationMinutes}

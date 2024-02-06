@@ -56,8 +56,6 @@
   $: submitted = onchainGame && $userSolvedGame(onchainGame.id, $user);
   $: liveStatus = onchainGame && liveGameStatus(onchainGame.id);
   $: expired = liveStatus && !$liveStatus?.submissionTimeLeft;
-
-  $: console.log($liveStatus);
 </script>
 
 {#if gameState}

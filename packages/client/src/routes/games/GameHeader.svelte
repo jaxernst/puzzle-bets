@@ -102,7 +102,7 @@
   <div class="flex justify-between items-center">
     <div class="font-mono sm:text-lg text-gray-100">
       {#if gameId}
-        {capitalized(gameType)} game #{parseInt(gameId, 16)}
+        {capitalized(gameType)} #{parseInt(gameId, 16)}
       {:else}
         {capitalized(gameType)}
       {/if}

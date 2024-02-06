@@ -4,7 +4,7 @@
   import WordleGame from "../WordleGame.svelte";
   import type { PageData } from "./$types";
   import { user } from "$lib/mud/mudStore";
-  import { userGames } from "$lib/gameStores";
+  import { liveGameStatus, userGames, userSolvedGame } from "$lib/gameStores";
   import { GameStatus, type EvmAddress } from "$lib/types";
 
   export let gameState: null | {
@@ -32,7 +32,7 @@
     !gameState &&
     $user &&
     onchainGame &&
-    onchainGame.status === GameStatus.Active &&
+    onchainGame.status !== GameStatus.Active &&
     onchainGame.opponent
   ) {
     console.log("creating new game");
@@ -48,6 +48,16 @@
     if (!res.ok) return;
     gameState = await res.json();
   };
+
+  $: gameOver =
+    gameState &&
+    (gameState.answers.length >= 6 || gameState.answers.at(-1) === "xxxxx");
+
+  $: submitted = onchainGame && $userSolvedGame(onchainGame.id, $user);
+  $: liveStatus = onchainGame && liveGameStatus(onchainGame.id);
+  $: expired = liveStatus && !$liveStatus?.submissionTimeLeft;
+
+  $: console.log($liveStatus);
 </script>
 
 {#if gameState}
@@ -62,7 +72,9 @@
       enterGuess(e.detail.guess);
     }}
   />
-  <div class="w-full text-center text-gray-400">
-    Submit your solution before the deadline
-  </div>
+  {#if gameOver && !submitted && !expired}
+    <div class="w-full text-center text-gray-400">
+      Submit your solution before the deadline
+    </div>
+  {/if}
 {/if}

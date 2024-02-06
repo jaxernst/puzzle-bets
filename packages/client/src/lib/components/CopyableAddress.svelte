@@ -14,7 +14,7 @@
   }
 </script>
 
-<div class="relative p-2 group">
+<div class="relative p-1 sm:p-2 group">
   <div class="group-hover:opacity-40">{shortenAddress(address)}</div>
   <button
     on:click={copyInviteUrl}

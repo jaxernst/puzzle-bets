@@ -112,16 +112,15 @@
         `}
       href={gameRoute(id, type)}
     >
-      <div class="flex gap-1 items-center">
+      <div class="text-sm sm:text-base flex gap-1 items-center">
         {capitalized(type)}
-        <span class={`text-sm ${active ? "text-lime-600" : "text-lime-500"}`}
-        ></span>
+        <div></div>
         <span class={`${active ? "text-white" : "text-lime-500"}`}
           >{betAmount(id)}</span
         >
       </div>
       <div
-        class={`px-1 text-[.7em] italic whitespace-nowrap 
+        class={`px-1 text-[.6em] sm:text-[.7em] italic whitespace-nowrap 
           ${active ? "text-lime-600 font-bold" : "text-gray-200"}`}
       >
         {#if status === GameStatus.Pending}

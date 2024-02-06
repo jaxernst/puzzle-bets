@@ -14,7 +14,7 @@
     return g.id === gameId;
   });
 
-  const liveStatus = liveGameStatus(gameId);
+  $: liveStatus = liveGameStatus(gameId);
 
   $: betAmountEth = Number(formatEther(game?.buyInAmount ?? 0n));
   $: betAmountUsd = betAmountEth * $ethPrice;
@@ -44,7 +44,7 @@
 </script>
 
 {#if game}
-  <div class="text-gray-400 font-semibold italic px-2 mb-4">
+  <div class="text-gray-400 font-semibold italic px-2 mb-2 sm:mb-4">
     {statusLabels[game.status]()}...
   </div>
   <div class="flex gap-4 items-stretch px-2">
@@ -54,9 +54,7 @@
     </div>
     <div class="flex flex-col justify-evenly gap-1 text-gray-100">
       <div class="text-gray-300">
-        ${betAmountUsd}
-        {@html "&#9670"}
-        {formatEther(game?.buyInAmount)} eth
+        ${betAmountUsd.toFixed(2)}
       </div>
       <div class="text-gray-300">
         {#if game.opponent}

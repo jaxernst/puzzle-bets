@@ -51,7 +51,7 @@
   {#key $page.route.id}
     {#if game && game.status === GameStatus.Pending}
       <div
-        class="flex flex-col gap-4 grow text-center justify-center items-center font-bold px-6 pb-10"
+        class="flex flex-col gap-2 sm:gap-4 grow text-center justify-center items-center font-bold sm:px-6 pb-10"
       >
         The puzzle will reveal for both players once the invite is accepted
         <div class="text-gray-300 text-sm italic">

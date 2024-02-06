@@ -9,7 +9,7 @@
 <WalletConnector />
 
 <div class="app max-w-[40rem] mx-auto">
-  <main class="text-white flex-grow flex flex-col p-4 gap-5">
+  <main class="text-white flex-grow flex flex-col p-4 gap-4 sm:gap-5">
     <AppHeader />
     <section class="flex flex-col gap-2">
       <div class="relative flex gap-2 items-center overflow-auto no-scrollbar">
@@ -41,6 +41,7 @@
     >
       <slot />
     </section>
+    <div class="sm:hidden h-5"></div>
   </main>
 </div>
 

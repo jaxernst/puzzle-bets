@@ -100,7 +100,7 @@
 
 <div class="flex flex-col">
   <div class="flex justify-between items-center">
-    <div class="font-mono text-lg text-gray-100">
+    <div class="font-mono sm:text-lg text-gray-100">
       {#if gameId}
         {capitalized(gameType)} game #{parseInt(gameId, 16)}
       {:else}
@@ -129,7 +129,7 @@
           on:click={() => {
             showResultsModal = true;
           }}
-          class="bg-lime-500 rounded-full px-2 py-1 font-semibold"
+          class="bg-lime-500 rounded-full px-2 py-1 font-semibold whitespace-nowrap"
         >
           View Results + Claim
         </button>

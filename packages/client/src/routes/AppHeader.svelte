@@ -31,7 +31,7 @@
 
 <div class="w-full flex justify-between items-center">
   <div
-    class="flex gap-2 items-center text-off-black fill-off-black stroke-red-500 font-bold text-xl tracking-wider"
+    class="flex sm:gap-2 items-center text-off-black fill-off-black stroke-red-500 font-bold text-lg sm:text-xl tracking-wider"
   >
     <a href="/welcome" class="h-11 w-11">
       <Puzzly />
@@ -44,10 +44,12 @@
       {/if}
     </div>
   </div>
-  <div class="flex gap-3 justify-end items-center">
+  <div class="flex gap-1 sm:gap-3 justify-end items-center">
     {#if userBalance}
       <div class="flex gap-1 items-center">
-        <div class="text-gray-600 font-mono">{userBalance}</div>
+        <div class="text-gray-600 font-mono text-sm sm:text-base">
+          {userBalance}
+        </div>
         <div class="fill-gray-600 w-4 h-4">
           <EthSymbol />
         </div>

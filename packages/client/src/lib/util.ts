@@ -179,3 +179,10 @@ export const timeRemaining = (deadlineTimestampSeconds: bigint | number) => {
   const tDiff = Number(deadlineTimestampSeconds) - curTime;
   return Math.max(0, tDiff);
 };
+
+export const formatAsDollar = (value: number) => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(value);
+};

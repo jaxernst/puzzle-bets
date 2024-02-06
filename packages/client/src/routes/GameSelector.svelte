@@ -1,16 +1,14 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { getGame, userGames } from "$lib/gameStores";
-  import { getComponentValueStrict, type Entity } from "@latticexyz/recs";
   import { type GameType, GameStatus } from "$lib/types";
 
   import { capitalized, shortenAddress } from "$lib/util";
-  import { mud } from "$lib/mud/mudStore";
-  import { user } from "$lib/mud/mudStore";
-  import { encodeEntity } from "@latticexyz/store-sync/recs";
   import { formatEther, parseEther } from "viem";
   import { slide } from "svelte/transition";
-  import { cubicIn, cubicInOut, cubicOut } from "svelte/easing";
+  import { cubicOut } from "svelte/easing";
+  import { ethPrice } from "$lib/ethPrice";
+  import type { Entity } from "@latticexyz/recs";
 
   $: activeGames = $userGames.filter((g) => g.status !== GameStatus.Complete);
   $: completedGames = $userGames.filter(
@@ -22,8 +20,6 @@
     return `/games/${gameType}/${parseInt(id, 16)}`;
   };
 
-  let ethPrice = 2400;
-
   const formatAsDollar = (value: number) => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
@@ -33,7 +29,7 @@
 
   $: betAmount = (id: string) => {
     const weiValue = $getGame(id as Entity)?.buyInAmount ?? 0n;
-    return formatAsDollar(Number(formatEther(weiValue * BigInt(ethPrice))));
+    return formatAsDollar(Number(formatEther(weiValue * BigInt($ethPrice))));
   };
 
   let selectedTab: "live" | "completed" | "archived" = "live";

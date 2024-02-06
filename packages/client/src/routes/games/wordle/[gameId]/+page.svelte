@@ -32,7 +32,7 @@
     !gameState &&
     $user &&
     onchainGame &&
-    onchainGame.status !== GameStatus.Active &&
+    onchainGame.status === GameStatus.Active &&
     onchainGame.opponent
   ) {
     console.log("creating new game");
@@ -56,8 +56,6 @@
   $: submitted = onchainGame && $userSolvedGame(onchainGame.id, $user);
   $: liveStatus = onchainGame && liveGameStatus(onchainGame.id);
   $: expired = liveStatus && !$liveStatus?.submissionTimeLeft;
-
-  $: console.log($liveStatus);
 </script>
 
 {#if gameState}

@@ -53,17 +53,19 @@ export const mud = (() => {
       });
     });
 
-    mountDevTools({
-      config: mudConfig,
-      walletClient: walletClient,
-      publicClient: network.publicClient,
-      latestBlock$: network.latestBlock$,
-      storedBlockLogs$: network.storedBlockLogs$,
-      worldAddress: network.worldContract.address,
-      worldAbi: network.worldContract.abi,
-      write$: network.write$,
-      recsWorld: network.world,
-    });
+    if (import.meta.env.VITE_CHAIN_ID === 31337) {
+      mountDevTools({
+        config: mudConfig,
+        walletClient: walletClient,
+        publicClient: network.publicClient,
+        latestBlock$: network.latestBlock$,
+        storedBlockLogs$: network.storedBlockLogs$,
+        worldAddress: network.worldContract.address,
+        worldAbi: network.worldContract.abi,
+        write$: network.write$,
+        recsWorld: network.world,
+      });
+    }
 
     /**
      * Wait for state to be synced before resolving setup promise

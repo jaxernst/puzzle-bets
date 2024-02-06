@@ -1,3 +1,8 @@
+<script context="module">
+  import { writable } from "svelte/store";
+  const gameCache = writable();
+</script>
+
 <script lang="ts">
   import { page } from "$app/stores";
   import { onMount } from "svelte";
@@ -15,6 +20,11 @@
   } = null;
 
   const getOrCreateGame = async (user: string, opponent: string) => {
+    if ($gameCache) {
+      gameState = $gameCache as typeof gameState;
+      return;
+    }
+
     const res = await fetch("/api/wordle/get-or-create-game", {
       method: "POST",
       body: JSON.stringify({ gameId: $page.params.gameId, user, opponent }),
@@ -22,6 +32,7 @@
 
     if (!res.ok) return;
     gameState = await res.json();
+    gameCache.set(gameState);
   };
 
   $: onchainGame = $userGames.find(
@@ -40,6 +51,8 @@
   }
 
   const enterGuess = async (guess: string) => {
+    gameCache.set(undefined);
+
     const res = await fetch("/api/wordle/submit-guess", {
       method: "POST",
       body: JSON.stringify({ guess, gameId: $page.params.gameId, user: $user }),

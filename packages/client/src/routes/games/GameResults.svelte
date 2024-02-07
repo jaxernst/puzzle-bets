@@ -104,8 +104,10 @@
   };
 </script>
 
-<div class="bg-gray-600 p-5 rounded-xl flex flex-col gap-2 max-w-[450px]">
-  <div class="flex flex-col gap-6 font-semibold">
+<div
+  class="bg-gray-600 min-w-[350px] p-5 rounded-xl flex flex-col gap-2 max-w-[450px]"
+>
+  <div class="flex flex-col gap-7 font-semibold">
     <div class="flex justify-between items-center gap-5">
       <div class="">Game #{parseInt(gameId, 16)} Results</div>
       <div
@@ -159,7 +161,7 @@
       </div>
     </div>
 
-    <div class="flex flex-col items-center gap-2">
+    <div class="flex flex-col items-center gap-1 p-3">
       {#if gameOutcome === "lost"}
         <span class="text-pb-yellow">
           You lost :( Your opponent won the pot
@@ -199,10 +201,10 @@
               It's a tie! Vote to rematch?
             {/if}
           </button>
-          or
+          <span class="text-gray-400 text-sm">or</span>
         {/if}
         <button
-          class={`border border-pb-yellow rounded-lg p-2 self-center whitespace-nowrap ${
+          class={`border border-pb-yellow text-gray-100 rounded-lg p-2 self-center whitespace-nowrap ${
             claimed ? "opacity-50" : ""
           }`}
           disabled={claimed}

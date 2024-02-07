@@ -3,4 +3,5 @@ export type GameState = {
   answers: string[];
   answer: string | null;
   badGuess: boolean;
+  resetCount?: number;
 };

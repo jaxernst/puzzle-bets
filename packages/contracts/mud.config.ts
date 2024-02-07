@@ -37,6 +37,15 @@ export default mudConfig({
       },
       valueSchema: "address",
     },
+
+    RematchCount: "uint16",
+    VoteRematch: {
+      keySchema: {
+        gameId: "bytes32",
+        me: "address",
+      },
+      valueSchema: "bool",
+    },
   },
 
   modules: [

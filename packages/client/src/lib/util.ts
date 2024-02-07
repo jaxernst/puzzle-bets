@@ -1,5 +1,5 @@
 import type { Entity } from "@latticexyz/recs";
-import { numberToHex, padHex } from "viem";
+import { formatEther, numberToHex, padHex } from "viem";
 
 export const localTzOffsetHrs = () => {
   return -new Date().getTimezoneOffset() / 60;
@@ -185,4 +185,8 @@ export const formatAsDollar = (value: number) => {
     style: "currency",
     currency: "USD",
   }).format(value);
+};
+
+export const weiToDollar = (wei: bigint, ethPrice: number) => {
+  return formatAsDollar(Number(formatEther(wei)) * ethPrice);
 };

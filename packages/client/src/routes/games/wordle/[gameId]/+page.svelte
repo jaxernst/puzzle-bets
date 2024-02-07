@@ -7,9 +7,7 @@
 
 <script lang="ts">
   import { page } from "$app/stores";
-  import { onMount } from "svelte";
   import WordleGame from "../WordleGame.svelte";
-  import type { PageData } from "./$types";
   import { user } from "$lib/mud/mudStore";
   import { liveGameStatus, userGames, userSolvedGame } from "$lib/gameStores";
   import { GameStatus, type EvmAddress } from "$lib/types";
@@ -30,6 +28,10 @@
     gameStates.update((s) => s.set(gameId, gameState!));
   };
 
+  $: onchainGame = $userGames.find(
+    (g) => parseInt(g.id, 16).toString() === $page.params.gameId
+  );
+
   $: if (
     !gameState &&
     $user &&
@@ -37,13 +39,32 @@
     onchainGame.status === GameStatus.Active &&
     onchainGame.opponent
   ) {
-    console.log("creating new game");
     getOrCreateGame($user, onchainGame.opponent);
   }
 
-  $: onchainGame = $userGames.find(
-    (g) => parseInt(g.id, 16).toString() === $page.params.gameId
-  );
+  $: console.log(onchainGame?.rematchCount, gameState?.resetCount);
+  $: if (
+    onchainGame &&
+    gameState &&
+    onchainGame.rematchCount > (gameState.resetCount ?? 1e10)
+  ) {
+    (async () => {
+      const res = await fetch("/api/wordle/reset-game", {
+        method: "POST",
+        body: JSON.stringify({
+          gameId: $page.params.gameId,
+          user: $user,
+          otherPlayer: onchainGame?.opponent,
+          chainRematchCount: onchainGame.rematchCount,
+        }),
+      });
+
+      if (!res.ok) return;
+
+      gameState = await res.json();
+      gameStates.update((s) => s.set(gameId, gameState!));
+    })();
+  }
 
   const enterGuess = async (guess: string) => {
     const res = await fetch("/api/wordle/submit-guess", {
@@ -53,8 +74,11 @@
 
     if (!res.ok) return;
 
-    gameState = await res.json();
-    gameStates.update((s) => s.set(gameId, gameState!));
+    gameState = (await res.json()) as Omit<GameState, "resetCount">;
+    gameStates.update((s) => {
+      let resetCount = s.get(gameId)?.resetCount;
+      return s.set(gameId, { ...gameState!, resetCount });
+    });
 
     if (gameState?.answers.at(-1) === "xxxxx") {
       launchConfetti();

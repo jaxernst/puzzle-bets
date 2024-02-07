@@ -20,5 +20,7 @@ interface IPuzzleGameSystem {
 
   function games__submitSolution(bytes32 gameId) external;
 
+  function games__voteRematch(bytes32 gameId) external;
+
   function games__claim(bytes32 gameId) external;
 }

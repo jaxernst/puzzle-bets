@@ -14,3 +14,5 @@ import { Player2, Player2TableId } from "./tables/Player2.sol";
 import { Solved, SolvedTableId } from "./tables/Solved.sol";
 import { Balance, BalanceTableId } from "./tables/Balance.sol";
 import { OtherPlayer, OtherPlayerTableId } from "./tables/OtherPlayer.sol";
+import { RematchCount, RematchCountTableId } from "./tables/RematchCount.sol";
+import { VoteRematch, VoteRematchTableId } from "./tables/VoteRematch.sol";

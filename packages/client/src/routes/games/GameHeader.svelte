@@ -95,7 +95,7 @@
       showResultsModal = false;
     }}
   >
-    <GameResults {gameId} />
+    <GameResults {gameId} onClose={() => (showResultsModal = false)} />
   </Modal>
 {/if}
 

@@ -2,6 +2,12 @@ import type { EvmAddress, Game, GameType } from "$lib/types";
 import { urlGameIdToEntity } from "$lib/util";
 import { supabase } from "./supabaseClient";
 
+const chainId = import.meta.env.VITE_CHAIN_ID;
+
+const gameStateTable = (demoGame?: boolean) => {
+  return `game-state-${demoGame ? "demo" : chainId}`;
+};
+
 interface GameStore {
   hasGame: (
     gameType: GameType,
@@ -24,8 +30,9 @@ interface GameStore {
 export const supabaseGameStore: GameStore = (() => {
   return {
     hasGame: async (gameType, gameId, user) => {
+      const isDemo = !user;
       const res = await supabase
-        .from("game-state")
+        .from(gameStateTable(isDemo))
         .select("*")
         .eq("game_type", gameType)
         .eq("game_id", gameId)
@@ -35,8 +42,9 @@ export const supabaseGameStore: GameStore = (() => {
       return Boolean(res.data);
     },
     getGame: async (gameType, gameId, user) => {
+      const isDemo = !user;
       const res = await supabase
-        .from("game-state")
+        .from(gameStateTable(isDemo))
         .select("*")
         .eq("game_type", gameType)
         .eq("game_id", gameId)
@@ -46,7 +54,8 @@ export const supabaseGameStore: GameStore = (() => {
       return res.data && res.data.game_state;
     },
     setGame: async (newGameState, gameType, gameId, user) => {
-      const res = await supabase.from("game-state").upsert({
+      const isDemo = !user;
+      const res = await supabase.from(gameStateTable(isDemo)).upsert({
         game_id: gameId,
         game_type: gameType,
         game_state: newGameState,
@@ -60,7 +69,7 @@ export const supabaseGameStore: GameStore = (() => {
 
 export const getGameResetCount = async (gameId: string) => {
   const res = await supabase
-    .from("game-state")
+    .from(gameStateTable())
     .select("reset_count")
     .eq("game_id", gameId);
 
@@ -79,7 +88,7 @@ export const incrementGameResetCount = async (
   }
 
   const res = await supabase
-    .from("game-state")
+    .from(gameStateTable())
     .update({
       reset_count: curCount + 1,
     })

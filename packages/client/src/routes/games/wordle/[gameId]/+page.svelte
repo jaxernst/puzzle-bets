@@ -49,13 +49,7 @@
     gameStates.update((s) => s.set(gameId, gameState!));
   };
 
-  $: if (
-    !gameState &&
-    $user &&
-    onchainGame &&
-    onchainGame.status === GameStatus.Active &&
-    onchainGame.opponent
-  ) {
+  $: if (!gameState && $user && onchainGame && onchainGame.opponent) {
     getOrCreateGame($user, onchainGame.opponent);
   }
 
@@ -103,6 +97,10 @@
       answer: gameState.answer,
       badGuess: gameState.badGuess,
     }}
+    paused={gameOver ||
+      submitted ||
+      expired ||
+      onchainGame?.status !== GameStatus.Active}
     on:submitGuess={(e) => {
       enterGuess(e.detail.guess);
     }}

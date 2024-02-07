@@ -8,6 +8,8 @@
     badGuess?: boolean | null;
   } = { answers: [], answer: null, guesses: [] };
 
+  export let paused = false;
+
   $: badGuess = data.badGuess;
 
   $: won = data.answers.at(-1) === "xxxxx";
@@ -146,7 +148,7 @@
     {/each}
   </div>
 
-  <div class={`controls ${!gameOver ? "controls-playing" : ""}`}>
+  <div class={`controls ${!(gameOver || paused) ? "controls-playing" : ""}`}>
     {#if won}
       <p>You solved it!</p>
     {:else if data.answers.length >= 6}
@@ -164,7 +166,7 @@
           ? "you solved the puzzle. Wait for the deadline to view results :)"
           : `game over :(`} play again?
       </button>-->
-    {:else}
+    {:else if !paused}
       <div class="keyboard">
         <button
           data-key="enter"

@@ -87,6 +87,7 @@
   $: submitted = onchainGame && $userSolvedGame(onchainGame.id, $user);
   $: liveStatus = onchainGame && liveGameStatus(onchainGame.id);
   $: expired = liveStatus && !$liveStatus?.submissionTimeLeft;
+  $: won = gameState?.answers.at(-1) === "xxxxx";
 </script>
 
 {#if gameState}
@@ -105,7 +106,7 @@
       enterGuess(e.detail.guess);
     }}
   />
-  {#if gameOver && !submitted && !expired}
+  {#if won && !submitted && !expired}
     <div class="w-full text-center text-gray-400">
       Submit your solution before the deadline
     </div>

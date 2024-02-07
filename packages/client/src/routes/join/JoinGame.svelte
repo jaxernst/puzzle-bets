@@ -78,7 +78,7 @@
         <div class="flex flex-col gap-1 text-gray-400">
           <div class="">Game Creator</div>
           <div class="">Bet Amount</div>
-          <div class="">Submission Window</div>
+          <div class="">Solution Deadline</div>
         </div>
         <div class="flex flex-col gap-1 text-gray-100">
           <div class="">{shortenAddress(game.p1)}</div>

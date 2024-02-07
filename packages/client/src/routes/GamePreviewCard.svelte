@@ -27,6 +27,8 @@
 
     return formatAsDollar(ethValue * $ethPrice);
   };
+
+  $: liveStatus = liveGameStatus(id);
 </script>
 
 <a
@@ -53,7 +55,11 @@
     {:else if solved}
       successfully solved!
     {:else if status === GameStatus.Active}
-      waiting for submission...
+      {#if ($liveStatus?.submissionTimeLeft ?? 0) > 0}
+        waiting for submission...
+      {:else}
+        time's up...
+      {/if}
     {/if}
   </div>
 </a>

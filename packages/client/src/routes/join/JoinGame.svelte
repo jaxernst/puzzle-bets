@@ -99,17 +99,19 @@
     </div>
 
     <div class="px-4 flex justify-center mt-2">
-      <button
-        in:slide={{ axis: "x" }}
-        class="bg-lime-500 text-white rounded-lg p-2 whitespace-nowrap hover:bg-lime-400 hover:shadow transition-all"
-        on:click={joinGame}
-      >
-        {#if joinGameLoading}
-          <DotLoader />
-        {:else}
-          Join to Reveal Puzzle
-        {/if}
-      </button>
+      {#key joinGameLoading}
+        <button
+          in:slide={{ axis: "x" }}
+          class="bg-lime-500 text-white rounded-lg p-2 whitespace-nowrap hover:bg-lime-400 hover:shadow transition-all"
+          on:click={joinGame}
+        >
+          {#if joinGameLoading}
+            <DotLoader />
+          {:else}
+            Join to Reveal Puzzle
+          {/if}
+        </button>
+      {/key}
     </div>
   </div>
 {/if}

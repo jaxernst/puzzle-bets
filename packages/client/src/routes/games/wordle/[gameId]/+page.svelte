@@ -16,6 +16,10 @@
   $: gameId = $page.params.gameId;
   $: gameState = $gameStates.get(gameId);
 
+  $: onchainGame = $userGames.find(
+    (g) => parseInt(g.id, 16).toString() === $page.params.gameId
+  );
+
   $: getOrCreateGame = async (user: string, opponent: string) => {
     const res = await fetch("/api/wordle/get-or-create-game", {
       method: "POST",
@@ -28,9 +32,22 @@
     gameStates.update((s) => s.set(gameId, gameState!));
   };
 
-  $: onchainGame = $userGames.find(
-    (g) => parseInt(g.id, 16).toString() === $page.params.gameId
-  );
+  $: resetGame = async () => {
+    const res = await fetch("/api/wordle/reset-game", {
+      method: "POST",
+      body: JSON.stringify({
+        gameId: $page.params.gameId,
+        user: $user,
+        otherPlayer: onchainGame?.opponent,
+        chainRematchCount: onchainGame?.rematchCount,
+      }),
+    });
+
+    if (!res.ok) return;
+
+    gameState = await res.json();
+    gameStates.update((s) => s.set(gameId, gameState!));
+  };
 
   $: if (
     !gameState &&
@@ -47,22 +64,7 @@
     gameState &&
     onchainGame.rematchCount > (gameState.resetCount ?? 1e10)
   ) {
-    (async () => {
-      const res = await fetch("/api/wordle/reset-game", {
-        method: "POST",
-        body: JSON.stringify({
-          gameId: $page.params.gameId,
-          user: $user,
-          otherPlayer: onchainGame?.opponent,
-          chainRematchCount: onchainGame.rematchCount,
-        }),
-      });
-
-      if (!res.ok) return;
-
-      gameState = await res.json();
-      gameStates.update((s) => s.set(gameId, gameState!));
-    })();
+    resetGame();
   }
 
   const enterGuess = async (guess: string) => {

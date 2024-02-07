@@ -1,6 +1,8 @@
-<script context="module">
+<script context="module" lang="ts">
+  import { type GameState } from "../types";
   import { writable } from "svelte/store";
-  const gameCache = writable();
+
+  const gameStates = writable<Map<string, GameState>>(new Map());
 </script>
 
 <script lang="ts">
@@ -13,32 +15,20 @@
   import { GameStatus, type EvmAddress } from "$lib/types";
   import { launchConfetti } from "$lib/components/Confetti.svelte";
 
-  export let gameState: null | {
-    guesses: string[];
-    answers: string[];
-    answer: string | null;
-    badGuess: boolean;
-  } = null;
+  $: gameId = $page.params.gameId;
+  $: gameState = $gameStates.get(gameId);
 
-  const getOrCreateGame = async (user: string, opponent: string) => {
-    if ($gameCache) {
-      gameState = $gameCache as typeof gameState;
-      return;
-    }
-
+  $: getOrCreateGame = async (user: string, opponent: string) => {
     const res = await fetch("/api/wordle/get-or-create-game", {
       method: "POST",
       body: JSON.stringify({ gameId: $page.params.gameId, user, opponent }),
     });
 
     if (!res.ok) return;
-    gameState = await res.json();
-    gameCache.set(gameState);
-  };
 
-  $: onchainGame = $userGames.find(
-    (g) => parseInt(g.id, 16).toString() === $page.params.gameId
-  );
+    gameState = (await res.json()) as GameState;
+    gameStates.update((s) => s.set(gameId, gameState!));
+  };
 
   $: if (
     !gameState &&
@@ -51,16 +41,20 @@
     getOrCreateGame($user, onchainGame.opponent);
   }
 
-  const enterGuess = async (guess: string) => {
-    gameCache.set(undefined);
+  $: onchainGame = $userGames.find(
+    (g) => parseInt(g.id, 16).toString() === $page.params.gameId
+  );
 
+  const enterGuess = async (guess: string) => {
     const res = await fetch("/api/wordle/submit-guess", {
       method: "POST",
       body: JSON.stringify({ guess, gameId: $page.params.gameId, user: $user }),
     });
 
     if (!res.ok) return;
+
     gameState = await res.json();
+    gameStates.update((s) => s.set(gameId, gameState!));
 
     if (gameState?.answers.at(-1) === "xxxxx") {
       launchConfetti();

@@ -89,7 +89,6 @@ export type LiveStatus = {
  * user claims the pot
  **/
 export function liveGameStatus(gameId: Entity) {
-  console.log("instantiate live status");
   const store = writable<LiveStatus | null>(null);
 
   // Decrement timers and mark game as complete when time runs out
@@ -130,7 +129,6 @@ export function liveGameStatus(gameId: Entity) {
     timer = setInterval(() => {
       updateStatusTimers(game, () => {
         // On game finalized callback
-        console.log("game finalized");
         timersStarted = false;
         clearInterval(timer);
       });
@@ -169,7 +167,6 @@ export function liveGameStatus(gameId: Entity) {
 
     // If the game start time changes (when a rematch occurs), reset timers
     if (gameStartTimeChanged && timersStarted) {
-      console.log("Reset timers");
       clearInterval(timer);
       startTimers(game);
     }

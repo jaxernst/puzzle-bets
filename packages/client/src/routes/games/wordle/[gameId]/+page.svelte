@@ -42,7 +42,6 @@
     getOrCreateGame($user, onchainGame.opponent);
   }
 
-  $: console.log(onchainGame?.rematchCount, gameState?.resetCount);
   $: if (
     onchainGame &&
     gameState &&

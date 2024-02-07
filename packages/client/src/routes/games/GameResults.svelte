@@ -53,11 +53,9 @@
   })();
 
   $: userBalance = $user === game.p1 ? game.p1Balance : game.p2Balance;
-
-  $: claimed =
-    gameOutcome !== "lost" &&
-    game.status === GameStatus.Complete &&
-    userBalance === 0n;
+  $: opponentBalance = $user === game.p1 ? game.p2Balance : game.p1Balance;
+  $: claimed = gameOutcome !== "lost" && userBalance === 0n;
+  $: opponentClaimed = gameOutcome !== "won" && opponentBalance === 0n;
 
   let claimLoading = false;
   let claimError: string | null = null;
@@ -178,26 +176,45 @@
           {#if claimLoading}
             <DotLoader />
           {:else if claimed}
-            ${gameOutcome === "won" ? potSizeUsd : potSizeUsd / 2} claimed!
+            {formatAsDollar(potSizeUsd)} claimed!
           {:else}
             You won! Click to claim your winnings
           {/if}
         </button>
       {:else if gameOutcome === "tie"}
+        {#if !claimed && !opponentClaimed}
+          <button
+            class={`bg-lime-500 rounded-lg p-2 self-center whitespace-nowrap ${
+              votedRematch ? "opacity-50" : ""
+            }`}
+            disabled={votedRematch}
+            on:click={voteRematch}
+            in:slide={{ axis: "x" }}
+          >
+            {#if voteRematchLoading}
+              <DotLoader />
+            {:else if votedRematch}
+              Voted to rematch
+            {:else}
+              It's a tie! Vote to rematch?
+            {/if}
+          </button>
+          or
+        {/if}
         <button
-          class={`bg-lime-500 rounded-lg p-2 self-center whitespace-nowrap ${
-            votedRematch ? "opacity-50" : ""
+          class={`border border-pb-yellow rounded-lg p-2 self-center whitespace-nowrap ${
+            claimed ? "opacity-50" : ""
           }`}
-          disabled={votedRematch}
-          on:click={voteRematch}
+          disabled={claimed}
+          on:click={claim}
           in:slide={{ axis: "x" }}
         >
-          {#if voteRematchLoading}
-            <DotLoader />
-          {:else if votedRematch}
-            Voted to rematch
+          {#if claimLoading}
+            <DotLoader klass="fill-gray-100" />
+          {:else if claimed}
+            {formatAsDollar(potSizeUsd / 2)} claimed!
           {:else}
-            It's a tie! Vote to rematch?
+            Withdraw wager
           {/if}
         </button>
       {/if}

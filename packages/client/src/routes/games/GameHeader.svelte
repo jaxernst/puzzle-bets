@@ -113,7 +113,7 @@
         </a>
         {capitalized(gameType)} #{parseInt(gameId, 16)}
       {:else}
-        {capitalized(gameType)}
+        {capitalized(gameType)} (practice)
       {/if}
     </div>
 

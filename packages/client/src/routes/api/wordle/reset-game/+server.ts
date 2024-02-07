@@ -14,6 +14,8 @@ export const POST = async ({ request }) => {
       chainRematchCount?: number;
     };
 
+  const isDemoGame = !otherPlayer && !chainRematchCount;
+
   if (!gameId) return new Response("Missing game ID", { status: 400 });
 
   const gameExists = await supabaseGameStore.hasGame("wordle", gameId, user);
@@ -37,7 +39,11 @@ export const POST = async ({ request }) => {
     );
   }
 
-  const resetCount = await incrementGameResetCount(gameId, chainRematchCount);
+  const resetCount = await incrementGameResetCount(
+    gameId,
+    chainRematchCount,
+    isDemoGame
+  );
 
   return new Response(
     JSON.stringify({

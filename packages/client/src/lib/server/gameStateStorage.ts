@@ -67,9 +67,9 @@ export const supabaseGameStore: GameStore = (() => {
   };
 })();
 
-export const getGameResetCount = async (gameId: string) => {
+export const getGameResetCount = async (gameId: string, isDemo?: boolean) => {
   const res = await supabase
-    .from(gameStateTable())
+    .from(gameStateTable(isDemo))
     .select("reset_count")
     .eq("game_id", gameId);
 
@@ -78,9 +78,10 @@ export const getGameResetCount = async (gameId: string) => {
 
 export const incrementGameResetCount = async (
   gameId: string,
-  chainRematchCount?: number
+  chainRematchCount?: number,
+  isDemo?: boolean
 ) => {
-  const curCount = (await getGameResetCount(gameId)) ?? 0;
+  const curCount = (await getGameResetCount(gameId, isDemo)) ?? 0;
 
   // offchain reset count should never exceed db reset count
   if (typeof chainRematchCount === "number" && curCount >= chainRematchCount) {
@@ -88,7 +89,7 @@ export const incrementGameResetCount = async (
   }
 
   const res = await supabase
-    .from(gameStateTable())
+    .from(gameStateTable(isDemo))
     .update({
       reset_count: curCount + 1,
     })

@@ -8,6 +8,8 @@
     badGuess?: boolean | null;
   } = { answers: [], answer: null, guesses: [] };
 
+  $: badGuess = data.badGuess;
+
   $: won = data.answers.at(-1) === "xxxxx";
 
   $: gameOver = won || data.answers.length >= 6;
@@ -97,7 +99,7 @@
   method="POST"
   on:submit={(e) => {
     e.preventDefault();
-    data.badGuess = false;
+    badGuess = false;
     dispatch("submitGuess", { guess: currentGuess });
   }}
 >
@@ -105,7 +107,7 @@
     >How to play</a
   >
 
-  <div class="grid" class:playing={!won} class:bad-guess={data.badGuess}>
+  <div class="grid" class:playing={!won} class:bad-guess={badGuess}>
     {#each Array.from(Array(6).keys()) as row (row)}
       {@const current = row === i}
       <h2 class="visually-hidden">Row {row + 1}</h2>

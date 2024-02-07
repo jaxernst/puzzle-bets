@@ -11,6 +11,7 @@
   import { user } from "$lib/mud/mudStore";
   import { liveGameStatus, userGames, userSolvedGame } from "$lib/gameStores";
   import { GameStatus, type EvmAddress } from "$lib/types";
+  import { launchConfetti } from "$lib/components/Confetti.svelte";
 
   export let gameState: null | {
     guesses: string[];
@@ -60,6 +61,10 @@
 
     if (!res.ok) return;
     gameState = await res.json();
+
+    if (gameState?.answers.at(-1) === "xxxxx") {
+      launchConfetti();
+    }
   };
 
   $: gameOver =

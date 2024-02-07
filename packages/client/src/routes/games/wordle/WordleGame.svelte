@@ -97,6 +97,7 @@
   method="POST"
   on:submit={(e) => {
     e.preventDefault();
+    data.badGuess = false;
     dispatch("submitGuess", { guess: currentGuess });
   }}
 >

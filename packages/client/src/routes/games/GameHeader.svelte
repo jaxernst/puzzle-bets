@@ -18,6 +18,7 @@
   import DotLoader from "$lib/components/DotLoader.svelte";
   import { slide } from "svelte/transition";
   import { SUPPORTED_GAME_TYPES } from "$lib/constants";
+  import BackArrow from "$lib/icons/BackArrow.svelte";
 
   export let gameType: GameType;
   export let gameId: Entity | null = null;
@@ -100,8 +101,16 @@
 
 <div class="flex flex-col">
   <div class="flex justify-between items-center">
-    <div class="font-mono sm:text-lg text-gray-100">
+    <div class="flex gap-1 items-center font-mono sm:text-lg text-gray-100">
       {#if gameId}
+        <a
+          href={`/games/${gameType}/demo`}
+          class="p-1 hover:scale-125 hover:fill-white transition-all"
+        >
+          <div class="h-5 w-5 fill-gray-100 stroke-gray-100">
+            <BackArrow />
+          </div>
+        </a>
         {capitalized(gameType)} #{parseInt(gameId, 16)}
       {:else}
         {capitalized(gameType)}

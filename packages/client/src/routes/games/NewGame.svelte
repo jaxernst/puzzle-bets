@@ -159,6 +159,10 @@
         type="text"
         class="border-2 border-gray-500 bg-transparent text-gray-200 px-2 rounded-lg w-[130px]"
         bind:value={inviteName}
+        on:input={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+        }}
       />
     </div>
   </div>

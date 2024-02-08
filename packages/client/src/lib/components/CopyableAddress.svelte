@@ -4,6 +4,8 @@
 
   let copied = false;
   async function copyInviteUrl() {
+    if (typeof navigator === "undefined" || !navigator.clipboard) return;
+
     try {
       await navigator.clipboard.writeText(address);
       copied = true;

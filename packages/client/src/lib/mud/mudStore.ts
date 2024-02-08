@@ -3,12 +3,8 @@ import { writable, derived, get } from "svelte/store";
 import { mount as mountDevTools } from "@latticexyz/dev-tools";
 import {
   type Component,
-  runQuery,
-  Has,
-  HasValue,
   type Entity,
   getComponentValue,
-  getComponentEntities,
 } from "@latticexyz/recs";
 
 import {

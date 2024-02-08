@@ -1,7 +1,7 @@
 <script lang="ts">
   import { loginAndConnect } from "$lib/components/WalletConnector.svelte";
   import { mud, user } from "$lib/mud/mudStore";
-  import { type Entity, getComponentValue } from "@latticexyz/recs";
+  import { type Entity } from "@latticexyz/recs";
   import NewGameModal from "./NewGame.svelte";
   import { GameStatus, type Game, type GameType } from "$lib/types";
   import { capitalized } from "$lib/util";
@@ -9,14 +9,12 @@
   import Modal from "$lib/components/Modal.svelte";
   import GameResults from "./GameResults.svelte";
   import {
-    getGame,
     liveGameStatus,
     userSolvedGame,
     type LiveStatus,
   } from "$lib/gameStores";
   import { readable, writable, type Readable } from "svelte/store";
   import DotLoader from "$lib/components/DotLoader.svelte";
-  import { slide } from "svelte/transition";
   import { SUPPORTED_GAME_TYPES } from "$lib/constants";
   import BackArrow from "$lib/icons/BackArrow.svelte";
 

@@ -1,11 +1,8 @@
 <script lang="ts">
-  import { userWallet } from "$lib/mud/connectWallet";
   import { mud } from "$lib/mud/mudStore";
   import { page } from "$app/stores";
   import Modal from "$lib/components/Modal.svelte";
-  import { gameNumberToType, type GameType } from "$lib/types";
-  import { capitalized, systemTimestamp, urlGameIdToEntity } from "$lib/util";
-  import { getComponentValue, getComponentValueStrict } from "@latticexyz/recs";
+  import { systemTimestamp, urlGameIdToEntity } from "$lib/util";
   import JoinGame from "./JoinGame.svelte";
   import { goto } from "$app/navigation";
   import { onMount } from "svelte";

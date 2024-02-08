@@ -2,7 +2,6 @@
   export let data;
 
   let { gameType, senderName } = data;
-
   senderName = senderName?.split("_").join(" ") ?? null;
 
   let inviteMessage = "";

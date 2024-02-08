@@ -1,4 +1,4 @@
-import { derived, get, writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
 
 import { mud, user } from "./mud/mudStore";
 import {
@@ -13,12 +13,11 @@ import {
   GameStatus,
   gameNumberToType,
   type Game,
-  type StartedGame,
   type EvmAddress,
 } from "$lib/types";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
 import type { SetupNetworkResult } from "./mud/setupNetwork";
-import { systemTimestamp, timeRemaining } from "./util";
+import { timeRemaining } from "./util";
 
 export const userGames = derived([mud, user], ([$mud, $user]) => {
   if (!$mud || !$mud.ready || !$user) return [];

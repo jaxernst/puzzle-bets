@@ -1,11 +1,6 @@
 <script>
-  import { goto } from "$app/navigation";
-  import puzzly from "$lib/assets/puzzly.png";
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte";
-  import Puzzly from "$lib/icons/puzzly.svelte";
-  import { userWallet } from "$lib/mud/connectWallet";
   import { mud, user } from "$lib/mud/mudStore";
-  import { onMount } from "svelte";
 
   const loginAndConnect = async () => {
     const wallet = await promptConnectWallet();

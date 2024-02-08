@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { browser } from "$app/environment";
   import DotLoader from "$lib/components/DotLoader.svelte";
   import { ethPrice } from "$lib/ethPrice";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
@@ -51,7 +52,7 @@
   }
 
   let inviteUrl = "";
-  $: if (gameCreated) {
+  $: if (gameCreated && browser) {
     const entities = runQuery([
       HasValue($mud.components.Player1, { value: $user }),
     ]);

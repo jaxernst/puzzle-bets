@@ -3,16 +3,9 @@
   import { ethPrice } from "$lib/ethPrice";
   import { getGame, liveGameStatus, userSolvedGame } from "$lib/gameStores";
   import { user, mud } from "$lib/mud/mudStore";
-  import { GameStatus, type StartedGame } from "$lib/types";
-  import {
-    capitalized,
-    formatAsDollar,
-    formatTime,
-    shortenAddress,
-    weiToDollar,
-  } from "$lib/util";
+  import { type StartedGame } from "$lib/types";
+  import { formatAsDollar, formatTime, weiToDollar } from "$lib/util";
   import type { Entity } from "@latticexyz/recs";
-  import { asapScheduler } from "rxjs";
   import { slide } from "svelte/transition";
   import { formatEther } from "viem";
 

@@ -98,10 +98,12 @@
       answer: gameState.answer,
       badGuess: gameState.badGuess,
     }}
-    paused={gameOver ||
-      submitted ||
-      expired ||
-      onchainGame?.status !== GameStatus.Active}
+    paused={Boolean(
+      gameOver ||
+        submitted ||
+        expired ||
+        onchainGame?.status !== GameStatus.Active
+    )}
     on:submitGuess={(e) => {
       enterGuess(e.detail.guess);
     }}

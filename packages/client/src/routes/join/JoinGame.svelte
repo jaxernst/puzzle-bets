@@ -1,10 +1,7 @@
 <script lang="ts">
-  import { page } from "$app/stores";
   import DotLoader from "$lib/components/DotLoader.svelte";
-  import Modal from "$lib/components/Modal.svelte";
   import { getGame } from "$lib/gameStores";
   import { mud } from "$lib/mud/mudStore";
-  import { gameNumberToType, GameStatus, type GameType } from "$lib/types";
   import { ethPrice } from "$lib/ethPrice";
   import {
     capitalized,
@@ -12,17 +9,14 @@
     formatTime,
     shortenAddress,
     systemTimestamp,
-    urlGameIdToEntity,
   } from "$lib/util";
-  import { getComponentValueStrict, type Entity } from "@latticexyz/recs";
+  import { type Entity } from "@latticexyz/recs";
   import { createEventDispatcher, onMount } from "svelte";
   import { slide } from "svelte/transition";
   import { cubicInOut } from "svelte/easing";
   import { formatEther } from "viem";
 
   export let gameId: Entity;
-
-  let show = true;
 
   $: game = $getGame(gameId);
   $: gameType = game?.type;

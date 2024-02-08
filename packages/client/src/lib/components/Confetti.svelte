@@ -1,7 +1,6 @@
 <script context="module">
   import { browser } from "$app/environment";
   import { prefersReducedMotion } from "$lib/accessibility";
-  import { confetti } from "@neoconfetti/svelte";
   import { writable } from "svelte/store";
 
   const trigger = writable(0);
@@ -16,6 +15,10 @@
     stageWidth = window.innerWidth;
     stageHeight = window.innerHeight;
   }
+</script>
+
+<script>
+  import { confetti } from "@neoconfetti/svelte";
 </script>
 
 {#key $trigger}

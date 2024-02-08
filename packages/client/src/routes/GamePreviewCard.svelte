@@ -1,7 +1,12 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import { ethPrice } from "$lib/ethPrice";
-  import { getGame, liveGameStatus, userSolvedGame } from "$lib/gameStores";
+  import {
+    getGame,
+    liveGameStatus,
+    userArchivedGames,
+    userSolvedGame,
+  } from "$lib/gameStores";
   import { user } from "$lib/mud/mudStore";
   import { GameStatus, type Game, type GameType } from "$lib/types";
   import { capitalized, formatAsDollar } from "$lib/util";
@@ -29,6 +34,14 @@
   };
 
   $: liveStatus = liveGameStatus(id);
+
+  $: if (
+    $user &&
+    $liveStatus?.inviteTimeLeft === 0 &&
+    game.status === GameStatus.Pending
+  ) {
+    userArchivedGames.setArchivedState(id, true);
+  }
 </script>
 
 <a

@@ -24,7 +24,7 @@ export const POST = async ({ request }): Promise<Response> => {
 
   if (!gameId) return new Response("Missing game ID", { status: 400 });
 
-  const isDemoGame = !opponent && !user;
+  const isDemoGame = !opponent;
 
   let game: Game;
   if (isDemoGame) {

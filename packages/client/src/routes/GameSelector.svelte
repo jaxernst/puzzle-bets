@@ -1,16 +1,26 @@
 <script lang="ts">
-  import { getGame, userGames } from "$lib/gameStores";
+  import { getGame, userArchivedGames, userGames } from "$lib/gameStores";
   import { type GameType, GameStatus } from "$lib/types";
 
   import { slide } from "svelte/transition";
   import { cubicOut } from "svelte/easing";
   import GamePreviewCard from "./GamePreviewCard.svelte";
+  import { user } from "$lib/mud/mudStore";
 
-  $: activeGames = $userGames.filter((g) => g.status !== GameStatus.Complete);
-  $: completedGames = $userGames.filter(
+  $: nonArchivedGames = $userGames.filter(
+    (g) => !$userArchivedGames.includes(g.id)
+  );
+
+  $: activeGames = nonArchivedGames.filter(
+    (g) => g.status !== GameStatus.Complete
+  );
+  $: completedGames = nonArchivedGames.filter(
     (g) => g.status === GameStatus.Complete
   );
-  $: archivedGames = [];
+
+  $: archivedGames = $userGames.filter((g) =>
+    $userArchivedGames.includes(g.id)
+  );
 
   let selectedTab: "live" | "completed" | "archived" = "live";
 

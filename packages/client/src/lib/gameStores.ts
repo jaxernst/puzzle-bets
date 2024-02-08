@@ -18,7 +18,7 @@ import {
 } from "$lib/types";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
 import type { SetupNetworkResult } from "./mud/setupNetwork";
-import { systemTimestamp, timeRemaining } from "./util";
+import { systemTimestamp, timeRemaining, urlGameIdToEntity } from "./util";
 
 export const userGames = derived([mud, user], ([$mud, $user]) => {
   if (!$mud || !$mud.ready || !$user) return [];
@@ -177,6 +177,50 @@ export function liveGameStatus(gameId: Entity) {
 
   return store;
 }
+
+export const userArchivedGames = (() => {
+  const store = writable<Entity[]>([]);
+
+  user.subscribe(async ($user) => {
+    if (!$user) return;
+
+    const res = await fetch(`/api/game-settings/${$user}/archived`);
+    if (res.ok) {
+      const data = await res.json();
+      store.set(data.map(g => urlGameIdToEntity(g)));
+    }
+  });
+
+  const setArchivedState = async (gameId: Entity, archiveState: boolean) => {
+    const $user = get(user);
+    if (!$user || get(store).includes(gameId)) return;
+
+    const res = await fetch(`/api/game-settings/${$user}/update-archived`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        gameId: parseInt(gameId, 16),
+        archived: archiveState,
+      }),
+    });
+
+    if (res.ok) {
+      store.update((games) => {
+        if (archiveState) {
+          return [...games, gameId];
+        } else {
+          return games.filter((g) => g !== gameId);
+        }
+      });
+    }
+    console.log("archived game", gameId, res);
+  };
+
+  return {
+    ...store,
+    setArchivedState,
+  };
+})();
 
 const gameIdToGame = (
   gameId: Entity,

@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { goto, browser } from "$app/navigation";
+  import { browser } from "$app/environment";
+  import { goto } from "$app/navigation";
   import DotLoader from "$lib/components/DotLoader.svelte";
   import { ethPrice } from "$lib/ethPrice";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";

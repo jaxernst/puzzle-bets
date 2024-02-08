@@ -65,7 +65,7 @@
     if (newest) {
       const gameId = parseInt(newest, 16);
       const inviteUrlParams = inviteName
-        ? `?gameType=${gameType}&from=${inviteName}`
+        ? `?gameType=${gameType}&from=${inviteName.split(" ").join("_")}`
         : `?gameType=${gameType}`;
 
       inviteUrl = `${window.location.origin}/join/${gameId}${inviteUrlParams}`;

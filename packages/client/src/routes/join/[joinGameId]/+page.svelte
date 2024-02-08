@@ -1,8 +1,21 @@
 <script>
   export let data;
+  $: console.log(data);
+  let { gameType, senderName } = data;
+
+  let inviteMessage = "";
+  if (senderName) {
+    inviteMessage = `${senderName} has invited you to a ${gameType} game!`;
+  } else {
+    inviteMessage = `You have been invited to a ${gameType} game!`;
+  }
 </script>
 
 <svelte:head>
-  <title>Puzzle Bets | {data.gameType} Invite</title>
-  <meta name="description" content={data.inviteMessage} />
+  <title
+    >Puzzle Bets | {data.gameType} Invite {senderName
+      ? `from ${senderName}`
+      : ""}</title
+  >
+  <meta name="description" content={inviteMessage} />
 </svelte:head>

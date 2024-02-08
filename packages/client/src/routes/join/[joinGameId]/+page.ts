@@ -13,6 +13,6 @@ export async function load({ url }) {
 
   return {
     gameType,
-    inviteMessage,
+    senderName,
   };
 }

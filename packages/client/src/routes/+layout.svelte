@@ -1,9 +1,9 @@
 <script>
+  import "./styles.css";
   import { page } from "$app/stores";
   import WalletConnector from "$lib/components/WalletConnector.svelte";
   import GameSelector from "./GameSelector.svelte";
   import AppHeader from "./AppHeader.svelte";
-  import "./styles.css";
   import Confetti from "$lib/components/Confetti.svelte";
 </script>
 

@@ -1,8 +1,4 @@
 <script lang="ts">
-  import { confetti } from "@neoconfetti/svelte";
-  import { enhance } from "$app/forms";
-  import type { PageData, ActionData } from "./$types";
-  import { reduced_motion } from "./reduced-motion";
   import { createEventDispatcher } from "svelte";
 
   export let data: {
@@ -11,6 +7,10 @@
     answer: string | null;
     badGuess?: boolean | null;
   } = { answers: [], answer: null, guesses: [] };
+
+  export let paused = false;
+
+  $: badGuess = data.badGuess;
 
   $: won = data.answers.at(-1) === "xxxxx";
 
@@ -101,6 +101,7 @@
   method="POST"
   on:submit={(e) => {
     e.preventDefault();
+    badGuess = false;
     dispatch("submitGuess", { guess: currentGuess });
   }}
 >
@@ -108,7 +109,7 @@
     >How to play</a
   >
 
-  <div class="grid" class:playing={!won} class:bad-guess={data.badGuess}>
+  <div class="grid" class:playing={!won} class:bad-guess={badGuess}>
     {#each Array.from(Array(6).keys()) as row (row)}
       {@const current = row === i}
       <h2 class="visually-hidden">Row {row + 1}</h2>
@@ -147,7 +148,7 @@
     {/each}
   </div>
 
-  <div class={`controls ${!gameOver ? "controls-playing" : ""}`}>
+  <div class={`controls ${!(gameOver || paused) ? "controls-playing" : ""}`}>
     {#if won}
       <p>You solved it!</p>
     {:else if data.answers.length >= 6}
@@ -165,7 +166,7 @@
           ? "you solved the puzzle. Wait for the deadline to view results :)"
           : `game over :(`} play again?
       </button>-->
-    {:else}
+    {:else if !paused}
       <div class="keyboard">
         <button
           data-key="enter"
@@ -203,19 +204,6 @@
     {/if}
   </div>
 </form>
-
-{#if won}
-  <div
-    style="position: absolute; left: 50%; top: 30%"
-    use:confetti={{
-      particleCount: $reduced_motion ? 0 : undefined,
-      force: 0.7,
-      stageWidth: window.innerWidth,
-      stageHeight: window.innerHeight,
-      colors: ["#ff3e00", "#40b3ff", "#676778"],
-    }}
-  />
-{/if}
 
 <style>
   form {

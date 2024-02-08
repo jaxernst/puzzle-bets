@@ -8,6 +8,7 @@
   import { ethPrice } from "$lib/ethPrice";
   import {
     capitalized,
+    formatAsDollar,
     formatTime,
     shortenAddress,
     systemTimestamp,
@@ -77,13 +78,15 @@
         <div class="flex flex-col gap-1 text-gray-400">
           <div class="">Game Creator</div>
           <div class="">Bet Amount</div>
-          <div class="">Submission Window</div>
+          <div class="">Solution Deadline</div>
         </div>
         <div class="flex flex-col gap-1 text-gray-100">
           <div class="">{shortenAddress(game.p1)}</div>
           <div class="">
             {#if $ethPrice}
-              ${Number(formatEther(game.buyInAmount)) * $ethPrice}
+              {formatAsDollar(
+                Number(formatEther(game.buyInAmount)) * $ethPrice
+              )}
             {:else}
               {formatEther(game.buyInAmount)} eth
             {/if}
@@ -96,17 +99,19 @@
     </div>
 
     <div class="px-4 flex justify-center mt-2">
-      <button
-        in:slide={{ axis: "x" }}
-        class="bg-lime-500 text-white rounded-lg p-2 whitespace-nowrap hover:bg-lime-400 hover:shadow transition-all"
-        on:click={joinGame}
-      >
-        {#if joinGameLoading}
-          <DotLoader />
-        {:else}
-          Join to Reveal Puzzle
-        {/if}
-      </button>
+      {#key joinGameLoading}
+        <button
+          in:slide={{ axis: "x" }}
+          class="bg-lime-500 text-white rounded-lg p-2 whitespace-nowrap hover:bg-lime-400 hover:shadow transition-all"
+          on:click={joinGame}
+        >
+          {#if joinGameLoading}
+            <DotLoader />
+          {:else}
+            Join to Reveal Puzzle
+          {/if}
+        </button>
+      {/key}
     </div>
   </div>
 {/if}

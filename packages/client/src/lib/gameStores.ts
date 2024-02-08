@@ -121,22 +121,29 @@ export function liveGameStatus(gameId: Entity) {
   };
 
   let timersStarted = false;
+  let timer: NodeJS.Timeout;
+
+  const startTimers = (game: Game) => {
+    updateStatusTimers(game, () => {});
+
+    timer = setInterval(() => {
+      updateStatusTimers(game, () => {
+        // On game finalized callback
+        timersStarted = false;
+        clearInterval(timer);
+      });
+    }, 1000);
+
+    timersStarted = true;
+  };
+
+  let gameStartTime: bigint | null = null;
 
   // Listen for status updates to the onchain game state
-  const unsubscribe = mud.subscribe(($mud) => {
+  mud.subscribe(($mud) => {
     if (!$mud?.ready) return undefined;
 
     const game = gameIdToGame(gameId, $mud.components);
-
-    const startTimers = (game: Game) => {
-      updateStatusTimers(game, () => {});
-      const clearTimer = setInterval(() => {
-        updateStatusTimers(game, () => {
-          clearInterval(clearTimer);
-          unsubscribe();
-        });
-      }, 1000);
-    };
 
     store.update((state) => {
       if (!state) {
@@ -154,6 +161,18 @@ export function liveGameStatus(gameId: Entity) {
     if (!timersStarted) {
       startTimers(game);
     }
+
+    const gameStartTimeChanged =
+      gameStartTime !== null && game.startTime !== gameStartTime;
+
+    // If the game start time changes (when a rematch occurs), reset timers
+    if (gameStartTimeChanged && timersStarted) {
+      clearInterval(timer);
+      startTimers(game);
+    }
+
+    // Listen for a game rematch to occur. When it does, restart the timers
+    gameStartTime = game.startTime ?? null;
   });
 
   return store;
@@ -181,26 +200,6 @@ const gameIdToGame = (
   const buyInAmount =
     getComponentValue(mudComponents.BuyIn, gameId)?.value ?? 0n;
 
-  const p1Balance =
-    getComponentValue(
-      mudComponents.Balance,
-      encodeEntity(
-        { gameId: "bytes32", player: "address" },
-        { gameId: gameId as `0x${string}`, player: p1 as `0x${string}` }
-      )
-    )?.value ?? 0n;
-
-  const p2Balance =
-    (p2 &&
-      getComponentValue(
-        mudComponents.Balance,
-        encodeEntity(
-          { gameId: "bytes32", player: "address" },
-          { gameId: gameId as `0x${string}`, player: p2 as `0x${string}` }
-        )
-      )?.value) ??
-    0n;
-
   const startTime = getComponentValue(
     mudComponents.GameStartTime,
     gameId
@@ -216,6 +215,36 @@ const gameIdToGame = (
     gameId
   ).value;
 
+  const p1GameKey = encodeEntity(
+    { gameId: "bytes32", player: "address" },
+    { gameId: gameId as `0x${string}`, player: p1 as `0x${string}` }
+  );
+
+  const p2GameKey =
+    p2 &&
+    encodeEntity(
+      { gameId: "bytes32", player: "address" },
+      { gameId: gameId as `0x${string}`, player: p2 as `0x${string}` }
+    );
+
+  const p1Balance =
+    getComponentValue(mudComponents.Balance, p1GameKey)?.value ?? 0n;
+
+  const p2Balance =
+    (p2GameKey && getComponentValue(mudComponents.Balance, p2GameKey)?.value) ??
+    0n;
+
+  const p1Rematch = getComponentValue(
+    mudComponents.VoteRematch,
+    p1GameKey
+  )?.value;
+
+  const p2Rematch =
+    p2GameKey && getComponentValue(mudComponents.VoteRematch, p2GameKey)?.value;
+
+  const rematchCount =
+    getComponentValue(mudComponents.RematchCount, gameId)?.value ?? 0;
+
   return {
     id: gameId,
     type: gameType,
@@ -228,5 +257,8 @@ const gameIdToGame = (
     startTime,
     submissionWindow,
     inviteExpiration,
+    p1Rematch,
+    p2Rematch,
+    rematchCount,
   };
 };

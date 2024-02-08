@@ -4,9 +4,11 @@
   import GameSelector from "./GameSelector.svelte";
   import AppHeader from "./AppHeader.svelte";
   import "./styles.css";
+  import Confetti from "$lib/components/Confetti.svelte";
 </script>
 
 <WalletConnector />
+<Confetti />
 
 <div class="app max-w-[40rem] mx-auto">
   <main class="text-white flex-grow flex flex-col p-4 gap-4 sm:gap-5">

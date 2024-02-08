@@ -53,7 +53,7 @@ export const mud = (() => {
       });
     });
 
-    if (import.meta.env.VITE_CHAIN_ID === 31337) {
+    if (Number(import.meta.env.VITE_CHAIN_ID) === 31337) {
       mountDevTools({
         config: mudConfig,
         walletClient: walletClient,

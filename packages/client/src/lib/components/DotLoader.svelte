@@ -1,7 +1,11 @@
+<script>
+  export let klass = "fill-lime-600";
+</script>
+
 <svg
   width="24"
   height="24"
-  class="fill-lime-600"
+  class={klass}
   viewBox="0 0 24 24"
   xmlns="http://www.w3.org/2000/svg"
   ><style>

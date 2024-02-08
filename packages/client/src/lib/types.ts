@@ -26,6 +26,9 @@ export type StartedGame = {
   startTime: bigint;
   submissionWindow: number;
   inviteExpiration: bigint;
+  p1Rematch: boolean | undefined;
+  p2Rematch: boolean | undefined;
+  rematchCount: number;
 };
 
 export type GameType = "wordle" | "tradle" | "crossword" | "sudoku";

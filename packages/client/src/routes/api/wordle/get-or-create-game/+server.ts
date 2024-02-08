@@ -1,4 +1,7 @@
-import { supabaseGameStore } from "$lib/server/gameStateStorage";
+import {
+  getGameResetCount,
+  supabaseGameStore,
+} from "$lib/server/gameStateStorage";
 import { gameTypeToNumber } from "$lib/types";
 import { Game } from "../../../games/wordle/game.server";
 import { getOrCreateDemo, getOrCreateLiveGame } from "./getOrCreate";
@@ -31,12 +34,15 @@ export const POST = async ({ request }): Promise<Response> => {
     game = await getOrCreateLiveGame(gameId, user, opponent);
   }
 
+  const resetCount = await getGameResetCount(gameId);
+
   return new Response(
     JSON.stringify({
       gameId,
       guesses: game.guesses,
       answers: game.answers,
       answer: game.answers.length >= 6 ? game.answer : null,
+      resetCount,
     })
   );
 };

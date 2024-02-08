@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import WordleGame from "../WordleGame.svelte";
   import type { PageData } from "./$types";
+  import { launchConfetti } from "$lib/components/Confetti.svelte";
 
   export let data: PageData & { badGuess?: boolean };
 
@@ -14,6 +15,9 @@
     if (!res.ok) return;
 
     data = await res.json();
+    if (data.answers.at(-1) === "xxxxx") {
+      launchConfetti();
+    }
   };
 
   const reset = async () => {

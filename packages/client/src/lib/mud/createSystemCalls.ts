@@ -59,10 +59,18 @@ export function createSystemCalls({
     await waitForTransaction(tx);
   };
 
+  const voteRematch = async (gameId: Entity) => {
+    const tx = await worldContract.write.games__voteRematch([
+      gameId as `0x${string}`,
+    ]);
+    await waitForTransaction(tx);
+  };
+
   return {
     newGame,
     joinGame,
     submitSolution,
     claim,
+    voteRematch,
   };
 }

@@ -120,6 +120,19 @@ declare const abi: [
     "stateMutability": "pure"
   },
   {
+    "type": "function",
+    "name": "voteRematch",
+    "inputs": [
+      {
+        "name": "gameId",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
     "type": "event",
     "name": "Store_SpliceStaticData",
     "inputs": [

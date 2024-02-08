@@ -8,8 +8,8 @@
   import { onMount } from "svelte";
 
   const loginAndConnect = async () => {
-    //const wallet = await promptConnectWallet();
-    const wallet = userWallet.tryConnect();
+    const wallet = await promptConnectWallet();
+    // const wallet = userWallet.tryConnect();
     await mud.setup(wallet);
   };
 

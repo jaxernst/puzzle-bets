@@ -41,19 +41,17 @@
 
 <Modal show={$showModal} on:close={() => ($showModal = false)}>
   <div
-    class="relative z-10 min-w-[200px] min-h-[200px] bg-gray-50 text-cyan-400 flex flex-col gap-2 justify-evenly items-center rounded-lg p-6"
+    class="relative z-10 min-w-[200px] min-h-[200px] bg-gray-600 text-gray-100 flex flex-col gap-2 justify-evenly items-center rounded-lg p-6"
   >
     {#if $userWallet}
       <p transition:fade class={`font-semibold`}>
         Welcome {shortenAddress($userWallet?.account.address ?? "")}
       </p>
     {:else}
-      <div class="font-semibold text-lg text-zinc-400">
-        Sign in to Puzzle Bets
-      </div>
+      <div class="font-semibold text-lg">Sign in to Puzzle Bets</div>
       <button
         on:click={connectWallet}
-        class="bg-cyan-400 rounded-full px-2 py-1 text-white font-bold"
+        class="border border-lime-500 hover:bg-lime-500 transition-colors rounded-xl px-3 py-2 text-white font-bold"
       >
         Connect
       </button>

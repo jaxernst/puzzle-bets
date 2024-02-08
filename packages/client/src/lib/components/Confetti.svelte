@@ -1,4 +1,5 @@
 <script context="module">
+  import { browser } from "$app/environment";
   import { prefersReducedMotion } from "$lib/accessibility";
   import { confetti } from "@neoconfetti/svelte";
   import { onMount } from "svelte";
@@ -12,10 +13,10 @@
 
   let stageWidth = 800;
   let stageHeight = 2000;
-  onMount(() => {
+  if (browser) {
     stageWidth = window.innerWidth;
     stageHeight = window.innerHeight;
-  });
+  }
 </script>
 
 {#key $trigger}

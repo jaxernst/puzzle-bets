@@ -1,5 +1,6 @@
 <script lang="ts">
   import DotLoader from "$lib/components/DotLoader.svelte";
+  import { ethPrice } from "$lib/ethPrice";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
   import { mud, user } from "$lib/mud/mudStore";
   import type { GameType } from "$lib/types";
@@ -9,22 +10,21 @@
 
   export let gameType: GameType;
 
-  let ethPrice = 2300;
-
   // Game params
   let wagerETH: number = 0.001;
-  let wagerUSD: number = wagerETH * ethPrice;
+  let wagerUSD: number = wagerETH * $ethPrice;
   let submissionWindowMinutes = 8;
   let inviteExpirationMinutes = 20;
+  let inviteName: string | null = null;
 
   function updateETH(value: number) {
     wagerETH = value;
-    wagerUSD = wagerETH * ethPrice;
+    wagerUSD = wagerETH * $ethPrice;
   }
 
   function updateUSD(value: number) {
     wagerUSD = value;
-    wagerETH = wagerUSD / ethPrice;
+    wagerETH = wagerUSD / $ethPrice;
   }
 
   let createGameLoading = false;
@@ -63,7 +63,12 @@
     const newest = sorted[sorted.length - 1];
 
     if (newest) {
-      inviteUrl = `${window.location.origin}/join/${parseInt(newest, 16)}`;
+      const gameId = parseInt(newest, 16);
+      const inviteUrlParams = inviteName
+        ? `?gameType=${gameType}&from=${inviteName}`
+        : `?gameType=${gameType}`;
+
+      inviteUrl = `${window.location.origin}/join/${gameId}${inviteUrlParams}`;
     }
   }
 
@@ -123,6 +128,7 @@
       </div>
     </label>
   </div>
+
   <div class="py-2 px-6 flex flex-col gap-3">
     <div class="text-gray-400">
       Puzzle deadline:
@@ -134,6 +140,7 @@
         bind:value={submissionWindowMinutes}
       /> minutes
     </div>
+
     <div class="text-gray-400">
       Invite expires:
       <input
@@ -145,7 +152,17 @@
       />
       minutes
     </div>
+
+    <div class="text-gray-400">
+      Your name (optional):
+      <input
+        type="text"
+        class="border-2 border-gray-500 bg-transparent text-gray-200 px-2 rounded-lg w-[130px]"
+        bind:value={inviteName}
+      />
+    </div>
   </div>
+
   <div class="self-center p-4">
     {#key [createGameLoading, gameCreated, inviteCopied]}
       <button

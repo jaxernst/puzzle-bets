@@ -64,3 +64,5 @@
     </div>
   </Modal>
 {/if}
+
+<slot />

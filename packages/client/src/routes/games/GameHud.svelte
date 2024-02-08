@@ -1,11 +1,9 @@
 <script lang="ts">
   import { liveGameStatus, userGames, userSolvedGame } from "$lib/gameStores";
-  import { GameStatus } from "$lib/types";
-  import { formatTime, shortenAddress, systemTimestamp } from "$lib/util";
-  import { getComponentValueStrict, type Entity } from "@latticexyz/recs";
+  import { formatTime, shortenAddress } from "$lib/util";
+  import { type Entity } from "@latticexyz/recs";
   import { formatEther } from "viem";
   import { ethPrice } from "$lib/ethPrice";
-  import { onMount } from "svelte";
   import { user } from "$lib/mud/mudStore";
 
   export let gameId: Entity;

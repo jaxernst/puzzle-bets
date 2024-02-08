@@ -1,18 +1,8 @@
 <script lang="ts">
   import { page } from "$app/stores";
-
-  import { mud, user } from "$lib/mud/mudStore";
-  import { getGame } from "$lib/gameStores";
   import { GameStatus, type GameType } from "$lib/types";
-  import { encodeEntity } from "@latticexyz/store-sync/recs";
   import GameHeader from "./GameHeader.svelte";
-  import {
-    getComponentValueStrict,
-    type Entity,
-    getComponentValue,
-  } from "@latticexyz/recs";
   import GameHud from "./GameHud.svelte";
-  import { numberToHex, padHex, toBytes } from "viem";
   import { userGames } from "$lib/gameStores";
   import { formatTime, systemTimestamp, urlGameIdToEntity } from "$lib/util";
   import { onMount } from "svelte";

@@ -1,8 +1,3 @@
-/*
- * The MUD client code is built on top of viem
- * (https://viem.sh/docs/getting-started.html).
- * This line imports the functions we need from it.
- */
 import {
   createPublicClient,
   fallback,
@@ -17,6 +12,7 @@ import {
   type Account,
   type Chain,
 } from "viem";
+
 import { createFaucetService } from "@latticexyz/services/faucet";
 import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs";
 

@@ -1,15 +1,3 @@
-/*
- * The supported chains.
- * By default, there are only two chains here:
- *
- * - mudFoundry, the chain running on anvil that pnpm dev
- *   starts by default. It is similar to the viem anvil chain
- *   (see https://viem.sh/docs/clients/test.html), but with the
- *   basefee set to zero to avoid transaction fees.
- * - latticeTestnet, our public test network.
- *
- */
-
 import { type MUDChain, mudFoundry } from "@latticexyz/common/chains";
 
 // Override default lattice chain with 'miner.testnet' (from follower.testnet)

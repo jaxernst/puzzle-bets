@@ -1,8 +1,6 @@
 <script>
-  import { send } from "vite";
-
   export let data;
-  $: console.log(data);
+
   let { gameType, senderName } = data;
 
   senderName = senderName?.split("_").join(" ") ?? null;

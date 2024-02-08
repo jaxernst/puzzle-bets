@@ -1,6 +1,4 @@
 <script>
-  import { send } from "vite";
-
   export let data;
 
   let { gameType, senderName } = data;

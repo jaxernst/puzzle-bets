@@ -2,7 +2,6 @@
   import { browser } from "$app/environment";
   import { prefersReducedMotion } from "$lib/accessibility";
   import { confetti } from "@neoconfetti/svelte";
-  import { onMount } from "svelte";
   import { writable } from "svelte/store";
 
   const trigger = writable(0);

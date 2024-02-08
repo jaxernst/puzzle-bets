@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
   import DotLoader from "$lib/components/DotLoader.svelte";
   import { ethPrice } from "$lib/ethPrice";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
@@ -50,6 +51,7 @@
     }
   }
 
+  let createdGameId: number | null = null;
   let inviteUrl = "";
   $: if (gameCreated) {
     const entities = runQuery([
@@ -63,13 +65,18 @@
     const newest = sorted[sorted.length - 1];
 
     if (newest) {
-      const gameId = parseInt(newest, 16);
+      createdGameId = parseInt(newest, 16);
       const inviteUrlParams = inviteName
         ? `?gameType=${gameType}&from=${inviteName.split(" ").join("_")}`
         : `?gameType=${gameType}`;
 
-      inviteUrl = `${window.location.origin}/join/${gameId}${inviteUrlParams}`;
+      inviteUrl = `${window.location.origin}/join/${createdGameId}${inviteUrlParams}`;
     }
+  }
+
+  // Go to the game page (doesn't close modal)
+  $: if (createdGameId) {
+    goto(`/games/${gameType}/${createdGameId}`);
   }
 
   let inviteCopied = false;

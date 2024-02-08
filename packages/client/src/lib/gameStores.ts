@@ -1,4 +1,4 @@
-import { derived, get, writable } from "svelte/store";
+import { derived, writable } from "svelte/store";
 
 import { mud, user } from "./mud/mudStore";
 import {
@@ -13,7 +13,6 @@ import {
   GameStatus,
   gameNumberToType,
   type Game,
-  type StartedGame,
   type EvmAddress,
 } from "$lib/types";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
@@ -187,7 +186,7 @@ export const userArchivedGames = (() => {
     const res = await fetch(`/api/game-settings/${$user}/archived`);
     if (res.ok) {
       const data = await res.json();
-      store.set(data.map(g => urlGameIdToEntity(g)));
+      store.set(data.map((g) => urlGameIdToEntity(g)));
     }
   });
 

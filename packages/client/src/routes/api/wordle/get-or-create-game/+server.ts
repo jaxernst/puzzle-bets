@@ -1,8 +1,4 @@
-import {
-  getGameResetCount,
-  supabaseGameStore,
-} from "$lib/server/gameStateStorage";
-import { gameTypeToNumber } from "$lib/types";
+import { getGameResetCount } from "$lib/server/gameStateStorage";
 import { Game } from "../../../games/wordle/game.server";
 import { getOrCreateDemo, getOrCreateLiveGame } from "./getOrCreate";
 

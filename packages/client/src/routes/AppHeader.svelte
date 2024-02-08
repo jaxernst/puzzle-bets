@@ -2,7 +2,6 @@
   import { mud, user } from "$lib/mud/mudStore";
   import WalletIcon from "$lib/icons/Wallet.svelte";
   import { userWallet } from "$lib/mud/connectWallet";
-  import { shortenAddress } from "$lib/util";
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte";
   import Puzzly from "$lib/icons/puzzly.svelte";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";

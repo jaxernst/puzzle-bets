@@ -1,23 +1,25 @@
 <script>
+  import { formatAsDollar } from "$lib/util";
+
   export let data;
 
-  let { gameType, senderName } = data;
-
+  let { gameType, senderName, usdValue } = data;
   senderName = senderName?.split("_").join(" ") ?? null;
 
-  let inviteMessage = "";
+  let inviteMessage =
+    "Accept the challenge and solve the puzzle to win the pot";
+
+  let title = "Puzzle Bets! ";
   if (senderName) {
-    inviteMessage = `${senderName} has invited you to a ${gameType} game!`;
+    title += `${senderName} challenged you to a ${
+      usdValue ? formatAsDollar(Number(usdValue)) : ""
+    } ${gameType ?? ""} game`;
   } else {
-    inviteMessage = `You have been invited to a ${gameType} game!`;
+    title += `${gameType} Game Invite`;
   }
 </script>
 
 <svelte:head>
-  <title
-    >Puzzle Bets | {data.gameType} Invite {senderName
-      ? `from ${senderName}`
-      : ""}</title
-  >
+  <title>{title}</title>
   <meta name="description" content={inviteMessage} />
 </svelte:head>

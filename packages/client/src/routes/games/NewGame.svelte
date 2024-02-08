@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
+  import { goto, browser } from "$app/navigation";
   import DotLoader from "$lib/components/DotLoader.svelte";
   import { ethPrice } from "$lib/ethPrice";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
@@ -53,7 +53,7 @@
 
   let createdGameId: number | null = null;
   let inviteUrl = "";
-  $: if (gameCreated) {
+  $: if (gameCreated && browser) {
     const entities = runQuery([
       HasValue($mud.components.Player1, { value: $user }),
     ]);
@@ -67,7 +67,9 @@
     if (newest) {
       createdGameId = parseInt(newest, 16);
       const inviteUrlParams = inviteName
-        ? `?gameType=${gameType}&from=${inviteName.split(" ").join("_")}`
+        ? `?gameType=${gameType}&from=${inviteName
+            .split(" ")
+            .join("_")}&valUsd=${wagerUSD.toFixed(2)}`
         : `?gameType=${gameType}`;
 
       inviteUrl = `${window.location.origin}/join/${createdGameId}${inviteUrlParams}`;

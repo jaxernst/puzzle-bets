@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import WordleGame from "../WordleGame.svelte";
   import type { PageData } from "./$types";
   import { launchConfetti } from "$lib/components/Confetti.svelte";

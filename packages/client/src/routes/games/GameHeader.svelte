@@ -17,6 +17,7 @@
   import DotLoader from "$lib/components/DotLoader.svelte";
   import { SUPPORTED_GAME_TYPES } from "$lib/constants";
   import BackArrow from "$lib/icons/BackArrow.svelte";
+  import { puzzleStores, wordleGameStates } from "./puzzleGameStates";
 
   export let gameType: GameType;
   export let gameId: Entity | null = null;
@@ -25,6 +26,10 @@
   $: if (gameId) {
     liveStatus = liveGameStatus(gameId);
   }
+
+  $: puzzleState =
+    gameId && $wordleGameStates.get(parseInt(gameId, 16).toString());
+  $: console.log("puzzleState", puzzleState);
 
   let showNewGameModal = false;
   let showResultsModal = false;

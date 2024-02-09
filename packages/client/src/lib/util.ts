@@ -153,7 +153,7 @@ export const capitalized = (str: string) => {
 };
 
 export const urlGameIdToEntity = <T extends boolean = false>(
-  id: string | undefined | "demo",
+  id: string | number | undefined | "demo",
   strict?: T
 ): T extends true ? Entity : Entity | undefined => {
   if (!id || id === "demo") {

@@ -27,45 +27,43 @@ interface GameStore {
   ) => Promise<boolean>;
 }
 
-export const supabaseGameStore: GameStore = (() => {
-  return {
-    hasGame: async (gameType, gameId, user) => {
-      const isDemo = !user;
-      const res = await supabase
-        .from(gameStateTable(isDemo))
-        .select("*")
-        .eq("game_type", gameType)
-        .eq("game_id", gameId)
-        .eq("user_address", user ?? "NULL")
-        .single();
+export const supabaseGameStore: GameStore = {
+  hasGame: async (gameType, gameId, user) => {
+    const isDemo = !user;
+    const res = await supabase
+      .from(gameStateTable(isDemo))
+      .select("*")
+      .eq("game_type", gameType)
+      .eq("game_id", gameId)
+      .eq("user_address", user ?? "NULL")
+      .single();
 
-      return Boolean(res.data);
-    },
-    getGame: async (gameType, gameId, user) => {
-      const isDemo = !user;
-      const res = await supabase
-        .from(gameStateTable(isDemo))
-        .select("*")
-        .eq("game_type", gameType)
-        .eq("game_id", gameId)
-        .eq("user_address", user ?? "NULL")
-        .single();
+    return Boolean(res.data);
+  },
+  getGame: async (gameType, gameId, user) => {
+    const isDemo = !user;
+    const res = await supabase
+      .from(gameStateTable(isDemo))
+      .select("*")
+      .eq("game_type", gameType)
+      .eq("game_id", gameId)
+      .eq("user_address", user ?? "NULL")
+      .single();
 
-      return res.data && res.data.game_state;
-    },
-    setGame: async (newGameState, gameType, gameId, user) => {
-      const isDemo = !user;
-      const res = await supabase.from(gameStateTable(isDemo)).upsert({
-        game_id: gameId,
-        game_type: gameType,
-        game_state: newGameState,
-        user_address: user,
-      });
+    return res.data && res.data.game_state;
+  },
+  setGame: async (newGameState, gameType, gameId, user) => {
+    const isDemo = !user;
+    const res = await supabase.from(gameStateTable(isDemo)).upsert({
+      game_id: gameId,
+      game_type: gameType,
+      game_state: newGameState,
+      user_address: user,
+    });
 
-      return Boolean(res.error);
-    },
-  };
-})();
+    return Boolean(res.error);
+  },
+};
 
 export const getGameResetCount = async (gameId: string, isDemo?: boolean) => {
   const res = await supabase
@@ -100,4 +98,34 @@ export const incrementGameResetCount = async (
   } else {
     return curCount + 1;
   }
+};
+
+interface GameSettingsStore {
+  setArchiveState: (
+    gameId: number,
+    user: string,
+    archived: boolean
+  ) => Promise<boolean>;
+  getArchivedGames: (user: string) => Promise<string[]>;
+}
+
+export const supabaseGameSettingsStore: GameSettingsStore = {
+  setArchiveState: async (gameId, user, archived) => {
+    const res = await supabase.from("user-game-settings").upsert({
+      game_id: gameId,
+      user_address: user,
+      archived,
+    });
+
+    return Boolean(res.error);
+  },
+  getArchivedGames: async (user) => {
+    const res = await supabase
+      .from("user-game-settings")
+      .select("game_id")
+      .eq("user_address", user)
+      .eq("archived", true);
+
+    return res.data?.map((row) => row.game_id) ?? [];
+  },
 };

@@ -1,5 +1,5 @@
 import { supabaseGameStore } from "$lib/server/gameStateStorage";
-import { Game } from "../../../games/wordle/game.server";
+import { Game } from "../../../../lib/server/wordle/game.server";
 
 // Will need to add authentication to this endpoint to ensure players can't
 // 'steal' attestations from each other

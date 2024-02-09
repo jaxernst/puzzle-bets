@@ -2,7 +2,7 @@ import {
   incrementGameResetCount,
   supabaseGameStore,
 } from "$lib/server/gameStateStorage.js";
-import { Game } from "../../../games/wordle/game.server";
+import { Game } from "../../../../lib/server/wordle/game.server";
 
 /** @type {import('./$types').RequestHandler} */
 export const POST = async ({ request }) => {
@@ -50,6 +50,8 @@ export const POST = async ({ request }) => {
       gameId: gameId,
       guesses: [],
       answers: [],
+      solved: false,
+      lost: false,
       answer: null,
       badGuess: false,
       resetCount,

@@ -1,5 +1,5 @@
 import { supabaseGameStore } from "$lib/server/gameStateStorage";
-import { Game } from "../../../games/wordle/game.server";
+import { Game } from "../../../../lib/server/wordle/game.server";
 
 export const POST = async ({ request }): Promise<Response> => {
   const { guess, gameId, user } = (await request.json()) as {
@@ -23,12 +23,17 @@ export const POST = async ({ request }): Promise<Response> => {
   const valid = game.enter(guess);
   await supabaseGameStore.setGame(game.toString(), "wordle", gameId, user);
 
+  const solved = game.won();
+  const lost = game.answers.length >= 6 && !solved;
+
   return new Response(
     JSON.stringify({
       gameId,
       guesses: game.guesses,
       answers: game.answers,
       answer: game.answers.length >= 6 ? game.answer : null,
+      solved,
+      lost,
       badGuess: !valid,
     })
   );

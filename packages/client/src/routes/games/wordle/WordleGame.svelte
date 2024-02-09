@@ -1,19 +1,24 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
+  import type { WordleGameState } from "../puzzleGameStates";
 
   export let data: {
     answers: string[];
+    answer: null | string;
     guesses: string[];
-    answer: string | null;
-    badGuess?: boolean | null;
-  } = { answers: [], answer: null, guesses: [] };
+    badGuess: boolean | undefined;
+  } = {
+    answers: [],
+    answer: null,
+    guesses: [],
+    badGuess: false,
+  };
 
   export let paused = false;
 
   $: badGuess = data.badGuess;
 
   $: won = data.answers.at(-1) === "xxxxx";
-
   $: gameOver = won || data.answers.length >= 6;
   $: i = won ? -1 : data.answers.length; // Row index of current guess
   $: currentGuess = data.guesses[i] || "";

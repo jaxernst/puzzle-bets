@@ -101,7 +101,7 @@ export function liveGameStatus(gameId: Entity) {
       if (g.status === GameStatus.Pending) {
         return { ...g, inviteTimeLeft: timeRemaining(inviteExpiration) };
       } else if (g.status === GameStatus.Active) {
-        if (!startTime) throw new Error("Invariant error");
+        if (!startTime) return g;
 
         const timeLeft = timeRemaining(Number(startTime) + submissionWindow);
 

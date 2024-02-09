@@ -1,5 +1,5 @@
 import { getGameResetCount } from "$lib/server/gameStateStorage";
-import { Game } from "../../../games/wordle/game.server";
+import { Game } from "../../../../lib/server/wordle/game.server";
 import { getOrCreateDemo, getOrCreateLiveGame } from "./getOrCreate";
 
 export const POST = async ({ request }): Promise<Response> => {
@@ -32,12 +32,17 @@ export const POST = async ({ request }): Promise<Response> => {
 
   const resetCount = await getGameResetCount(gameId);
 
+  const solved = game.won();
+  const lost = game.answers.length >= 6 && !solved;
+
   return new Response(
     JSON.stringify({
       gameId,
       guesses: game.guesses,
       answers: game.answers,
       answer: game.answers.length >= 6 ? game.answer : null,
+      solved,
+      lost,
       resetCount,
     })
   );

@@ -94,7 +94,7 @@
 
   <div class="flex-grow flex justify-end items-center">
     <button
-      class="p-1 flex items-center"
+      class="pb-[.2rem] flex items-center"
       on:click={() => (expandedView = !expandedView)}
     >
       <div

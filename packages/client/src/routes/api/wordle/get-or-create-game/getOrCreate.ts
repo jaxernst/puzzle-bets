@@ -1,5 +1,5 @@
 import { supabaseGameStore } from "$lib/server/gameStateStorage";
-import { Game } from "../../../games/wordle/game.server";
+import { Game } from "../../../../lib/server/wordle/game.server";
 
 export const getOrCreateDemo = async (gameId: string) => {
   const hasGame = await supabaseGameStore.hasGame("wordle", gameId);

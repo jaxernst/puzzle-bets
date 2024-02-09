@@ -3,11 +3,12 @@
   import { type GameType, GameStatus } from "$lib/types";
 
   import { slide } from "svelte/transition";
-  import { cubicOut } from "svelte/easing";
+  import { cubicInOut, cubicOut } from "svelte/easing";
   import GamePreviewCard from "./GamePreviewCard.svelte";
-  import { user } from "$lib/mud/mudStore";
   import Expand from "$lib/icons/Expand.svelte";
   import { flip } from "svelte/animate";
+  import { page } from "$app/stores";
+  import { intToEntity } from "$lib/util";
 
   $: nonArchivedGames = $userGames.filter(
     (g) => !$userArchivedGames.includes(g.id)
@@ -16,6 +17,7 @@
   $: activeGames = nonArchivedGames.filter(
     (g) => g.status !== GameStatus.Complete
   );
+
   $: completedGames = nonArchivedGames.filter(
     (g) => g.status === GameStatus.Complete
   );
@@ -25,6 +27,17 @@
   );
 
   let selectedTab: "live" | "completed" | "archived" = "live";
+
+  $: gameId = $page.params.gameId && intToEntity($page.params.gameId);
+  $: gameIdTab = archivedGames.some((g) => g.id === gameId)
+    ? "archived"
+    : completedGames.some((g) => g.id === gameId)
+      ? "completed"
+      : activeGames.some((g) => g.id === gameId)
+        ? "live"
+        : "live";
+
+  $: selectedTab = gameIdTab as any;
 
   $: currentTabGames = (() => {
     switch (selectedTab) {
@@ -114,7 +127,7 @@
   }`}
 >
   {#each currentTabGames as game (game.id)}
-    <div animate:flip>
+    <div animate:flip={{ duration: 650, easing: cubicInOut }}>
       <GamePreviewCard {game} />
     </div>
   {/each}

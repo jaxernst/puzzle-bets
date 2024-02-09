@@ -34,7 +34,6 @@
     }
   };
 
-  $: console.log(puzzleState);
   $: gameOver = puzzleState?.solved || puzzleState?.lost;
   $: submitted = onchainGame && $userSolvedGame(onchainGame.id, $user);
   $: liveStatus = onchainGame && liveGameStatus(onchainGame.id);

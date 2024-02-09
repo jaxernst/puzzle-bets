@@ -4,7 +4,7 @@
   import { type Entity } from "@latticexyz/recs";
   import NewGameModal from "./NewGame.svelte";
   import { GameStatus, type Game, type GameType } from "$lib/types";
-  import { capitalized } from "$lib/util";
+  import { capitalized, entityToInt } from "$lib/util";
   import { onDestroy } from "svelte";
   import Modal from "$lib/components/Modal.svelte";
   import GameResults from "./GameResults.svelte";
@@ -17,7 +17,7 @@
   import DotLoader from "$lib/components/DotLoader.svelte";
   import { SUPPORTED_GAME_TYPES } from "$lib/constants";
   import BackArrow from "$lib/icons/BackArrow.svelte";
-  import { puzzleStores, wordleGameStates } from "./puzzleGameStates";
+  import { puzzleStores } from "./puzzleGameStates";
 
   export let gameType: GameType;
   export let gameId: Entity | null = null;
@@ -27,9 +27,7 @@
     liveStatus = liveGameStatus(gameId);
   }
 
-  $: puzzleState =
-    gameId && $wordleGameStates.get(parseInt(gameId, 16).toString());
-  $: console.log("puzzleState", puzzleState);
+  $: puzzleState = gameId && $puzzleStores[gameType].get(entityToInt(gameId));
 
   let showNewGameModal = false;
   let showResultsModal = false;
@@ -79,7 +77,8 @@
   $: canViewResult =
     $liveStatus?.status === GameStatus.Complete ||
     $liveStatus?.submissionTimeLeft === 0 ||
-    submitted;
+    submitted ||
+    puzzleState?.lost;
 </script>
 
 <Modal
@@ -145,13 +144,14 @@
           }}
           class="bg-lime-500 rounded-full px-2 py-1 font-semibold whitespace-nowrap"
         >
-          View Results + Claim
+          View Results {puzzleState?.lost ? "" : "+ Claim"}
         </button>
       {:else}
         <button
           class={`${
             submitError ? "bg-red-500 italicx" : "bg-lime-500"
-          } rounded-full px-2 py-1 font-semibold min-w-[70px] flex justify-center transition-all`}
+          } disabled:opacity-60 rounded-full px-2 py-1 font-semibold min-w-[70px] flex justify-center transition-all`}
+          disabled={$liveStatus?.status === GameStatus.Pending}
           on:click={verifyAndSubmitSolution}
         >
           {#if submitting}

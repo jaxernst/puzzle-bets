@@ -1,5 +1,5 @@
 import type { EvmAddress, Game, GameType } from "$lib/types";
-import { urlGameIdToEntity } from "$lib/util";
+import { intToEntity } from "$lib/util";
 import { supabase } from "./supabaseClient";
 
 const chainId = import.meta.env.VITE_CHAIN_ID;

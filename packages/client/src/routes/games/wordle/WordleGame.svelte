@@ -1,6 +1,5 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import type { WordleGameState } from "../puzzleGameStates";
 
   export let data: {
     answers: string[];
@@ -104,17 +103,34 @@
 
 <form
   method="POST"
+  class="w-full"
   on:submit={(e) => {
     e.preventDefault();
     badGuess = false;
     dispatch("submitGuess", { guess: currentGuess });
   }}
 >
-  <a class="text-white how-to-play" href="/games/wordle/how-to-play"
-    >How to play</a
-  >
+  <div class="flex gap-3 text-xs italic scale-90">
+    <div class="flex items-center gap-1 whitespace-nowrap">
+      Correct
+      <div class="letter exact px-2"></div>
+    </div>
+    <div class="flex items-center gap-1 whitespace-nowrap">
+      Close
+      <div class="letter close px-2"></div>
+    </div>
 
-  <div class="grid" class:playing={!won} class:bad-guess={badGuess}>
+    <div class="flex items-center gap-1 whitespace-nowrap">
+      Missing
+      <div class="letter missing px-2"></div>
+    </div>
+  </div>
+
+  <div
+    class="grid self-stretch"
+    class:playing={!won}
+    class:bad-guess={badGuess}
+  >
     {#each Array.from(Array(6).keys()) as row (row)}
       {@const current = row === i}
       <h2 class="visually-hidden">Row {row + 1}</h2>
@@ -152,13 +168,13 @@
       </div>
     {/each}
   </div>
-
-  <div class={`controls ${!(gameOver || paused) ? "controls-playing" : ""}`}>
-    {#if won}
-      <p>You solved it!</p>
-    {:else if data.answers.length >= 6}
-      <p>the answer was "{data.answer}"!</p>
-      <!--
+  <div>
+    <div class={`controls ${!(gameOver || paused) ? "controls-playing" : ""}`}>
+      {#if won}
+        <p>You solved it!</p>
+      {:else if data.answers.length >= 6}
+        <p>the answer was "{data.answer}"!</p>
+        <!--
       <button
         data-key="enter"
         class="restart selected"
@@ -171,42 +187,43 @@
           ? "you solved the puzzle. Wait for the deadline to view results :)"
           : `game over :(`} play again?
       </button>-->
-    {:else if !paused}
-      <div class="keyboard">
-        <button
-          data-key="enter"
-          class:selected={submittable}
-          disabled={!submittable}>enter</button
-        >
+      {:else if !paused}
+        <div class="keyboard">
+          <button
+            data-key="enter"
+            class:selected={submittable}
+            disabled={!submittable}>enter</button
+          >
 
-        <button
-          on:click|preventDefault={updateCurrentGuess}
-          data-key="backspace"
-          name="key"
-          value="backspace"
-        >
-          back
-        </button>
+          <button
+            on:click|preventDefault={updateCurrentGuess}
+            data-key="backspace"
+            name="key"
+            value="backspace"
+          >
+            back
+          </button>
 
-        {#each ["qwertyuiop", "asdfghjkl", "zxcvbnm"] as row}
-          <div class="row">
-            {#each row as letter}
-              <button
-                on:click|preventDefault={updateCurrentGuess}
-                data-key={letter}
-                class={classnames[letter]}
-                disabled={submittable}
-                name="key"
-                value={letter}
-                aria-label="{letter} {description[letter] || ''}"
-              >
-                {letter}
-              </button>
-            {/each}
-          </div>
-        {/each}
-      </div>
-    {/if}
+          {#each ["qwertyuiop", "asdfghjkl", "zxcvbnm"] as row}
+            <div class="row">
+              {#each row as letter}
+                <button
+                  on:click|preventDefault={updateCurrentGuess}
+                  data-key={letter}
+                  class={classnames[letter]}
+                  disabled={submittable}
+                  name="key"
+                  value={letter}
+                  aria-label="{letter} {description[letter] || ''}"
+                >
+                  {letter}
+                </button>
+              {/each}
+            </div>
+          {/each}
+        </div>
+      {/if}
+    </div>
   </div>
 </form>
 

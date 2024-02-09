@@ -91,10 +91,12 @@ export function liveGameStatus(gameId: Entity) {
   const store = writable<LiveStatus | null>(null);
 
   // Decrement timers and mark game as complete when time runs out
-  const updateStatusTimers = (
-    { inviteExpiration, submissionWindow, startTime }: Game,
-    onGameFinalized: () => void
-  ) => {
+  const updateStatusTimers = (onGameFinalized: () => void) => {
+    const { inviteExpiration, startTime, submissionWindow } = gameIdToGame(
+      gameId,
+      get(mud).components
+    );
+
     store.update((g) => {
       if (!g) return g;
 
@@ -122,11 +124,11 @@ export function liveGameStatus(gameId: Entity) {
   let timersStarted = false;
   let timer: NodeJS.Timeout;
 
-  const startTimers = (game: Game) => {
-    updateStatusTimers(game, () => {});
+  const startTimers = () => {
+    updateStatusTimers(() => {});
 
     timer = setInterval(() => {
-      updateStatusTimers(game, () => {
+      updateStatusTimers(() => {
         // On game finalized callback
         timersStarted = false;
         clearInterval(timer);
@@ -158,7 +160,7 @@ export function liveGameStatus(gameId: Entity) {
     });
 
     if (!timersStarted) {
-      startTimers(game);
+      startTimers();
     }
 
     const gameStartTimeChanged =
@@ -167,7 +169,7 @@ export function liveGameStatus(gameId: Entity) {
     // If the game start time changes (when a rematch occurs), reset timers
     if (gameStartTimeChanged && timersStarted) {
       clearInterval(timer);
-      startTimers(game);
+      startTimers();
     }
 
     // Listen for a game rematch to occur. When it does, restart the timers

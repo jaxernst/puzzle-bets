@@ -9,7 +9,7 @@
   } from "$lib/gameStores";
   import { user } from "$lib/mud/mudStore";
   import { GameStatus, type Game, type GameType } from "$lib/types";
-  import { capitalized, formatAsDollar } from "$lib/util";
+  import { capitalized, formatAsDollar, systemTimestamp } from "$lib/util";
   import type { Entity } from "@latticexyz/recs";
   import { formatEther, parseEther } from "viem";
 
@@ -35,11 +35,13 @@
 
   $: liveStatus = liveGameStatus(id);
 
-  $: if (
+  $: shouldArchive =
     $user &&
-    $liveStatus?.inviteTimeLeft === 0 &&
-    game.status === GameStatus.Pending
-  ) {
+    game.status === GameStatus.Pending &&
+    game.inviteExpiration &&
+    systemTimestamp() > game.inviteExpiration;
+
+  $: if (shouldArchive) {
     userArchivedGames.setArchivedState(id, true);
   }
 </script>

@@ -4,12 +4,12 @@
   import GameHeader from "./GameHeader.svelte";
   import GameHud from "./GameHud.svelte";
   import { userGames } from "$lib/gameStores";
-  import { formatTime, systemTimestamp, urlGameIdToEntity } from "$lib/util";
+  import { formatTime, systemTimestamp, intToEntity } from "$lib/util";
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
 
   $: gameType = $page.route.id?.split("/")[2] as GameType;
-  $: gameId = urlGameIdToEntity($page.params.gameId);
+  $: gameId = intToEntity($page.params.gameId);
   $: game = $userGames.find((g) => g.id === gameId);
 
   onMount(() => {

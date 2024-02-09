@@ -2,7 +2,7 @@
   import { mud } from "$lib/mud/mudStore";
   import { page } from "$app/stores";
   import Modal from "$lib/components/Modal.svelte";
-  import { systemTimestamp, urlGameIdToEntity } from "$lib/util";
+  import { systemTimestamp, intToEntity } from "$lib/util";
   import JoinGame from "./JoinGame.svelte";
   import { goto } from "$app/navigation";
   import { onMount } from "svelte";
@@ -18,7 +18,7 @@
     }
   });
 
-  $: gameId = urlGameIdToEntity($page.params.joinGameId, true);
+  $: gameId = intToEntity($page.params.joinGameId, true);
   $: game = $getGame(gameId);
   $: userIsEligible = $user && $user !== game?.p1;
 

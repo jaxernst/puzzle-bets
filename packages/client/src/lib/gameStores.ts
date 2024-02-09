@@ -17,7 +17,7 @@ import {
 } from "$lib/types";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
 import type { SetupNetworkResult } from "./mud/setupNetwork";
-import { systemTimestamp, timeRemaining, urlGameIdToEntity } from "./util";
+import { systemTimestamp, timeRemaining, intToEntity } from "./util";
 
 export const userGames = derived([mud, user], ([$mud, $user]) => {
   if (!$mud || !$mud.ready || !$user) return [];
@@ -186,7 +186,7 @@ export const userArchivedGames = (() => {
     const res = await fetch(`/api/game-settings/${$user}/archived`);
     if (res.ok) {
       const data = (await res.json()) as number[];
-      store.set(data.map((g) => urlGameIdToEntity(g, true)!));
+      store.set(data.map((g) => intToEntity(g, true)!));
     }
   });
 

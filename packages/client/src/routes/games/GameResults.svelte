@@ -4,44 +4,50 @@
   import { getGame, liveGameStatus, userSolvedGame } from "$lib/gameStores";
   import { user, mud } from "$lib/mud/mudStore";
   import { type StartedGame } from "$lib/types";
-  import { formatAsDollar, formatTime, weiToDollar } from "$lib/util";
+  import {
+    entityToInt,
+    formatAsDollar,
+    formatTime,
+    weiToDollar,
+  } from "$lib/util";
   import type { Entity } from "@latticexyz/recs";
   import { slide } from "svelte/transition";
   import { formatEther } from "viem";
+  import { puzzleStores } from "./puzzleGameStates";
 
   export let gameId: Entity;
   export let onClaimed = () => {};
   export let onClose = () => {};
 
   $: game = $getGame(gameId, { expectStarted: true }) as StartedGame;
+  $: userPuzzleState = $puzzleStores[game.type]?.get(entityToInt(gameId));
 
   $: potSizeUsd = Number(formatEther(game.buyInAmount * 2n)) * $ethPrice;
 
   $: liveStatus = liveGameStatus(gameId);
 
-  $: p1Solved = $userSolvedGame(gameId, game?.p1);
-  $: p2Solved = $userSolvedGame(gameId, game?.p2);
+  $: p1Submitted = $userSolvedGame(gameId, game?.p1);
+  $: p2Submitted = $userSolvedGame(gameId, game?.p2);
 
-  $: p1Results = p1Solved
-    ? "✅"
-    : ($liveStatus?.submissionTimeLeft ?? 0) > 0
-      ? "(pending)"
-      : "❌";
+  $: playerResults = (p: "1" | "2") => {
+    const addr = p === "1" ? game.p1 : game.p2;
+    const submitted = p === "1" ? p1Submitted : p2Submitted;
+    if (submitted) return "✅";
+    if ($user === addr && userPuzzleState?.lost) return "❌";
+    return ($liveStatus?.submissionTimeLeft ?? 0) > 0 ? "(pending)" : "❌";
+  };
 
-  $: p2Results = p2Solved
-    ? "✅"
-    : ($liveStatus?.submissionTimeLeft ?? 0) > 0
-      ? "(pending)"
-      : "❌";
+  $: p1Results = playerResults("1");
+  $: p2Results = playerResults("2");
 
   $: gameActive = ($liveStatus?.submissionTimeLeft ?? 0) > 0;
   $: gameOutcome = (() => {
-    if (p1Solved && p2Solved) return "tie";
+    if (p1Submitted && p2Submitted) return "tie";
     if (($liveStatus?.submissionTimeLeft ?? 0) > 0) return null;
 
-    if (!p1Solved && !p2Solved) return "tie";
-    if (p1Solved) return $user === game.p1 ? "won" : "lost";
-    if (p2Solved) return $user === game.p2 ? "won" : "lost";
+    if (!p1Submitted && !p2Submitted) return "tie";
+    if (p1Submitted) return $user === game.p1 ? "won" : "lost";
+    if (p2Submitted) return $user === game.p2 ? "won" : "lost";
     return null;
   })();
 

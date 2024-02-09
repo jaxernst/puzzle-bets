@@ -152,7 +152,7 @@ export const capitalized = (str: string) => {
     .join(" ");
 };
 
-export const urlGameIdToEntity = <T extends boolean = false>(
+export const intToEntity = <T extends boolean = false>(
   id: string | number | undefined | "demo",
   strict?: T
 ): T extends true ? Entity : Entity | undefined => {
@@ -161,6 +161,10 @@ export const urlGameIdToEntity = <T extends boolean = false>(
     return undefined as T extends true ? Entity : Entity | undefined;
   }
   return padHex(numberToHex(BigInt(id)), { size: 32 }) as Entity;
+};
+
+export const entityToInt = (entity: Entity) => {
+  return parseInt(entity, 16).toString();
 };
 
 export function generateRandomID(length: number) {

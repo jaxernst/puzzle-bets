@@ -1,10 +1,11 @@
 <script lang="ts">
   import { liveGameStatus, userGames, userSolvedGame } from "$lib/gameStores";
-  import { formatTime, shortenAddress } from "$lib/util";
+  import { entityToInt, formatTime, shortenAddress } from "$lib/util";
   import { type Entity } from "@latticexyz/recs";
   import { formatEther } from "viem";
   import { ethPrice } from "$lib/ethPrice";
   import { user } from "$lib/mud/mudStore";
+  import { puzzleStores } from "./puzzleGameStates";
 
   export let gameId: Entity;
 
@@ -18,6 +19,7 @@
   $: betAmountUsd = betAmountEth * $ethPrice;
 
   $: dueIn = $liveStatus?.submissionTimeLeft ?? 0;
+  $: puzzleState = game && $puzzleStores[game.type]?.get(entityToInt(gameId));
 
   $: statusLabels = {
     0: () => "",
@@ -32,6 +34,9 @@
           return "Solution received!";
         }
       } else if (dueIn > 0) {
+        if (puzzleState?.lost) {
+          return "Better luck next time";
+        }
         return `Puzzle due in ${formatTime(dueIn)}`;
       } else {
         return "Time's up. No solution received";

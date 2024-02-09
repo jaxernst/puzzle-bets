@@ -1,9 +1,9 @@
 import { getGame } from "$lib/gameStores";
 import { user } from "$lib/mud/mudStore";
-import type { EvmAddress } from "$lib/types";
-import { urlGameIdToEntity } from "$lib/util";
+import type { EvmAddress, GameType } from "$lib/types";
+import { intToEntity } from "$lib/util";
 
-import { derived, get, writable } from "svelte/store";
+import { derived, get, writable, type Readable } from "svelte/store";
 
 export interface PuzzleState {
   solved: boolean;
@@ -62,7 +62,7 @@ export const wordleGameStates = (() => {
     const $user = get(user);
     if (!$user) return;
 
-    const game = get(getGame)(urlGameIdToEntity(gameId, true));
+    const game = get(getGame)(intToEntity(gameId, true));
     if (!game) return;
 
     const opponent = $user === game.p1 ? game.p2 : game.p1;
@@ -102,6 +102,9 @@ export const puzzleStores = derived(
   ([$wordleGameStates]) => {
     return {
       wordle: $wordleGameStates,
+      tradle: new Map(),
+      crossword: new Map(),
+      sudoku: new Map(),
     };
   }
-);
+) as Readable<Record<GameType, Map<GameId, PuzzleState>>>;

@@ -41,7 +41,7 @@
 </script>
 
 <div
-  class="flex gap-3 items-center font-mono text-gray-100 text-sm transition-all duration-500"
+  class="flex gap-2 sm:gap-3 items-center font-mono text-gray-100 text-xs sm:text-sm transition-all duration-500"
 >
   <button
     on:click={() => (selectedTab = "live")}

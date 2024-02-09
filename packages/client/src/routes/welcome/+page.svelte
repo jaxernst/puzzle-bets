@@ -21,10 +21,10 @@
     <div class="w-[100px]"></div>
   </div>
   <div class="flex flex-col gap-1 items-center">
-    <div class="text-2xl font-bold">Welcome to Puzzle Bets.</div>
+    <div class="text-xl sm:text-2xl font-bold">Welcome to Puzzle Bets.</div>
     <div class=" text-gray-400">Play puzzles, bet with friends</div>
   </div>
-  <div class="p-10 flex flex-col items-center">
+  <div class="text-sm sm:text-base p-10 flex flex-col items-center">
     {#if !$user}
       <button
         on:click={loginAndConnect}

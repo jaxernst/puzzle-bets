@@ -28,7 +28,6 @@ export const wordleGameStates = (() => {
     const $user = get(user);
     if (!$user) return;
 
-    console.log($user, gameId, opponent);
     const res = await fetch("/api/wordle/get-or-create-game", {
       method: "POST",
       body: JSON.stringify({ gameId, user: $user, opponent }),

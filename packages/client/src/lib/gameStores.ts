@@ -214,7 +214,6 @@ export const userArchivedGames = (() => {
         }
       });
     }
-    console.log("archived game", gameId, res);
   };
 
   return {

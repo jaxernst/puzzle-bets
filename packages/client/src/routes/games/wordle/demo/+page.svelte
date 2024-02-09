@@ -5,17 +5,26 @@
 
   export let data: PageData & { badGuess?: boolean };
 
+  let guessEntering = false;
   const enterGuess = async (guess: string) => {
-    const res = await fetch("/api/wordle/submit-guess", {
-      method: "POST",
-      body: JSON.stringify({ guess, gameId: data.gameId }),
-    });
+    if (guessEntering) return;
 
-    if (!res.ok) return;
+    guessEntering = true;
 
-    data = await res.json();
-    if (data.answers.at(-1) === "xxxxx") {
-      launchConfetti();
+    try {
+      const res = await fetch("/api/wordle/submit-guess", {
+        method: "POST",
+        body: JSON.stringify({ guess, gameId: data.gameId }),
+      });
+
+      if (!res.ok) return;
+
+      data = await res.json();
+      if (data.answers.at(-1) === "xxxxx") {
+        launchConfetti();
+      }
+    } finally {
+      guessEntering = false;
     }
   };
 

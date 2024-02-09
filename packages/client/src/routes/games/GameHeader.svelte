@@ -104,7 +104,9 @@
 
 <div class="flex flex-col">
   <div class="flex justify-between items-center">
-    <div class="flex gap-1 items-center font-mono sm:text-lg text-gray-100">
+    <div
+      class="flex gap-1 items-center font-mono text-sm sm:text-base text-gray-100"
+    >
       {#if gameId}
         <a
           href={`/games/${gameType}/demo`}
@@ -120,7 +122,7 @@
       {/if}
     </div>
 
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 text-sm sm:text-base">
       {#if !$user}
         <button
           class="bg-lime-500 rounded-full px-2 py-1 font-semibold"

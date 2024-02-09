@@ -17,7 +17,7 @@
       <div class="relative flex gap-2 items-center overflow-auto no-scrollbar">
         {#each ["Wordle", "Tradle", "Crossword", "Sudoku"] as game}
           <a
-            class={`px-3 py-2 self-start rounded-lg text-white font-semibold text-center transition-all whitespace-nowrap
+            class={`px-2 sm:px-3 py-1 sm:py-2 self-start rounded-lg text-white font-semibold text-center transition-all whitespace-nowrap
               ${
                 $page.route.id?.includes(game.toLocaleLowerCase())
                   ? "bg-lime-500 shadow-lg"
@@ -33,13 +33,13 @@
       </div>
     </section>
     <section
-      class="flex flex-col gap-2 bg-gray-600 rounded-2xl p-4 shadow-inner"
+      class="flex flex-col gap-2 bg-gray-600 rounded-2xl p-3 sm:p-4 shadow-inner"
     >
       <GameSelector />
     </section>
 
     <section
-      class="flex flex-col flex-grow bg-gray-600 p-4 rounded-2xl shadow-inner"
+      class="flex flex-col flex-grow bg-gray-600 p-3 sm:p-4 rounded-2xl shadow-inner"
     >
       <slot />
     </section>

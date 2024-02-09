@@ -39,22 +39,32 @@ export const wordleGameStates = (() => {
     store.update((s) => s.set(gameId, gameState!));
   };
 
+  let guessEntering = false;
   const enterGuess = async (gameId: GameId, guess: string) => {
     const $user = get(user);
-    if (!$user) return;
+    if (!$user || guessEntering) return;
 
-    const res = await fetch("/api/wordle/submit-guess", {
-      method: "POST",
-      body: JSON.stringify({ guess, gameId, user: $user }),
-    });
+    guessEntering = true;
 
-    if (!res.ok) return;
+    try {
+      const res = await fetch("/api/wordle/submit-guess", {
+        method: "POST",
+        body: JSON.stringify({ guess, gameId, user: $user }),
+      });
 
-    const gameState = (await res.json()) as Omit<WordleGameState, "resetCount">;
-    store.update((s) => {
-      let resetCount = s.get(gameId)?.resetCount;
-      return s.set(gameId, { ...gameState!, resetCount });
-    });
+      if (!res.ok) return;
+
+      const gameState = (await res.json()) as Omit<
+        WordleGameState,
+        "resetCount"
+      >;
+      store.update((s) => {
+        let resetCount = s.get(gameId)?.resetCount;
+        return s.set(gameId, { ...gameState!, resetCount });
+      });
+    } finally {
+      guessEntering = false;
+    }
   };
 
   const reset = async (gameId: GameId) => {

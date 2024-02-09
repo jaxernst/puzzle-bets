@@ -20,7 +20,7 @@
 
   $: dueIn = $liveStatus?.submissionTimeLeft;
   $: puzzleState = game && $puzzleStores[game.type]?.get(entityToInt(gameId));
-  $: console.log($liveStatus);
+
   $: statusLabels = {
     0: () => "",
     1: () => "Invite Pending",

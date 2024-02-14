@@ -5,7 +5,8 @@
   import { liveGameStatus, userGames, userSolvedGame } from "$lib/gameStores";
   import { GameStatus, type EvmAddress } from "$lib/types";
   import { launchConfetti } from "$lib/components/Confetti.svelte";
-  import { wordleGameStates } from "../../puzzleGameStates";
+  import { puzzleStores, wordleGameStates } from "../../puzzleGameStates";
+  import { exportWordleBoard } from "../exportBoard";
 
   $: gameId = $page.params.gameId;
   $: puzzleState = $wordleGameStates.get(gameId);
@@ -38,6 +39,19 @@
   $: submitted = onchainGame && $userSolvedGame(onchainGame.id, $user);
   $: liveStatus = onchainGame && liveGameStatus(onchainGame.id);
   $: expired = liveStatus && !$liveStatus?.submissionTimeLeft;
+
+  let copied = false;
+  const copyBoard = async (board: string[]) => {
+    if (typeof navigator === "undefined" || !navigator.clipboard) return;
+
+    try {
+      await navigator.clipboard.writeText(exportWordleBoard(gameId, board));
+      copied = true;
+      setTimeout(() => (copied = false), 1800);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
 </script>
 
 {#if puzzleState}
@@ -56,6 +70,17 @@
   {#if puzzleState.solved && !submitted && !expired}
     <div class="w-full text-center text-gray-400">
       Submit your solution before the deadline
+    </div>
+  {/if}
+
+  {#if puzzleState.solved || puzzleState.lost}
+    <div class="pt-2 w-full flex justify-center">
+      <button
+        class="bg-pb-yellow font-semibold rounded-lg px-2 py-1 text-white"
+        on:click={() => copyBoard(puzzleState?.answers ?? [])}
+      >
+        {copied ? "Copied!" : "Share board"}
+      </button>
     </div>
   {/if}
 {/if}

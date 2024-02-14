@@ -12,12 +12,15 @@
     liveGameStatus,
     userSolvedGame,
     type LiveStatus,
+    userArchivedGames,
   } from "$lib/gameStores";
   import { readable, writable, type Readable } from "svelte/store";
   import DotLoader from "$lib/components/DotLoader.svelte";
   import { SUPPORTED_GAME_TYPES } from "$lib/constants";
   import BackArrow from "$lib/icons/BackArrow.svelte";
   import { puzzleStores } from "./puzzleGameStates";
+  import Minus from "$lib/icons/Minus.svelte";
+  import Plus from "$lib/icons/Plus.svelte";
 
   export let gameType: GameType;
   export let gameId: Entity | null = null;
@@ -79,6 +82,13 @@
     $liveStatus?.submissionTimeLeft === 0 ||
     submitted ||
     puzzleState?.lost;
+
+  $: gameHidden = $userArchivedGames.some((g) => g === gameId);
+  $: console.log(gameHidden);
+  $: hideOrShowGame = () => {
+    if (!gameId) return;
+    userArchivedGames.setArchivedState(gameId, !gameHidden);
+  };
 </script>
 
 <Modal
@@ -121,7 +131,7 @@
       {/if}
     </div>
 
-    <div class="flex flex-col gap-2 text-sm sm:text-base">
+    <div class="flex gap-2 items-center text-sm sm:text-base">
       {#if !$user}
         <button
           class="bg-lime-500 rounded-full px-2 py-1 font-semibold"
@@ -145,6 +155,16 @@
           class="bg-lime-500 rounded-full px-2 py-1 font-semibold whitespace-nowrap"
         >
           View Results {puzzleState?.lost ? "" : "+ Claim"}
+        </button>
+        <button
+          on:click={hideOrShowGame}
+          class="w-4 h-4 fill-gray-400 rounded border-[1.4px] border-gray-400"
+        >
+          {#if gameHidden}
+            <Plus />
+          {:else}
+            <Minus />
+          {/if}
         </button>
       {:else}
         <button

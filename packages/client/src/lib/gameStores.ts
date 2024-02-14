@@ -194,7 +194,7 @@ export const userArchivedGames = (() => {
 
   const setArchivedState = async (gameId: Entity, archiveState: boolean) => {
     const $user = get(user);
-    if (!$user || get(store).includes(gameId)) return;
+    if (!$user) return;
 
     const res = await fetch(`/api/game-settings/${$user}/update-archived`, {
       method: "POST",
@@ -214,7 +214,6 @@ export const userArchivedGames = (() => {
         }
       });
     }
-    console.log("archived game", gameId, res);
   };
 
   return {

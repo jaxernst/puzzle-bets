@@ -73,7 +73,7 @@
     </div>
   {/if}
 
-  {#if puzzleState.solved}
+  {#if puzzleState.solved || puzzleState.lost}
     <div class="pt-2 w-full flex justify-center">
       <button
         class="bg-pb-yellow font-semibold rounded-lg px-2 py-1 text-white"

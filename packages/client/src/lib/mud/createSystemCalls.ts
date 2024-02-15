@@ -66,11 +66,19 @@ export function createSystemCalls({
     await waitForTransaction(tx);
   };
 
+  const cancelPendingGame = async (gameId: Entity) => {
+    const tx = await worldContract.write.games__cancelPendingGame([
+      gameId as `0x${string}`,
+    ]);
+    await waitForTransaction(tx);
+  };
+
   return {
     newGame,
     joinGame,
     submitSolution,
     claim,
     voteRematch,
+    cancelPendingGame,
   };
 }

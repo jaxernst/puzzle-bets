@@ -3,11 +3,13 @@
   import { goto } from "$app/navigation";
   import DotLoader from "$lib/components/DotLoader.svelte";
   import { ethPrice } from "$lib/ethPrice";
+  import { gameInviteUrls } from "$lib/gameStores";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
   import { mud, user } from "$lib/mud/mudStore";
   import type { GameType } from "$lib/types";
   import { capitalized } from "$lib/util";
   import { HasValue, runQuery } from "@latticexyz/recs";
+  import { writable } from "svelte/store";
   import { slide } from "svelte/transition";
 
   export let gameType: GameType;
@@ -53,7 +55,6 @@
   }
 
   let createdGameId: number | null = null;
-  let inviteUrl = "";
   $: if (gameCreated && browser) {
     const entities = runQuery([
       HasValue($mud.components.Player1, { value: $user }),
@@ -67,13 +68,7 @@
 
     if (newest) {
       createdGameId = parseInt(newest, 16);
-      const inviteUrlParams = inviteName
-        ? `?gameType=${gameType}&from=${inviteName
-            .split(" ")
-            .join("_")}&valUsd=${wagerUSD.toFixed(2)}`
-        : `?gameType=${gameType}`;
-
-      inviteUrl = `${window.location.origin}/join/${createdGameId}${inviteUrlParams}`;
+      gameInviteUrls.create(gameType, createdGameId, wagerUSD, inviteName);
     }
   }
 
@@ -84,6 +79,10 @@
 
   let inviteCopied = false;
   async function copyInviteUrl() {
+    const inviteUrl =
+      typeof createdGameId === "number" && $gameInviteUrls[createdGameId];
+    if (!inviteUrl) throw new Error("No invite url");
+
     try {
       await navigator.clipboard.writeText(inviteUrl);
       inviteCopied = true;
@@ -169,10 +168,7 @@
         type="text"
         class="border-2 border-gray-500 bg-transparent text-gray-200 px-2 rounded-lg w-[130px]"
         bind:value={inviteName}
-        on:input={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
+        on:input|preventDefault|stopPropagation
       />
     </div>
   </div>

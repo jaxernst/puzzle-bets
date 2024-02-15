@@ -14,6 +14,7 @@ import {
   gameNumberToType,
   type Game,
   type EvmAddress,
+  type GameType,
 } from "$lib/types";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
 import type { SetupNetworkResult } from "./mud/setupNetwork";
@@ -194,7 +195,7 @@ export const userArchivedGames = (() => {
 
   const setArchivedState = async (gameId: Entity, archiveState: boolean) => {
     const $user = get(user);
-    if (!$user || get(store).includes(gameId)) return;
+    if (!$user) return;
 
     const res = await fetch(`/api/game-settings/${$user}/update-archived`, {
       method: "POST",
@@ -219,6 +220,51 @@ export const userArchivedGames = (() => {
   return {
     ...store,
     setArchivedState,
+  };
+})();
+
+export const gameInviteUrls = (() => {
+  const urls = writable<Record<number, string>>("");
+
+  const makeInviteUrl = (
+    gameType: GameType,
+    gameId: number,
+    gameWagerUsd?: number,
+    inviteName?: string | null
+  ) => {
+    const urlParams = new URLSearchParams({
+      gameType: gameType,
+    });
+
+    if (inviteName) {
+      urlParams.set("from", inviteName.split(" ").join("_"));
+    }
+
+    if (gameWagerUsd) {
+      urlParams.set("valUsd", gameWagerUsd.toFixed(2));
+    }
+
+    return `${window.location.origin}/join/${gameId}?${urlParams.toString()}`;
+  };
+
+  return {
+    subscribe: urls.subscribe,
+    create: (
+      gameType: GameType,
+      gameId: number,
+      gameWagerUsd?: number,
+      inviteName?: string | null
+    ) => {
+      const url = makeInviteUrl(gameType, gameId, gameWagerUsd, inviteName);
+      urls.update((urls) => {
+        return {
+          ...urls,
+          [gameId]: url,
+        };
+      });
+
+      return url;
+    },
   };
 })();
 

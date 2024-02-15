@@ -13,7 +13,8 @@
   let stageHeight = 2000;
   if (browser) {
     stageWidth = window.innerWidth;
-    stageHeight = window.innerHeight;
+    // Add a margin so confetti falls below end of screen
+    stageHeight = window.innerHeight * 1.4;
   }
 </script>
 

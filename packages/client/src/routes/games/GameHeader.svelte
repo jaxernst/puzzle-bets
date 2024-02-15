@@ -12,12 +12,17 @@
     liveGameStatus,
     userSolvedGame,
     type LiveStatus,
+    userArchivedGames,
+    gameInviteUrls,
   } from "$lib/gameStores";
   import { readable, writable, type Readable } from "svelte/store";
   import DotLoader from "$lib/components/DotLoader.svelte";
   import { SUPPORTED_GAME_TYPES } from "$lib/constants";
   import BackArrow from "$lib/icons/BackArrow.svelte";
   import { puzzleStores } from "./puzzleGameStates";
+  import Minus from "$lib/icons/Minus.svelte";
+  import Plus from "$lib/icons/Plus.svelte";
+  import { slide } from "svelte/transition";
 
   export let gameType: GameType;
   export let gameId: Entity | null = null;
@@ -79,6 +84,44 @@
     $liveStatus?.submissionTimeLeft === 0 ||
     submitted ||
     puzzleState?.lost;
+
+  $: gameHidden = $userArchivedGames.some((g) => g === gameId);
+  $: hideOrShowGame = () => {
+    if (!gameId) return;
+    userArchivedGames.setArchivedState(gameId, !gameHidden);
+  };
+
+  let cancellingGame = false;
+  $: cancelAndArchive = async () => {
+    if (!gameId) return;
+    cancellingGame = true;
+    try {
+      await $mud.systemCalls.cancelPendingGame(gameId);
+      userArchivedGames.setArchivedState(gameId, true);
+    } catch (e) {
+      console.error("Failed to cancel invite");
+      console.error(e);
+    } finally {
+      cancellingGame = false;
+    }
+  };
+
+  let urlCopied = false;
+  $: copyInviteUrl = () => {
+    if (!gameId) return;
+    const gId = Number(entityToInt(gameId));
+    let url = $gameInviteUrls[gId];
+    if (!url) {
+      url = gameInviteUrls.create(gameType, gId);
+    }
+
+    navigator.clipboard.writeText(url);
+
+    urlCopied = true;
+    setTimeout(() => {
+      urlCopied = false;
+    }, 1700);
+  };
 </script>
 
 <Modal
@@ -121,7 +164,7 @@
       {/if}
     </div>
 
-    <div class="flex flex-col gap-2 text-sm sm:text-base">
+    <div class="flex gap-2 items-center text-sm sm:text-base">
       {#if !$user}
         <button
           class="bg-lime-500 rounded-full px-2 py-1 font-semibold"
@@ -137,6 +180,27 @@
         >
           Start live game
         </button>
+      {:else if $liveStatus?.status === GameStatus.Pending}
+        <button
+          on:click={copyInviteUrl}
+          class="whitespace-nowrap self-start border border-lime-500 text-lime-500 font-semibold rounded-full px-2 py-1"
+        >
+          {#if urlCopied}
+            <div in:slide={{ axis: "x" }}>Invite Copied!</div>
+          {:else}
+            <div in:slide={{ axis: "x" }}>Copy Invite</div>
+          {/if}
+        </button>
+        <button
+          class="self-start text-pb-yellow underline px-2 py-1"
+          on:click={cancelAndArchive}
+        >
+          {#if cancellingGame}
+            <DotLoader klass="fill-pb-yellow" />
+          {:else}
+            Cancel
+          {/if}
+        </button>
       {:else if canViewResult}
         <button
           on:click={() => {
@@ -146,12 +210,12 @@
         >
           View Results {puzzleState?.lost ? "" : "+ Claim"}
         </button>
-      {:else}
+      {:else if $liveStatus?.status === GameStatus.Active}
         <button
           class={`${
             submitError ? "bg-red-500 italicx" : "bg-lime-500"
           } disabled:opacity-60 rounded-full px-2 py-1 font-semibold min-w-[70px] flex justify-center transition-all`}
-          disabled={$liveStatus?.status === GameStatus.Pending}
+          disabled={!puzzleState?.solved}
           on:click={verifyAndSubmitSolution}
         >
           {#if submitting}
@@ -160,6 +224,19 @@
             {submitError}
           {:else}
             Submit
+          {/if}
+        </button>
+      {/if}
+
+      {#if gameId && ($liveStatus?.status === GameStatus.Complete || $liveStatus?.status === GameStatus.Inactive)}
+        <button
+          on:click={hideOrShowGame}
+          class="w-4 h-4 fill-gray-400 rounded border-[1.4px] border-gray-400"
+        >
+          {#if gameHidden}
+            <Plus />
+          {:else}
+            <Minus />
           {/if}
         </button>
       {/if}

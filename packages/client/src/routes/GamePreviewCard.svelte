@@ -34,16 +34,6 @@
   };
 
   $: liveStatus = liveGameStatus(id);
-
-  $: shouldArchive =
-    $user &&
-    game.status === GameStatus.Pending &&
-    game.inviteExpiration &&
-    systemTimestamp() > game.inviteExpiration;
-
-  $: if (shouldArchive) {
-    userArchivedGames.setArchivedState(id, true);
-  }
 </script>
 
 <a
@@ -75,6 +65,8 @@
       {:else}
         time's up...
       {/if}
+    {:else if status === GameStatus.Inactive}
+      game cancelled...
     {/if}
   </div>
 </a>

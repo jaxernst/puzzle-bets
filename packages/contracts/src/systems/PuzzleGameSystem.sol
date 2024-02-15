@@ -79,6 +79,18 @@ contract PuzzleGameSystem is System {
   }
 
   /**
+   * Cancel a game request and withdraw funds
+   * @notice Can only be called by the creator of the game while the game is
+   * still in a pending state (second player has not joined)
+   */
+  function cancelPendingGame(bytes32 gameId) public {
+    require(_msgSender() == Player1.get(gameId), "Only creator can cancel");
+    require(GameStatus.get(gameId) == Status.Pending, "Game is not pending");
+    GameStatus.set(gameId, Status.Inactive);
+    _returnPlayerDeposit(gameId);
+  }
+
+  /**
    * Check outcome of the game and distribute funds to players.
    * @notice Players can claim funds after the deadline has passed, but may claim before
    * the deadline if both players have solved (tie game)
@@ -86,6 +98,7 @@ contract PuzzleGameSystem is System {
   function claim(bytes32 gameId) public playerOnly(gameId) {
     address p1 = Player1.get(gameId);
     address p2 = Player2.get(gameId);
+
     if (p1 == _msgSender()) {
       _claim(gameId, p1, p2);
     } else {

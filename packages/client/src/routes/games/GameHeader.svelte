@@ -13,6 +13,7 @@
     userSolvedGame,
     type LiveStatus,
     userArchivedGames,
+    gameInviteUrls,
   } from "$lib/gameStores";
   import { readable, writable, type Readable } from "svelte/store";
   import DotLoader from "$lib/components/DotLoader.svelte";
@@ -21,6 +22,7 @@
   import { puzzleStores } from "./puzzleGameStates";
   import Minus from "$lib/icons/Minus.svelte";
   import Plus from "$lib/icons/Plus.svelte";
+  import { slide } from "svelte/transition";
 
   export let gameType: GameType;
   export let gameId: Entity | null = null;
@@ -103,6 +105,23 @@
       cancellingGame = false;
     }
   };
+
+  let urlCopied = false;
+  $: copyInviteUrl = () => {
+    if (!gameId) return;
+    const gId = Number(entityToInt(gameId));
+    let url = $gameInviteUrls[gId];
+    if (!url) {
+      url = gameInviteUrls.create(gameType, gId);
+    }
+
+    navigator.clipboard.writeText(url);
+
+    urlCopied = true;
+    setTimeout(() => {
+      urlCopied = false;
+    }, 1700);
+  };
 </script>
 
 <Modal
@@ -163,9 +182,14 @@
         </button>
       {:else if $liveStatus?.status === GameStatus.Pending}
         <button
-          class="self-start border border-lime-500 text-lime-500 font-semibold rounded-full px-2 py-1"
+          on:click={copyInviteUrl}
+          class="whitespace-nowrap self-start border border-lime-500 text-lime-500 font-semibold rounded-full px-2 py-1"
         >
-          Copy Invite
+          {#if urlCopied}
+            <div in:slide={{ axis: "x" }}>Invite Copied!</div>
+          {:else}
+            <div in:slide={{ axis: "x" }}>Copy Invite</div>
+          {/if}
         </button>
         <button
           class="self-start text-pb-yellow underline px-2 py-1"

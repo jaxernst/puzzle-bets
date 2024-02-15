@@ -84,10 +84,24 @@
     puzzleState?.lost;
 
   $: gameHidden = $userArchivedGames.some((g) => g === gameId);
-  $: console.log(gameHidden);
   $: hideOrShowGame = () => {
     if (!gameId) return;
     userArchivedGames.setArchivedState(gameId, !gameHidden);
+  };
+
+  let cancellingGame = false;
+  $: cancelAndArchive = async () => {
+    if (!gameId) return;
+    cancellingGame = true;
+    try {
+      await $mud.systemCalls.cancelPendingGame(gameId);
+      userArchivedGames.setArchivedState(gameId, true);
+    } catch (e) {
+      console.error("Failed to cancel invite");
+      console.error(e);
+    } finally {
+      cancellingGame = false;
+    }
   };
 </script>
 
@@ -147,6 +161,22 @@
         >
           Start live game
         </button>
+      {:else if $liveStatus?.status === GameStatus.Pending}
+        <button
+          class="self-start border border-lime-500 text-lime-500 font-semibold rounded-full px-2 py-1"
+        >
+          Copy Invite
+        </button>
+        <button
+          class="self-start text-pb-yellow underline px-2 py-1"
+          on:click={cancelAndArchive}
+        >
+          {#if cancellingGame}
+            <DotLoader klass="fill-pb-yellow" />
+          {:else}
+            Cancel
+          {/if}
+        </button>
       {:else if canViewResult}
         <button
           on:click={() => {
@@ -156,22 +186,12 @@
         >
           View Results {puzzleState?.lost ? "" : "+ Claim"}
         </button>
-        <button
-          on:click={hideOrShowGame}
-          class="w-4 h-4 fill-gray-400 rounded border-[1.4px] border-gray-400"
-        >
-          {#if gameHidden}
-            <Plus />
-          {:else}
-            <Minus />
-          {/if}
-        </button>
-      {:else}
+      {:else if $liveStatus?.status === GameStatus.Active}
         <button
           class={`${
             submitError ? "bg-red-500 italicx" : "bg-lime-500"
           } disabled:opacity-60 rounded-full px-2 py-1 font-semibold min-w-[70px] flex justify-center transition-all`}
-          disabled={$liveStatus?.status === GameStatus.Pending}
+          disabled={!puzzleState?.solved}
           on:click={verifyAndSubmitSolution}
         >
           {#if submitting}
@@ -180,6 +200,19 @@
             {submitError}
           {:else}
             Submit
+          {/if}
+        </button>
+      {/if}
+
+      {#if gameId && ($liveStatus?.status === GameStatus.Complete || $liveStatus?.status === GameStatus.Inactive)}
+        <button
+          on:click={hideOrShowGame}
+          class="w-4 h-4 fill-gray-400 rounded border-[1.4px] border-gray-400"
+        >
+          {#if gameHidden}
+            <Plus />
+          {:else}
+            <Minus />
           {/if}
         </button>
       {/if}

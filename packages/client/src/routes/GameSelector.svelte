@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getGame, userArchivedGames, userGames } from "$lib/gameStores";
+  import { userArchivedGames, userGames } from "$lib/gameStores";
   import { type GameType, GameStatus } from "$lib/types";
 
   import { slide } from "svelte/transition";

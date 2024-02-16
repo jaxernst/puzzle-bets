@@ -23,6 +23,7 @@
   import Minus from "$lib/icons/Minus.svelte";
   import Plus from "$lib/icons/Plus.svelte";
   import { slide } from "svelte/transition";
+  import { cubicIn, cubicInOut, cubicOut } from "svelte/easing";
 
   export let gameType: GameType;
   export let gameId: Entity | null = null;
@@ -188,7 +189,7 @@
           {#if urlCopied}
             <div in:slide={{ axis: "x" }}>Invite Copied!</div>
           {:else}
-            <div in:slide={{ axis: "x" }}>Copy Invite</div>
+            <div in:slide={{ axis: "x", easing: cubicOut }}>Copy Invite</div>
           {/if}
         </button>
         <button

@@ -4,7 +4,7 @@
   "short_name": "Puzzle Bets",
   "start_url": "/",
   "lang": "en-US",
-  "theme_color": "eacb28",
+  "theme_color": "rgb(202, 216, 228)",
   "display": "standalone",
   "icons": [
     {

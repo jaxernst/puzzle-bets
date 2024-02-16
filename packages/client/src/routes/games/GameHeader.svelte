@@ -184,7 +184,7 @@
       {:else if $liveStatus?.status === GameStatus.Pending}
         <button
           on:click={copyInviteUrl}
-          class="whitespace-nowrap self-start border border-lime-500 text-lime-500 font-semibold rounded-full px-2 py-1"
+          class="whitespace-nowrap text-sm border border-lime-500 text-lime-500 font-semibold rounded-full px-2 py-1"
         >
           {#if urlCopied}
             <div in:slide={{ axis: "x" }}>Invite Copied!</div>
@@ -192,12 +192,9 @@
             <div in:slide={{ axis: "x", easing: cubicOut }}>Copy Invite</div>
           {/if}
         </button>
-        <button
-          class="self-start text-pb-yellow underline px-2 py-1"
-          on:click={cancelAndArchive}
-        >
+        <button class=" text-pb-yellow text-sm" on:click={cancelAndArchive}>
           {#if cancellingGame}
-            <DotLoader klass="fill-pb-yellow" />
+            <DotLoader klass="fill-pb-yellow " />
           {:else}
             Cancel
           {/if}

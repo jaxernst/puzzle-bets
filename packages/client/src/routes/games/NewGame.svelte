@@ -9,6 +9,7 @@
   import type { GameType } from "$lib/types";
   import { capitalized } from "$lib/util";
   import { HasValue, runQuery } from "@latticexyz/recs";
+  import { cubicOut } from "svelte/easing";
   import { writable } from "svelte/store";
   import { slide } from "svelte/transition";
 
@@ -178,7 +179,7 @@
       <button
         class="bg-lime-500 hover:bg-lime-400 whitespace-nowrap hover:shadow-lg transition-all active:bg-lime-600 rounded-lg font-bold px-3 py-2"
         on:click={() => (!gameCreated ? createGame() : copyInviteUrl())}
-        in:slide={{ axis: "x" }}
+        in:slide={{ axis: "x", easing: cubicOut }}
       >
         {#if createGameLoading}
           <DotLoader />

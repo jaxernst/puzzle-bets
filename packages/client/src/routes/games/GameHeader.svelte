@@ -23,6 +23,7 @@
   import Minus from "$lib/icons/Minus.svelte";
   import Plus from "$lib/icons/Plus.svelte";
   import { slide } from "svelte/transition";
+  import { cubicIn, cubicInOut, cubicOut } from "svelte/easing";
 
   export let gameType: GameType;
   export let gameId: Entity | null = null;
@@ -183,20 +184,17 @@
       {:else if $liveStatus?.status === GameStatus.Pending}
         <button
           on:click={copyInviteUrl}
-          class="whitespace-nowrap self-start border border-lime-500 text-lime-500 font-semibold rounded-full px-2 py-1"
+          class="whitespace-nowrap text-sm border border-lime-500 text-lime-500 font-semibold rounded-full px-2 py-1"
         >
           {#if urlCopied}
             <div in:slide={{ axis: "x" }}>Invite Copied!</div>
           {:else}
-            <div in:slide={{ axis: "x" }}>Copy Invite</div>
+            <div in:slide={{ axis: "x", easing: cubicOut }}>Copy Invite</div>
           {/if}
         </button>
-        <button
-          class="self-start text-pb-yellow underline px-2 py-1"
-          on:click={cancelAndArchive}
-        >
+        <button class=" text-pb-yellow text-sm" on:click={cancelAndArchive}>
           {#if cancellingGame}
-            <DotLoader klass="fill-pb-yellow" />
+            <DotLoader klass="fill-pb-yellow " />
           {:else}
             Cancel
           {/if}

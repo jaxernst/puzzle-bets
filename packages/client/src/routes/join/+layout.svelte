@@ -9,6 +9,7 @@
   import { loginAndConnect } from "$lib/components/WalletConnector.svelte";
   import { user } from "$lib/mud/mudStore";
   import { getGame } from "$lib/gameStores";
+  import { GameStatus } from "$lib/types";
 
   let show = true;
 
@@ -21,6 +22,7 @@
   $: gameId = intToEntity($page.params.joinGameId, true);
   $: game = $getGame(gameId);
   $: userIsEligible = $user && $user !== game?.p1;
+  $: inviteCancelled = game?.status === GameStatus.Inactive;
 
   let inviteExpired = false;
   onMount(() =>
@@ -48,8 +50,8 @@
         Game not found
       {:else if !userIsEligible}
         You are not elligible for this game
-      {:else if inviteExpired}
-        Game inviteExpired
+      {:else if inviteExpired || game?.status === GameStatus.Inactive}
+        Game invite expired
       {:else}
         <JoinGame
           {gameId}

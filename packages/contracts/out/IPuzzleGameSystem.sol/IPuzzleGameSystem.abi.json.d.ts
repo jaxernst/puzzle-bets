@@ -1,6 +1,19 @@
 declare const abi: [
   {
     "type": "function",
+    "name": "games__cancelPendingGame",
+    "inputs": [
+      {
+        "name": "gameId",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "games__claim",
     "inputs": [
       {

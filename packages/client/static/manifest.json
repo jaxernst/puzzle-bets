@@ -1,0 +1,23 @@
+{
+  "name": "Puzzle Bets - competitive puzzles",
+  "description": "Challenge friends to competitive puzzle games",
+  "short_name": "Puzzle Bets",
+  "start_url": "/",
+  "lang": "en-US",
+  "theme_color": "eacb28",
+  "display": "standalone",
+  "icons": [
+    {
+      "purpose": "maskable",
+      "sizes": "512x512",
+      "src": "icon512_maskable.png",
+      "type": "image/png"
+    },
+    {
+      "purpose": "any",
+      "sizes": "512x512",
+      "src": "icon512_rounded.png",
+      "type": "image/png"
+    }
+  ]
+}

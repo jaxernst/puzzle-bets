@@ -22,7 +22,8 @@ self.addEventListener("install", (event) => {
     await cache.addAll(ASSETS);
   }
 
-  event.waitUntil(addFilesToCache());
+  // Temporarily paused until this can be tested properly
+  //  event.waitUntil(addFilesToCache());
 });
 
 self.addEventListener("activate", (event) => {

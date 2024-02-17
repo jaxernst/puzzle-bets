@@ -15,9 +15,9 @@ export const load = (async ({ cookies }) => {
   console.log("cachedGame", cachedGame);
   let game: Game;
   if (!cachedGame) {
-    game = new Game(cachedGame);
-  } else {
     game = await getOrCreateDemo(gameId);
+  } else {
+    game = new Game(cachedGame);
   }
 
   cookies.set(wordleGameCacheKey(gameId), game.toString(), { path: "" });

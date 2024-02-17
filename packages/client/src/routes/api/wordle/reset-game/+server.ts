@@ -1,3 +1,4 @@
+import { wordleGameCacheKey } from "$lib/server/gameCacheKeys";
 import {
   incrementGameResetCount,
   supabaseGameStore,
@@ -5,7 +6,7 @@ import {
 import { Game } from "../../../../lib/server/wordle/game.server";
 
 /** @type {import('./$types').RequestHandler} */
-export const POST = async ({ request }) => {
+export const POST = async ({ request, cookies }) => {
   const { gameId, user, otherPlayer, chainRematchCount } =
     (await request.json()) as {
       gameId: string;
@@ -37,6 +38,11 @@ export const POST = async ({ request }) => {
       gameId,
       otherPlayer
     );
+  }
+
+  const cachedGame = cookies.get(wordleGameCacheKey(gameId));
+  if (cachedGame) {
+    cookies.set(wordleGameCacheKey(gameId), game.toString(), { path: "/" });
   }
 
   const resetCount = await incrementGameResetCount(

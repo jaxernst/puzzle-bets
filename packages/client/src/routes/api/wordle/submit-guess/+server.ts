@@ -1,7 +1,8 @@
+import { wordleGameCacheKey } from "$lib/server/gameCacheKeys";
 import { supabaseGameStore } from "$lib/server/gameStateStorage";
 import { Game } from "../../../../lib/server/wordle/game.server";
 
-export const POST = async ({ request }): Promise<Response> => {
+export const POST = async ({ request, cookies }): Promise<Response> => {
   const { guess, gameId, user } = (await request.json()) as {
     guess: string;
     gameId: string;
@@ -25,6 +26,11 @@ export const POST = async ({ request }): Promise<Response> => {
 
   const solved = game.won();
   const lost = game.answers.length >= 6 && !solved;
+
+  // Update cache
+  cookies.set(wordleGameCacheKey(gameId), game.toString(), {
+    path: "/",
+  });
 
   return new Response(
     JSON.stringify({

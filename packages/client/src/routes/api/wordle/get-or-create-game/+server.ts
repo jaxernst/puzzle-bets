@@ -1,8 +1,9 @@
+import { wordleGameCacheKey } from "$lib/server/gameCacheKeys";
 import { getGameResetCount } from "$lib/server/gameStateStorage";
 import { Game } from "../../../../lib/server/wordle/game.server";
 import { getOrCreateDemo, getOrCreateLiveGame } from "./getOrCreate";
 
-export const POST = async ({ request }): Promise<Response> => {
+export const POST = async ({ request, cookies }): Promise<Response> => {
   const { gameId, user, opponent } = (await request.json()) as {
     gameId: string;
     // Temporarily get the opponent from the client as a param.
@@ -22,12 +23,18 @@ export const POST = async ({ request }): Promise<Response> => {
 
   const isDemoGame = !opponent;
 
+  const cachedGame = cookies.get(wordleGameCacheKey(gameId));
+
   let game: Game;
-  if (isDemoGame) {
+  if (cachedGame) {
+    game = new Game(cachedGame);
+  } else if (isDemoGame) {
     game = await getOrCreateDemo(gameId);
+    cookies.set(wordleGameCacheKey(gameId), game.toString(), { path: "/" });
   } else {
     if (!user || !opponent) throw new Error("Invariant error");
     game = await getOrCreateLiveGame(gameId, user, opponent);
+    cookies.set(wordleGameCacheKey(gameId), game.toString(), { path: "/" });
   }
 
   const resetCount = await getGameResetCount(gameId);

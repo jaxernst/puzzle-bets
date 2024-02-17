@@ -1,12 +1,12 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import WordleGame from "../WordleGame.svelte";
+  import WordleGame from "../../WordleGame.svelte";
   import { user } from "$lib/mud/mudStore";
   import { liveGameStatus, userGames, userSolvedGame } from "$lib/gameStores";
   import { GameStatus, type EvmAddress } from "$lib/types";
   import { launchConfetti } from "$lib/components/Confetti.svelte";
-  import { puzzleStores, wordleGameStates } from "../../puzzleGameStates";
-  import { exportWordleBoard } from "../exportBoard";
+  import { puzzleStores, wordleGameStates } from "../../../puzzleGameStates";
+  import { exportWordleBoard } from "../../exportBoard";
 
   $: gameId = $page.params.gameId;
   $: puzzleState = $wordleGameStates.get(gameId);

@@ -1,6 +1,8 @@
 import type { PageServerLoad } from "./$types";
 import { generateRandomID } from "$lib/util";
 import { getOrCreateDemo } from "../../../api/wordle/get-or-create-game/getOrCreate";
+import { Game } from "$lib/server/wordle/game.server";
+import { wordleGameCacheKey } from "$lib/server/gameStateCache";
 
 export const load = (async ({ cookies }) => {
   let gameId = cookies.get("gameId");
@@ -9,7 +11,16 @@ export const load = (async ({ cookies }) => {
     cookies.set("gameId", gameId, { path: "" });
   }
 
-  const game = await getOrCreateDemo(gameId);
+  const cachedGame = cookies.get(wordleGameCacheKey(gameId));
+  console.log("cachedGame", cachedGame);
+  let game: Game;
+  if (!cachedGame) {
+    game = new Game(cachedGame);
+  } else {
+    game = await getOrCreateDemo(gameId);
+  }
+
+  cookies.set(wordleGameCacheKey(gameId), game.toString(), { path: "" });
 
   return {
     gameId,

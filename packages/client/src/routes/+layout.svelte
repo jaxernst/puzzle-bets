@@ -17,7 +17,7 @@
       <div class="relative flex gap-2 items-center overflow-auto no-scrollbar">
         {#each ["Wordle", "Tradle", "Crossword", "Sudoku"] as game}
           <a
-            class={`px-2 sm:px-3 py-1 sm:py-2 self-start rounded-lg text-white tracking-wider font-semibold text-center transition-all whitespace-nowrap
+            class={`px-2 sm:px-3 py-1 sm:py-2 self-start rounded-lg text-white tracking-wide font-semibold text-center transition-all whitespace-nowrap
               ${
                 $page.route.id?.includes(game.toLocaleLowerCase())
                   ? "bg-lime-500 shadow-lg"

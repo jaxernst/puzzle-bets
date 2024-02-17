@@ -3,6 +3,7 @@
   "description": "Challenge friends to competitive puzzle games",
   "short_name": "Puzzle Bets",
   "start_url": "/",
+  "scope": "/",
   "lang": "en-US",
   "theme_color": "cad8e4",
   "display": "standalone",

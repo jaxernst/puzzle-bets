@@ -14,6 +14,8 @@ const CACHE = `cache-${version}`;
 
 const ASSETS = [...build, ...files];
 
+/* 
+
 self.addEventListener("install", (event) => {
   console.log("SW install");
   // Create a new cache and add all files to it
@@ -34,7 +36,7 @@ self.addEventListener("activate", (event) => {
     }
   }
 
-  event.waitUntil(deleteOldCaches());
+  // event.waitUntil(deleteOldCaches());
 });
 
 self.addEventListener("fetch", (event) => {
@@ -65,8 +67,10 @@ self.addEventListener("fetch", (event) => {
     }
   }
 
-  event.respondWith(respond() as Promise<Response>);
+  //event.respondWith(respond() as Promise<Response>);
 });
+
+*/
 
 /** Push Notifications  **/
 

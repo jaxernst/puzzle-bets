@@ -11,12 +11,13 @@
     localStorage.setItem("wordleDemoGameId", gameId);
   }
 
-  wordleGameStates.getOrCreate(gameId);
-
   $: game = $wordleGameStates.get(gameId);
+  $: if (!game) {
+    wordleGameStates.getOrCreate(gameId, true);
+  }
 
   const enterGuess = async (guess: string) => {
-    await wordleGameStates.enterGuess(gameId, guess);
+    await wordleGameStates.enterGuess(gameId, guess, true);
     const puzzleState = $wordleGameStates.get(gameId);
     if (puzzleState?.solved) {
       launchConfetti();
@@ -24,7 +25,7 @@
   };
 
   const reset = async () => {
-    wordleGameStates.reset(gameId, false);
+    wordleGameStates.reset(gameId, true);
   };
 
   let showRestart = false;

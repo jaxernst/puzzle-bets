@@ -6,7 +6,7 @@ import { Game } from "../../../../lib/server/wordle/game.server";
 export const POST = async ({ request }): Promise<Response> => {
   const { gameId, user } = (await request.json()) as {
     gameId: string;
-    user?: string;
+    user: string;
   };
 
   if (!gameId || !user) {

@@ -5,8 +5,10 @@
   import { liveGameStatus, userGames, userSolvedGame } from "$lib/gameStores";
   import { GameStatus, type EvmAddress } from "$lib/types";
   import { launchConfetti } from "$lib/components/Confetti.svelte";
-  import { puzzleStores, wordleGameStates } from "../../puzzleGameStates";
+  import { wordleGameStates } from "../../puzzleGameStates";
   import { exportWordleBoard } from "../exportBoard";
+  import { cubicOut } from "svelte/easing";
+  import { slide } from "svelte/transition";
 
   $: gameId = $page.params.gameId;
   $: puzzleState = $wordleGameStates.get(gameId);
@@ -79,7 +81,21 @@
         class="bg-pb-yellow font-semibold rounded-lg px-2 py-1 text-white"
         on:click={() => copyBoard(puzzleState?.answers ?? [])}
       >
-        {copied ? "Copied!" : "Share board"}
+        {#if copied}
+          <div
+            in:slide={{ axis: "x", easing: cubicOut }}
+            class="whitespace-nowrap"
+          >
+            Copied
+          </div>
+        {:else}
+          <div
+            in:slide={{ axis: "x", easing: cubicOut }}
+            class="whitespace-nowrap"
+          >
+            Share Board
+          </div>
+        {/if}
       </button>
     </div>
   {/if}

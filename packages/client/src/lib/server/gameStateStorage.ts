@@ -1,8 +1,8 @@
+import { PUBLIC_CHAIN_ID } from "$env/static/public";
 import type { EvmAddress, Game, GameType } from "$lib/types";
-import { intToEntity } from "$lib/util";
 import { supabase } from "./supabaseClient";
 
-const chainId = import.meta.env.VITE_CHAIN_ID;
+const chainId = PUBLIC_CHAIN_ID;
 
 const gameStateTable = (demoGame?: boolean) => {
   return `game-state-${demoGame ? "demo" : chainId}`;

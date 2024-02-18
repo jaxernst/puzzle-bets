@@ -9,24 +9,8 @@
     deviceHash,
     notificationPermissionGranted,
     subscribeToPushNotifications,
-  } from "$lib/notifications";
+  } from "$lib/notifications/notificationUtil";
   import { user } from "$lib/mud/mudStore";
-
-  $: if (!notificationPermissionGranted() && $user) {
-    (async () => {
-      const subscription = await subscribeToPushNotifications();
-      const res = await fetch(
-        `api/notifications/${$user}/${await deviceHash()}/subscribe`,
-        {
-          method: "POST",
-          body: JSON.stringify(subscription),
-          headers: {
-            "content-type": "application/json",
-          },
-        }
-      );
-    })();
-  }
 </script>
 
 <WalletConnector />

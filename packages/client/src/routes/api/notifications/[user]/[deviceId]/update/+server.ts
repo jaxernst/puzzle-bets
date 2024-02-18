@@ -12,7 +12,7 @@ export async function POST({ request, params }: RequestEvent) {
     return new Response("No subscription received", { status: 400 });
   }
 
-  // Save subscription to "alarm_notifications" table
+  // Save subscription to "notifications" table
   try {
     const { data } = await supabase
       .from("notifications")

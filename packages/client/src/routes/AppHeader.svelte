@@ -6,8 +6,10 @@
   import Puzzly from "$lib/icons/puzzly.svelte";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
   import CopyableAddress from "$lib/components/CopyableAddress.svelte";
+  import NotificationBell from "$lib/icons/NotificationBell.svelte";
   import { formatEther } from "viem";
   import { onMount } from "svelte";
+  import { notifications } from "$lib/notifications/notificationStore";
 
   let userBalance: string;
   onMount(() => {
@@ -26,6 +28,8 @@
     const wallet = await promptConnectWallet();
     mud.setup(wallet);
   };
+
+  $: console.log($notifications.loading);
 </script>
 
 <div class="w-full flex justify-between items-center">
@@ -59,8 +63,25 @@
         <WalletIcon />
       </div>
       {#if $userWallet && $mud.ready}
-        <div class="w-2 h-2 rounded-full bg-green-500"></div>
+        <div class="w-[.4rem] h-[.4rem] rounded-full bg-green-500"></div>
       {/if}
     </button>
+    {#if $user}
+      <button class="flex" on:click={$notifications.toggle}>
+        <div class="flex justify-center items-center h-7">
+          <div
+            class={`w-5 h-5 fill-gray-600 transition-colors
+              ${$notifications.enabled ? "" : "opacity-50"} 
+              ${$notifications.loading ? "animate-pulse" : ""}
+            `}
+          >
+            <NotificationBell />
+          </div>
+        </div>
+        {#if $notifications.enabled}
+          <div class="w-[.4rem] h-[.4rem] rounded-full bg-green-500"></div>
+        {/if}
+      </button>
+    {/if}
   </div>
 </div>

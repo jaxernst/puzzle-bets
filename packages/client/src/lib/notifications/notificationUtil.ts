@@ -1,4 +1,13 @@
 import { PUBLIC_VAPID_KEY } from "$env/static/public";
+import type { EvmAddress } from "$lib/types";
+
+export async function fetchNotificationState(address: EvmAddress) {
+  const res = await fetch(
+    `/api/notifications/${address}/${await deviceHash()}/status`
+  );
+  const { subscribed }: { subscribed: boolean } = await res.json();
+  return subscribed;
+}
 
 export async function deviceHash() {
   const dataString = navigator.userAgent;

@@ -1,5 +1,6 @@
 /// <reference lib="webworker" />
 /// <reference types="@sveltejs/kit" />
+import { deviceHash } from "$lib/notifications/notificationUtil";
 import { build, files, version } from "$service-worker";
 
 declare const self: ServiceWorkerGlobalScope;
@@ -76,13 +77,19 @@ self.addEventListener("fetch", (event) => {
 
 self.addEventListener("push", (event) => {
   console.log("Push event received");
-  const data = event.data?.json();
 
-  const title = data.title || "Push Notification";
+  let data;
+  try {
+    data = event.data?.json();
+  } catch {
+    data = {};
+  }
+
+  const title = data.title || "Puzzle Bets";
 
   const options = {
     body: data.body,
-    icon: "./sac_logo.svg",
+    icon: "./icon512_rounded.png",
     badge: data.badge,
   };
 
@@ -90,14 +97,14 @@ self.addEventListener("push", (event) => {
 });
 
 const handlePushRenew = async () => {
-  /*const newSubscription = await self.registration.pushManager.getSubscription();
-  await fetch(`api/_/notifications/${await deviceHash()}/update`, {
+  const newSubscription = await self.registration.pushManager.getSubscription();
+  await fetch(`api/notifications/_/${await deviceHash()}/update`, {
     method: "POST",
     body: JSON.stringify(newSubscription),
     headers: {
       "content-type": "application/json",
     },
-  }); */
+  });
 };
 
 self.addEventListener(

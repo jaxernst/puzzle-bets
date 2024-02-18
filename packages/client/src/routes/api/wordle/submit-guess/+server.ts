@@ -3,26 +3,44 @@ import { supabaseGameStore } from "$lib/server/gameStateStorage";
 import { Game } from "../../../../lib/server/wordle/game.server";
 
 export const POST = async ({ request, cookies }): Promise<Response> => {
-  const { guess, gameId, user } = (await request.json()) as {
+  const { guess, gameId, user, isDemo } = (await request.json()) as {
     guess: string;
     gameId: string;
     user?: string;
+    isDemo?: boolean;
   };
 
   if (!gameId || !guess) {
     return new Response("Missing params", { status: 400 });
   }
 
-  const hasGame = await supabaseGameStore.hasGame("wordle", gameId, user);
+  const hasGame = await supabaseGameStore.hasGame(
+    "wordle",
+    gameId,
+    user,
+    isDemo
+  );
+
   if (!hasGame) {
     return new Response("Game not found", { status: 404 });
   }
 
-  const gameState = await supabaseGameStore.getGame("wordle", gameId, user);
-  const game = new Game(gameState);
+  const gameState = await supabaseGameStore.getGame(
+    "wordle",
+    gameId,
+    user,
+    isDemo
+  );
 
+  const game = new Game(gameState);
   const valid = game.enter(guess);
-  await supabaseGameStore.setGame(game.toString(), "wordle", gameId, user);
+  await supabaseGameStore.setGame(
+    game.toString(),
+    "wordle",
+    gameId,
+    user,
+    isDemo
+  );
 
   const solved = game.won();
   const lost = game.answers.length >= 6 && !solved;

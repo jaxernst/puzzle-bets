@@ -7,19 +7,24 @@ import { Game } from "../../../../lib/server/wordle/game.server";
 
 /** @type {import('./$types').RequestHandler} */
 export const POST = async ({ request, cookies }) => {
-  const { gameId, user, otherPlayer, chainRematchCount } =
+  const { gameId, user, otherPlayer, chainRematchCount, isDemo } =
     (await request.json()) as {
       gameId: string;
+      isDemo?: boolean;
       user?: string;
       otherPlayer?: string;
       chainRematchCount?: number;
     };
 
-  const isDemoGame = !otherPlayer && !chainRematchCount;
-
   if (!gameId) return new Response("Missing game ID", { status: 400 });
 
-  const gameExists = await supabaseGameStore.hasGame("wordle", gameId, user);
+  const gameExists = await supabaseGameStore.hasGame(
+    "wordle",
+    gameId,
+    user,
+    isDemo
+  );
+
   if (!gameExists) return new Response("No game to reset", { status: 400 });
 
   // gameId's that are onchain (have an associated bet) can only be reset when
@@ -30,8 +35,15 @@ export const POST = async ({ request, cookies }) => {
   // TODO: get 'chainRematchCount' with a contract read
 
   const game = new Game();
-  await supabaseGameStore.setGame(game.toString(), "wordle", gameId, user);
-  if (otherPlayer) {
+  await supabaseGameStore.setGame(
+    game.toString(),
+    "wordle",
+    gameId,
+    user,
+    isDemo
+  );
+
+  if (otherPlayer && !isDemo) {
     await supabaseGameStore.setGame(
       game.toString(),
       "wordle",
@@ -48,7 +60,7 @@ export const POST = async ({ request, cookies }) => {
   const resetCount = await incrementGameResetCount(
     gameId,
     chainRematchCount,
-    isDemoGame
+    isDemo
   );
 
   return new Response(

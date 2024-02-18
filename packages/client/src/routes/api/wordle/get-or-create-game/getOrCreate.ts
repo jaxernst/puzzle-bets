@@ -1,15 +1,26 @@
 import { supabaseGameStore } from "$lib/server/gameStateStorage";
 import { Game } from "../../../../lib/server/wordle/game.server";
 
-export const getOrCreateDemo = async (gameId: string) => {
-  const hasGame = await supabaseGameStore.hasGame("wordle", gameId);
+export const getOrCreateDemo = async (gameId: string, user?: string) => {
+  const hasGame = await supabaseGameStore.hasGame("wordle", gameId, user, true);
 
   if (hasGame) {
-    const gameState = await supabaseGameStore.getGame("wordle", gameId);
+    const gameState = await supabaseGameStore.getGame(
+      "wordle",
+      gameId,
+      user,
+      true
+    );
     return new Game(gameState);
   } else {
     const game = new Game();
-    await supabaseGameStore.setGame(game.toString(), "wordle", gameId);
+    await supabaseGameStore.setGame(
+      game.toString(),
+      "wordle",
+      gameId,
+      user,
+      true
+    );
     return game;
   }
 };

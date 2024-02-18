@@ -16,7 +16,7 @@
   );
 
   $: if (!puzzleState && $user && onchainGame && onchainGame.opponent) {
-    wordleGameStates.getOrCreate(gameId, onchainGame.opponent);
+    wordleGameStates.getOrCreate(gameId, false, onchainGame.opponent);
   }
 
   $: if (
@@ -24,11 +24,11 @@
     puzzleState &&
     onchainGame.rematchCount > (puzzleState.resetCount ?? 1e10)
   ) {
-    wordleGameStates.reset(gameId);
+    wordleGameStates.reset(gameId, false);
   }
 
   $: enterGuess = async (guess: string) => {
-    await wordleGameStates.enterGuess(gameId, guess);
+    await wordleGameStates.enterGuess(gameId, guess, false);
     const puzzleState = $wordleGameStates.get(gameId);
     if (puzzleState?.solved) {
       launchConfetti();

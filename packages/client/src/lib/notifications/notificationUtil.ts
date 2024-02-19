@@ -3,7 +3,7 @@ import type { EvmAddress } from "$lib/types";
 
 export async function fetchNotificationState(address: EvmAddress) {
   const res = await fetch(
-    `api/notifications/${address}/${await deviceHash()}/status`
+    `/api/notifications/${address}/${await deviceHash()}/status`
   );
   const { subscribed }: { subscribed: boolean } = await res.json();
   return subscribed;
@@ -83,7 +83,7 @@ export const updatePushSubscription = async () => {
     const registration = await navigator.serviceWorker.ready;
     const subscription = await registration.pushManager.getSubscription();
     console.log("Updating subscription...");
-    await fetch(`api/notifications/_/${await deviceHash()}/update`, {
+    await fetch(`/api/notifications/_/${await deviceHash()}/update`, {
       method: "POST",
       body: JSON.stringify(subscription),
       headers: {

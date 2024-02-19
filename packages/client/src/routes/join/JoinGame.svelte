@@ -33,6 +33,10 @@
         Number(formatEther(game?.buyInAmount))
       );
       dispatch("joined");
+
+      fetch(`/api/notifications/${game.p1}/notify-game-joined`, {
+        method: "POST",
+      });
     } finally {
       joinGameLoading = false;
     }

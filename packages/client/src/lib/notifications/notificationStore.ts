@@ -45,7 +45,7 @@ export const notifications = (() => {
 
         if ($enabledBackend && $enabledClient) {
           const res = await fetch(
-            `api/notifications/${$user}/${deviceId}/unsubscribe`,
+            `/api/notifications/${$user}/${deviceId}/unsubscribe`,
             {
               method: "POST",
             }
@@ -61,7 +61,7 @@ export const notifications = (() => {
 
           if (!$enabledBackend) {
             const res = await fetch(
-              `api/notifications/${$user}/${deviceId}/subscribe`,
+              `/api/notifications/${$user}/${deviceId}/subscribe`,
               {
                 method: "POST",
                 body: JSON.stringify(subscription),

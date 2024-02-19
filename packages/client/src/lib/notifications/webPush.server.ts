@@ -11,3 +11,22 @@ webpush.setVapidDetails(
   PUBLIC_VAPID_KEY,
   PRIVATE_VAPID_KEY
 );
+
+export const sendPushNotification = async (
+  title: string,
+  body: string,
+  subscription: PushSubscription
+) => {
+  try {
+    await webpush.sendNotification(
+      subscription as any,
+      JSON.stringify({
+        title,
+        body,
+      })
+    );
+  } catch (e) {
+    console.error("Error sending push notification", e);
+    throw e;
+  }
+};

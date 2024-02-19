@@ -28,8 +28,6 @@
     const wallet = await promptConnectWallet();
     mud.setup(wallet);
   };
-
-  $: console.log($notifications.loading);
 </script>
 
 <div class="w-full flex justify-between items-center">

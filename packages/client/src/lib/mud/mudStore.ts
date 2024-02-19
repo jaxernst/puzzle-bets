@@ -14,6 +14,7 @@ import {
 } from "./setupNetwork";
 import { createSystemCalls } from "./createSystemCalls";
 import { userWallet } from "$lib/mud/connectWallet";
+import { PUBLIC_CHAIN_ID } from "$env/static/public";
 
 enum Status {
   Inactive,
@@ -49,7 +50,7 @@ export const mud = (() => {
       });
     });
 
-    if (Number(import.meta.env.VITE_CHAIN_ID) === 31337) {
+    if (Number(PUBLIC_CHAIN_ID) === 31337) {
       mountDevTools({
         config: mudConfig,
         walletClient: walletClient,

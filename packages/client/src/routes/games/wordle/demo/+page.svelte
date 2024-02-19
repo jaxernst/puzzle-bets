@@ -1,57 +1,39 @@
 <script lang="ts">
   import WordleGame from "../WordleGame.svelte";
-  import type { PageData } from "./$types";
   import { launchConfetti } from "$lib/components/Confetti.svelte";
+  import { wordleGameStates } from "../../puzzleGameStates";
+  import { generateRandomID } from "$lib/util";
 
-  export let data: PageData & { badGuess?: boolean };
+  const storedGameId = localStorage.getItem("wordleDemoGameId");
+  const gameId = storedGameId ?? generateRandomID(32);
 
-  let guessEntering = false;
+  if (!storedGameId) {
+    localStorage.setItem("wordleDemoGameId", gameId);
+  }
+
+  $: game = $wordleGameStates.get(gameId);
+  $: if (!game) {
+    wordleGameStates.getOrCreate(gameId, true);
+  }
+
   const enterGuess = async (guess: string) => {
-    if (guessEntering) return;
-
-    guessEntering = true;
-
-    try {
-      const res = await fetch("/api/wordle/submit-guess", {
-        method: "POST",
-        body: JSON.stringify({ guess, gameId: data.gameId }),
-      });
-
-      if (!res.ok) return;
-
-      data = await res.json();
-      if (data.answers.at(-1) === "xxxxx") {
-        launchConfetti();
-      }
-    } finally {
-      guessEntering = false;
+    await wordleGameStates.enterGuess(gameId, guess, true);
+    const puzzleState = $wordleGameStates.get(gameId);
+    if (puzzleState?.solved) {
+      launchConfetti();
     }
   };
 
   const reset = async () => {
-    const res = await fetch("/api/wordle/reset-game", {
-      method: "POST",
-      body: JSON.stringify({ gameId: data.gameId }),
-    });
-
-    if (!res.ok) return;
-
-    data = await res.json();
+    wordleGameStates.reset(gameId, true);
   };
 
   let showRestart = false;
-
-  $: gameOver = data.answers.length >= 6 || data.answers.at(-1) === "xxxxx";
 </script>
 
-{#if data}
+{#if game}
   <WordleGame
-    data={{
-      guesses: data.guesses,
-      answers: data.answers,
-      answer: data.answer,
-      badGuess: data.badGuess,
-    }}
+    data={game}
     on:submitGuess={(e) => {
       enterGuess(e.detail.guess);
     }}
@@ -61,7 +43,7 @@
   />
 {/if}
 
-{#if showRestart || gameOver}
+{#if showRestart || game?.solved || game?.lost}
   <div class="w-ful flex justify-center py-4">
     <button
       class="rounded-lg p-2 bg-lime-500 font-semibold"

@@ -24,13 +24,16 @@ export const wordleGameStates = (() => {
   const store = writable<Map<GameId, WordleGameState>>(new Map());
 
   // Opponent is temporary, and will eventually be retrieved in the backend
-  const getOrCreate = async (gameId: GameId, opponent: EvmAddress) => {
+  const getOrCreate = async (
+    gameId: GameId,
+    isDemo: boolean,
+    opponent?: EvmAddress
+  ) => {
     const $user = get(user);
-    if (!$user) return;
 
     const res = await fetch("/api/wordle/get-or-create-game", {
       method: "POST",
-      body: JSON.stringify({ gameId, user: $user, opponent }),
+      body: JSON.stringify({ gameId, user: $user, opponent, isDemo }),
     });
 
     if (!res.ok) return;
@@ -40,16 +43,21 @@ export const wordleGameStates = (() => {
   };
 
   let guessEntering = false;
-  const enterGuess = async (gameId: GameId, guess: string) => {
+  const enterGuess = async (gameId: GameId, guess: string, isDemo: boolean) => {
+    if (guessEntering) return;
+
     const $user = get(user);
-    if (!$user || guessEntering) return;
 
     guessEntering = true;
-
     try {
       const res = await fetch("/api/wordle/submit-guess", {
         method: "POST",
-        body: JSON.stringify({ guess, gameId, user: $user }),
+        body: JSON.stringify({
+          guess,
+          gameId,
+          user: $user,
+          isDemo,
+        }),
       });
 
       if (!res.ok) return;
@@ -67,20 +75,18 @@ export const wordleGameStates = (() => {
     }
   };
 
-  const reset = async (gameId: GameId) => {
+  const reset = async (gameId: GameId, isDemo: boolean) => {
     const $user = get(user);
-    if (!$user) return;
+    const game = isDemo ? undefined : get(getGame)(intToEntity(gameId, true));
+    const opponent = game ? ($user === game.p1 ? game.p2 : game.p1) : undefined;
 
-    const game = get(getGame)(intToEntity(gameId, true));
-    if (!game) return;
-
-    const opponent = $user === game.p1 ? game.p2 : game.p1;
-    const rematchCount = game.rematchCount;
     const currentState = get(store).get(gameId);
     if (!currentState) return;
 
     // Prevent resetting offchain puzzle state more than onchain rematch count
-    if ((currentState.resetCount ?? 1e10) >= game.rematchCount) return;
+    if (game && (currentState.resetCount ?? Infinity) >= game.rematchCount) {
+      return;
+    }
 
     const res = await fetch("/api/wordle/reset-game", {
       method: "POST",
@@ -88,7 +94,8 @@ export const wordleGameStates = (() => {
         gameId,
         user: $user,
         otherPlayer: opponent,
-        chainRematchCount: rematchCount,
+        chainRematchCount: game?.rematchCount,
+        isDemo,
       }),
     });
 

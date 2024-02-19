@@ -1,8 +1,8 @@
+import { PUBLIC_CHAIN_ID } from "$env/static/public";
 import type { EvmAddress, Game, GameType } from "$lib/types";
-import { intToEntity } from "$lib/util";
 import { supabase } from "./supabaseClient";
 
-const chainId = import.meta.env.VITE_CHAIN_ID;
+const chainId = PUBLIC_CHAIN_ID;
 
 const gameStateTable = (demoGame?: boolean) => {
   return `game-state-${demoGame ? "demo" : chainId}`;
@@ -12,24 +12,27 @@ interface GameStore {
   hasGame: (
     gameType: GameType,
     gameId: string,
-    user?: string
+    user?: string,
+    isDemo?: boolean
   ) => Promise<boolean>;
   getGame: (
     gameType: GameType,
     gameId: string,
-    user?: string
+    user?: string,
+    isDemo?: boolean
   ) => Promise<string>;
   setGame: (
     gameState: string,
     gameType: GameType,
     gameId: string,
-    user?: string
+    user?: string,
+    isDemo?: boolean
   ) => Promise<boolean>;
 }
 
 export const supabaseGameStore: GameStore = {
-  hasGame: async (gameType, gameId, user) => {
-    const isDemo = !user;
+  hasGame: async (gameType, gameId, user, isDemo) => {
+    if (isDemo) user = undefined;
     const res = await supabase
       .from(gameStateTable(isDemo))
       .select("*")
@@ -40,8 +43,8 @@ export const supabaseGameStore: GameStore = {
 
     return Boolean(res.data);
   },
-  getGame: async (gameType, gameId, user) => {
-    const isDemo = !user;
+  getGame: async (gameType, gameId, user, isDemo) => {
+    if (isDemo) user = undefined;
     const res = await supabase
       .from(gameStateTable(isDemo))
       .select("*")
@@ -52,8 +55,8 @@ export const supabaseGameStore: GameStore = {
 
     return res.data && res.data.game_state;
   },
-  setGame: async (newGameState, gameType, gameId, user) => {
-    const isDemo = !user;
+  setGame: async (newGameState, gameType, gameId, user, isDemo) => {
+    if (isDemo) user = undefined;
     const res = await supabase.from(gameStateTable(isDemo)).upsert({
       game_id: gameId,
       game_type: gameType,

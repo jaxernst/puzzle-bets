@@ -25,6 +25,7 @@ import worlds from "contracts/worlds.json";
  */
 
 import { supportedChains } from "./supportedChains";
+import { PUBLIC_CHAIN_ID } from "$env/static/public";
 
 export function getNetworkConfig() {
   const params = new URLSearchParams(""); // window.location.search);
@@ -37,10 +38,7 @@ export function getNetworkConfig() {
    * 4. The default, 31337 (anvil)
    */
   const chainId = Number(
-    params.get("chainId") ||
-      params.get("chainid") ||
-      import.meta.env.VITE_CHAIN_ID ||
-      31337
+    params.get("chainId") || params.get("chainid") || PUBLIC_CHAIN_ID || 31337
   );
 
   /*

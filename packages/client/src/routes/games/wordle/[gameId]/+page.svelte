@@ -1,12 +1,14 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import WordleGame from "../../WordleGame.svelte";
+  import WordleGame from "../WordleGame.svelte";
   import { user } from "$lib/mud/mudStore";
   import { liveGameStatus, userGames, userSolvedGame } from "$lib/gameStores";
   import { GameStatus, type EvmAddress } from "$lib/types";
   import { launchConfetti } from "$lib/components/Confetti.svelte";
-  import { puzzleStores, wordleGameStates } from "../../../puzzleGameStates";
-  import { exportWordleBoard } from "../../exportBoard";
+  import { wordleGameStates } from "../../puzzleGameStates";
+  import { exportWordleBoard } from "../exportBoard";
+  import { cubicOut } from "svelte/easing";
+  import { slide } from "svelte/transition";
 
   $: gameId = $page.params.gameId;
   $: puzzleState = $wordleGameStates.get(gameId);
@@ -16,7 +18,7 @@
   );
 
   $: if (!puzzleState && $user && onchainGame && onchainGame.opponent) {
-    wordleGameStates.getOrCreate(gameId, onchainGame.opponent);
+    wordleGameStates.getOrCreate(gameId, false, onchainGame.opponent);
   }
 
   $: if (
@@ -24,11 +26,11 @@
     puzzleState &&
     onchainGame.rematchCount > (puzzleState.resetCount ?? 1e10)
   ) {
-    wordleGameStates.reset(gameId);
+    wordleGameStates.reset(gameId, false);
   }
 
   $: enterGuess = async (guess: string) => {
-    await wordleGameStates.enterGuess(gameId, guess);
+    await wordleGameStates.enterGuess(gameId, guess, false);
     const puzzleState = $wordleGameStates.get(gameId);
     if (puzzleState?.solved) {
       launchConfetti();
@@ -79,7 +81,21 @@
         class="bg-pb-yellow font-semibold rounded-lg px-2 py-1 text-white"
         on:click={() => copyBoard(puzzleState?.answers ?? [])}
       >
-        {copied ? "Copied!" : "Share board"}
+        {#if copied}
+          <div
+            in:slide={{ axis: "x", easing: cubicOut }}
+            class="whitespace-nowrap"
+          >
+            Copied
+          </div>
+        {:else}
+          <div
+            in:slide={{ axis: "x", easing: cubicOut }}
+            class="whitespace-nowrap"
+          >
+            Share Board
+          </div>
+        {/if}
       </button>
     </div>
   {/if}

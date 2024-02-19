@@ -1,39 +1,39 @@
-import { wordleGameCacheKey } from "$lib/server/gameStateCache";
+import { wordleGameCacheKey } from "$lib/server/gameCacheKeys";
 import { getGameResetCount } from "$lib/server/gameStateStorage";
 import { Game } from "../../../../lib/server/wordle/game.server";
 import { getOrCreateDemo, getOrCreateLiveGame } from "./getOrCreate";
 
 export const POST = async ({ request, cookies }): Promise<Response> => {
-  const { gameId, user, opponent } = (await request.json()) as {
+  const { gameId, user, opponent, isDemo } = (await request.json()) as {
     gameId: string;
     // Temporarily get the opponent from the client as a param.
     // TODO: Query the smart contracts to get opponent for security (client can't
     // be trusted to provided the correct opponent)
+    isDemo?: boolean;
     opponent?: string;
     user?: string;
   };
 
   // If a user is provided, this implies a non-demo game and thus the opponent
   // must be provided too
-  if ((user && !opponent) || (opponent && !user)) {
+  if (!isDemo && !(opponent && user)) {
     return new Response("Missing parameter", { status: 400 });
   }
 
   if (!gameId) return new Response("Missing game ID", { status: 400 });
 
-  const isDemoGame = !opponent;
-
-  const cacheKey = wordleGameCacheKey(gameId);
-  const gameCache = cookies.get(cacheKey);
+  const cachedGame = cookies.get(wordleGameCacheKey(gameId));
 
   let game: Game;
-  if (gameCache) {
-    game = new Game(gameCache);
-  } else if (isDemoGame) {
+  if (cachedGame) {
+    game = new Game(cachedGame);
+  } else if (isDemo) {
     game = await getOrCreateDemo(gameId);
+    cookies.set(wordleGameCacheKey(gameId), game.toString(), { path: "/" });
   } else {
     if (!user || !opponent) throw new Error("Invariant error");
     game = await getOrCreateLiveGame(gameId, user, opponent);
+    cookies.set(wordleGameCacheKey(gameId), game.toString(), { path: "/" });
   }
 
   const resetCount = await getGameResetCount(gameId);

@@ -6,6 +6,7 @@
   "scope": "/",
   "lang": "en-US",
   "theme_color": "rgb(202, 216, 228)",
+  "background_color": "rgb(202, 216, 228)",
   "display": "standalone",
   "icons": [
     {

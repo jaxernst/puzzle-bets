@@ -89,7 +89,7 @@ self.addEventListener("push", (event) => {
 
   const options = {
     body: data.body,
-    icon: "./icon512_rounded.png",
+    icon: "icons/icon-192x192.png",
     badge: data.badge,
   };
 

@@ -104,7 +104,9 @@
     the game, the puzzle will be revealed and the deadline clock will start
     ticking.
   </div>
-  <div class="py-2 px-6 flex justify-between items-center text-gray-400">
+  <div
+    class="py-2 px-3 sm:px-6 flex justify-between items-center text-gray-400"
+  >
     <label class="flex flex-col gap-1 text-gray-200">
       <span class="text-sm text-gray-400">Wager (ETH)</span>
       <div class="flex items-center gap-1">
@@ -200,7 +202,7 @@
 
   {#if gameCreated && !$notifications.enabled}
     <div
-      class="self-center flex items-center gap-2 text-gray-400 fill-gray-400"
+      class="whitespace-nowrap text-[.82rem] sm:text-base self-center flex items-center gap-2 text-gray-400 fill-gray-400"
     >
       Click the
       <div class="w-4 h-4"><NotificationBell /></div>

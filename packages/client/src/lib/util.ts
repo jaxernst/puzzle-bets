@@ -194,3 +194,20 @@ export const formatAsDollar = (value: number) => {
 export const weiToDollar = (wei: bigint, ethPrice: number) => {
   return formatAsDollar(Number(formatEther(wei)) * ethPrice);
 };
+
+export const isIosSafari = () => {
+  const ua = window.navigator.userAgent;
+  const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
+  const webkit = !!ua.match(/WebKit/i);
+  return iOS && webkit && !ua.match(/CriOS/i);
+};
+
+export function getPWADisplayMode() {
+  const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+  if (document.referrer.startsWith("android-app://")) {
+    return "twa";
+  } else if ((navigator as any).standalone || isStandalone) {
+    return "standalone";
+  }
+  return "browser";
+}

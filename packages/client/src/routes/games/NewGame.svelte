@@ -10,8 +10,9 @@
   import { capitalized } from "$lib/util";
   import { HasValue, runQuery } from "@latticexyz/recs";
   import { cubicOut } from "svelte/easing";
-  import { writable } from "svelte/store";
   import { slide } from "svelte/transition";
+  import { notifications } from "$lib/notifications/notificationStore";
+  import NotificationBell from "$lib/icons/NotificationBell.svelte";
 
   export let gameType: GameType;
 
@@ -195,5 +196,15 @@
   </div>
   {#if createGameError}
     <div class="text-red-500 text-sm">{createGameError}</div>
+  {/if}
+
+  {#if gameCreated && !$notifications.enabled}
+    <div
+      class="self-center flex items-center gap-2 text-gray-400 fill-gray-400"
+    >
+      Click the
+      <div class="w-4 h-4"><NotificationBell /></div>
+      to get notified when your opponent joins
+    </div>
   {/if}
 </div>

@@ -10,6 +10,7 @@
   import { formatEther } from "viem";
   import { onMount } from "svelte";
   import { notifications } from "$lib/notifications/notificationStore";
+  import { getPWADisplayMode, isIosSafari } from "$lib/util";
 
   let userBalance: string;
   onMount(() => {
@@ -27,6 +28,21 @@
   const loginAndConnect = async () => {
     const wallet = await promptConnectWallet();
     mud.setup(wallet);
+  };
+
+  $: maybeToggleNotifications = () => {
+    if ($notifications.enabled) return $notifications.toggle();
+
+    // Before enabling notifications, make sure device supports it. If we're on
+    // ios safari, we need to be in standalone mode
+    if (isIosSafari() && getPWADisplayMode() === "browser") {
+      alert(
+        "Please install the app to enable notifications. You can do this by clicking the 'Add to Home Screen' button in your browser."
+      );
+      return;
+    }
+
+    $notifications.toggle();
   };
 </script>
 
@@ -56,28 +72,36 @@
         </div>
       </div>
     {/if}
-    <button class="flex" on:click={() => loginAndConnect()}>
-      <div class="w-7 h-7 stroke-off-black">
+    <button
+      class="flex h-7 items-center justify-center"
+      on:click={() => loginAndConnect()}
+    >
+      <div class="h-6 w-6 stroke-gray-600">
         <WalletIcon />
       </div>
       {#if $userWallet && $mud.ready}
-        <div class="w-[.4rem] h-[.4rem] rounded-full bg-green-500"></div>
+        <div
+          class="self-start w-[.4rem] h-[.4rem] rounded-full bg-green-500"
+        ></div>
       {/if}
     </button>
     {#if $user}
-      <button class="flex" on:click={$notifications.toggle}>
-        <div class="flex justify-center items-center h-7">
-          <div
-            class={`w-5 h-5 fill-gray-600 transition-colors
+      <button
+        class="h-7 flex items-center justify-center"
+        on:click={maybeToggleNotifications}
+      >
+        <div
+          class={`w-5 h-5 fill-gray-600 transition-colors
               ${$notifications.enabled ? "" : "opacity-50"} 
               ${$notifications.loading ? "animate-pulse" : ""}
             `}
-          >
-            <NotificationBell />
-          </div>
+        >
+          <NotificationBell />
         </div>
         {#if $notifications.enabled}
-          <div class="w-[.4rem] h-[.4rem] rounded-full bg-green-500"></div>
+          <div
+            class="self-start w-[.4rem] h-[.4rem] rounded-full bg-green-500"
+          ></div>
         {/if}
       </button>
     {/if}

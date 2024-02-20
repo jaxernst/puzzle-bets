@@ -59,7 +59,7 @@
           <CopyableAddress address={$user}></CopyableAddress>
         </div>
       {:else}
-        <a class="px-1" href="/welcome"> Puzzle Bets </a>
+        <a class="px-1" href="/welcome"> Puzzle Bets</a>
       {/if}
     </div>
   </div>

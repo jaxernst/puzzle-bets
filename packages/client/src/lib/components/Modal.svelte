@@ -49,7 +49,7 @@
   <div
     bind:this={modal}
     tabindex="-1"
-    class="modal z-50 fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+    class="z-50 fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
     style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right);"
     on:click={clickOutside}
     aria-modal="true"

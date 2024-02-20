@@ -33,6 +33,7 @@
 body {
   min-height: 100vh;
   margin: 0;
+
   background-attachment: fixed;
   background-color: var(--color-bg-1);
   background-size: 100vw 100vh;
@@ -47,6 +48,11 @@ body {
       var(--color-bg-1) 15%,
       var(--color-bg-2) 50%
     );
+
+  padding-top: env(safe-area-inset-top);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 h1,

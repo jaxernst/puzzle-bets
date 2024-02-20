@@ -48,20 +48,22 @@
 
 <div class="w-full flex justify-between items-center">
   <div
-    class="flex sm:gap-2 items-center text-off-black fill-off-black stroke-red-500 font-bold text-lg sm:text-xl tracking-wider"
+    class="flex items-center text-off-black fill-off-black stroke-red-500 font-bold text-lg sm:text-xl tracking-wide"
   >
-    <a href="/welcome" class="h-11 w-11">
+    <a href="/welcome" class="h-10 w-10 sm:h-11 sm:w-11">
       <Puzzly />
     </a>
     <div style="line-height: 1em">
       {#if $user}
-        <CopyableAddress address={$user}></CopyableAddress>
+        <div class="text-base sm:text-lg">
+          <CopyableAddress address={$user}></CopyableAddress>
+        </div>
       {:else}
         <a href="/welcome"> Puzzle Bets </a>
       {/if}
     </div>
   </div>
-  <div class="flex gap-1 sm:gap-3 justify-end items-center">
+  <div class="flex gap-2 sm:gap-3 justify-end items-center">
     {#if userBalance}
       <div class="flex gap-1 items-center">
         <div class="text-gray-600 font-mono text-sm sm:text-base">

@@ -55,7 +55,7 @@
     </a>
     <div style="line-height: 1em">
       {#if $user}
-        <div class="text-sm sm:text-lg">
+        <div class="text-base sm:text-lg">
           <CopyableAddress address={$user}></CopyableAddress>
         </div>
       {:else}
@@ -63,7 +63,7 @@
       {/if}
     </div>
   </div>
-  <div class="flex gap-1 sm:gap-3 justify-end items-center">
+  <div class="flex gap-2 sm:gap-3 justify-end items-center">
     {#if userBalance}
       <div class="flex gap-1 items-center">
         <div class="text-gray-600 font-mono text-sm sm:text-base">

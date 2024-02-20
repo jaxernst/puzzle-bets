@@ -10,6 +10,7 @@
   import { formatEther } from "viem";
   import { onMount } from "svelte";
   import { notifications } from "$lib/notifications/notificationStore";
+  import { getPWADisplayMode, isIosSafari } from "$lib/util";
 
   let userBalance: string;
   onMount(() => {
@@ -27,6 +28,21 @@
   const loginAndConnect = async () => {
     const wallet = await promptConnectWallet();
     mud.setup(wallet);
+  };
+
+  $: maybeToggleNotifications = () => {
+    if ($notifications.enabled) return $notifications.toggle();
+
+    // Before enabling notifications, make sure device supports it. If we're on
+    // ios safari, we need to be in standalone mode
+    if (isIosSafari() && getPWADisplayMode() === "browser") {
+      alert(
+        "Please install the app to enable notifications. You can do this by clicking the 'Add to Home Screen' button in your browser."
+      );
+      return;
+    }
+
+    $notifications.toggle();
   };
 </script>
 
@@ -72,7 +88,7 @@
     {#if $user}
       <button
         class="h-7 flex items-center justify-center"
-        on:click={$notifications.toggle}
+        on:click={maybeToggleNotifications}
       >
         <div
           class={`w-5 h-5 fill-gray-600 transition-colors

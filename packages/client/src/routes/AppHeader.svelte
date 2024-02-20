@@ -48,9 +48,9 @@
 
 <div class="w-full flex justify-between items-center">
   <div
-    class="flex items-center text-off-black fill-off-black stroke-red-500 font-bold text-lg sm:text-xl tracking-wide"
+    class="flex items-center text-off-black font-bold text-lg sm:text-xl tracking-wide"
   >
-    <a href="/welcome" class="h-10 w-10 sm:h-11 sm:w-11">
+    <a href="/welcome" class="h-10 w-10 sm:h-11 sm:w-11 fill-off-black">
       <Puzzly />
     </a>
     <div style="line-height: 1em">
@@ -59,17 +59,17 @@
           <CopyableAddress address={$user}></CopyableAddress>
         </div>
       {:else}
-        <a href="/welcome"> Puzzle Bets </a>
+        <a class="px-1" href="/welcome"> Puzzle Bets </a>
       {/if}
     </div>
   </div>
   <div class="flex gap-2 sm:gap-3 justify-end items-center">
     {#if userBalance}
       <div class="flex gap-1 items-center">
-        <div class="text-gray-600 font-mono text-sm sm:text-base">
+        <div class="text-off-black font-mono text-sm sm:text-base">
           {userBalance}
         </div>
-        <div class="fill-gray-600 w-4 h-4">
+        <div class="fill-off-black w-4 h-4">
           <EthSymbol />
         </div>
       </div>
@@ -78,7 +78,7 @@
       class="flex h-7 items-center justify-center"
       on:click={() => loginAndConnect()}
     >
-      <div class="h-6 w-6 stroke-gray-600">
+      <div class="h-6 w-6 stroke-off-black">
         <WalletIcon />
       </div>
       {#if $userWallet && $mud.ready}
@@ -93,7 +93,7 @@
         on:click={maybeToggleNotifications}
       >
         <div
-          class={`w-5 h-5 fill-gray-600 transition-colors
+          class={`w-5 h-5 fill-off-black/90 transition-colors
               ${$notifications.enabled ? "" : "opacity-50"} 
               ${$notifications.loading ? "animate-pulse" : ""}
             `}

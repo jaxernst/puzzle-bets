@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        "off-black": "#3e3e3e",
+        "off-black": "#252525",
         "pb-yellow": "#EACB28",
       },
     },

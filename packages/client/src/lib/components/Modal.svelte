@@ -49,7 +49,8 @@
   <div
     bind:this={modal}
     tabindex="-1"
-    class="z-50 top-0 left-0 fixed w-screen h-[100lvh] inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+    class="modal z-50 fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+    style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right);"
     on:click={clickOutside}
     aria-modal="true"
     role="dialog"
@@ -59,3 +60,17 @@
     <slot />
   </div>
 {/if}
+
+<style>
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding-top: env(safe-area-inset-top);
+    padding-right: env(safe-area-inset-right);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+  }
+</style>

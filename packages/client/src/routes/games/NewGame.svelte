@@ -202,7 +202,7 @@
 
   {#if gameCreated && !$notifications.enabled}
     <div
-      class="whitespace-nowrap text-[.82rem] sm:text-base self-center flex items-center gap-2 text-gray-400 fill-gray-400"
+      class="whitespace-nowrap text-xs sm:text-base self-center flex items-center gap-2 text-gray-400 fill-gray-400"
     >
       Click the
       <div class="w-4 h-4"><NotificationBell /></div>

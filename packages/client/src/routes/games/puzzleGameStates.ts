@@ -83,6 +83,9 @@ export const wordleGameStates = (() => {
     const currentState = get(store).get(gameId);
     if (!currentState) return;
 
+    // Refetch game state to ensure resetCount is up to date
+    await getOrCreate(gameId, isDemo, opponent);
+
     // Prevent resetting offchain puzzle state more than onchain rematch count
     if (game && (currentState.resetCount ?? Infinity) >= game.rematchCount) {
       return;

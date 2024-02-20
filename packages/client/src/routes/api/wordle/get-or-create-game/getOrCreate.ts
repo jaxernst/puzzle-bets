@@ -45,7 +45,7 @@ export const getOrCreateLiveGame = async (
 
   // If the opponent has a game entry (and user does not), create a new game entry
   // for the user with the same solution index (ensures same solution for both players)
-  if (opponentHasGame) {
+  if (opponentHasGame && !userHasGame) {
     const gameState = await supabaseGameStore.getGame(
       "wordle",
       gameId,

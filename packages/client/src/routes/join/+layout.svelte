@@ -10,6 +10,7 @@
   import { user } from "$lib/mud/mudStore";
   import { getGame } from "$lib/gameStores";
   import { GameStatus } from "$lib/types";
+  import DotLoader from "$lib/components/DotLoader.svelte";
 
   let show = true;
 
@@ -35,7 +36,7 @@
   );
 </script>
 
-{#if $user && $mud.ready}
+{#if $user}
   <Modal
     {show}
     on:close={() => {
@@ -46,7 +47,14 @@
     <div
       class="relative bg-gray-600 text-gray-200 p-6 rounded-xl flex flex-col gap-2 max-w-[450px]"
     >
-      {#if !game}
+      {#if !$mud.ready}
+        <div class="self-center">
+          <DotLoader klass="fill-gray-200" />
+        </div>
+        <div class="self-center text-gray-400 text-xs">
+          Syncing blockchain state...
+        </div>
+      {:else if !game}
         Game not found
       {:else if !userIsEligible}
         You are not elligible for this game

@@ -31,7 +31,6 @@
 
   const connectWallet = async () => {
     const wallet = userWallet.tryConnect();
-    await new Promise((r) => setTimeout(r, 800));
 
     if (wallet) {
       showModal.set(false);

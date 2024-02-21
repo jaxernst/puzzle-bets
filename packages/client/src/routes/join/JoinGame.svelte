@@ -1,6 +1,6 @@
 <script lang="ts">
   import DotLoader from "$lib/components/DotLoader.svelte";
-  import { getGame } from "$lib/gameStores";
+  import { getGame, liveGameStatus } from "$lib/gameStores";
   import { mud } from "$lib/mud/mudStore";
   import { ethPrice } from "$lib/ethPrice";
   import {
@@ -42,15 +42,7 @@
     }
   };
 
-  let inviteExpiry: number | undefined;
-  onMount(() =>
-    setInterval(() => {
-      if (!game) return;
-
-      const tDiff = Number(game.inviteExpiration) - systemTimestamp();
-      inviteExpiry = tDiff > 0 ? tDiff : 0;
-    }, 1000)
-  );
+  $: liveStatus = liveGameStatus(gameId);
 </script>
 
 {#if game && gameType}
@@ -62,12 +54,12 @@
       )}
     </div>
 
-    {#if inviteExpiry}
+    {#if $liveStatus?.inviteTimeLeft !== undefined}
       <div
         class="italic text-gray-400 whitespace-nowrap min-w-[270px]"
         in:slide={{ axis: "x", easing: cubicInOut }}
       >
-        Invite expires in {formatTime(inviteExpiry)}...
+        Invite expires in {formatTime($liveStatus.inviteTimeLeft)}...
       </div>
     {/if}
 

@@ -9,6 +9,7 @@
   import { exportWordleBoard } from "../exportBoard";
   import { cubicOut } from "svelte/easing";
   import { slide } from "svelte/transition";
+  import DotLoader from "$lib/components/DotLoader.svelte";
 
   $: gameId = $page.params.gameId;
   $: puzzleState = $wordleGameStates.get(gameId);
@@ -17,8 +18,14 @@
     (g) => parseInt(g.id, 16).toString() === $page.params.gameId
   );
 
+  let getGameLoading = false;
   $: if (!puzzleState && $user && onchainGame && onchainGame.opponent) {
-    wordleGameStates.getOrCreate(gameId, false, onchainGame.opponent);
+    getGameLoading = true;
+    wordleGameStates
+      .getOrCreate(gameId, false, onchainGame.opponent)
+      .finally(() => {
+        getGameLoading = false;
+      });
   }
 
   $: if (
@@ -99,4 +106,8 @@
       </button>
     </div>
   {/if}
+{:else if getGameLoading}
+  <div class="self-center h-[200px] flex items-center justify-center">
+    <DotLoader klass="fill-gray-200 h-10 w-10" />
+  </div>
 {/if}

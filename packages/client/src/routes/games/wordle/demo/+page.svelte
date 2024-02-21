@@ -3,6 +3,7 @@
   import { launchConfetti } from "$lib/components/Confetti.svelte";
   import { wordleGameStates } from "../../puzzleGameStates";
   import { generateRandomID } from "$lib/util";
+  import DotLoader from "$lib/components/DotLoader.svelte";
 
   const storedGameId = localStorage.getItem("wordleDemoGameId");
   const gameId = storedGameId ?? generateRandomID(32);
@@ -12,8 +13,13 @@
   }
 
   $: game = $wordleGameStates.get(gameId);
+
+  let getGameLoading = false;
   $: if (!game) {
-    wordleGameStates.getOrCreate(gameId, true);
+    getGameLoading = true;
+    wordleGameStates.getOrCreate(gameId, true).finally(() => {
+      getGameLoading = false;
+    });
   }
 
   const enterGuess = async (guess: string) => {
@@ -41,6 +47,10 @@
       showRestart = true;
     }}
   />
+{:else if getGameLoading}
+  <div class="self-center h-[200px] flex items-center justify-center">
+    <DotLoader klass="fill-gray-200 h-10 w-10" />
+  </div>
 {/if}
 
 {#if showRestart || game?.solved || game?.lost}

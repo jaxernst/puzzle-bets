@@ -27,6 +27,17 @@ export const POST = async ({ request, cookies }) => {
 
   if (!gameExists) return new Response("No game to reset", { status: 400 });
 
+  let resetCount = 0;
+  try {
+    resetCount = await incrementGameResetCount(
+      gameId,
+      chainRematchCount,
+      isDemo
+    );
+  } catch {
+    return new Response("Game not resetable", { status: 403 });
+  }
+
   // gameId's that are onchain (have an associated bet) can only be reset when
   // both players vote to reset. Will need to verify both players have voted
   // and reset each players game state
@@ -56,12 +67,6 @@ export const POST = async ({ request, cookies }) => {
   if (cachedGame) {
     cookies.set(wordleGameCacheKey(gameId), game.toString(), { path: "/" });
   }
-
-  const resetCount = await incrementGameResetCount(
-    gameId,
-    chainRematchCount,
-    isDemo
-  );
 
   return new Response(
     JSON.stringify({

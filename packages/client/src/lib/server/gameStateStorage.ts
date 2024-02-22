@@ -4,7 +4,7 @@ import { supabase } from "./supabaseClient";
 
 const chainId = PUBLIC_CHAIN_ID;
 
-const gameStateTable = (demoGame?: boolean) => {
+export const gameStateTable = (demoGame?: boolean) => {
   return `game-state-${demoGame ? "demo" : chainId}`;
 };
 
@@ -27,6 +27,13 @@ interface GameStore {
     gameId: string,
     user?: string,
     isDemo?: boolean
+  ) => Promise<boolean>;
+  createDuelGame: (
+    gameState: string,
+    gameType: GameType,
+    gameId: string,
+    p1: string,
+    p2: string
   ) => Promise<boolean>;
 }
 
@@ -66,6 +73,19 @@ export const supabaseGameStore: GameStore = {
 
     return Boolean(res.error);
   },
+  createDuelGame: async (newGameState, gameType, gameId, p1, p2) => {
+    const res = await supabase.rpc("create_duel_game", {
+      _game_id: Number(gameId),
+      _game_type: gameType,
+      _game_state: newGameState,
+      _p1_address: p1,
+      _p2_address: p2,
+    });
+
+    if (res.error) return false;
+
+    return res.data;
+  },
 };
 
 export const getGameResetCount = async (gameId: string, isDemo?: boolean) => {
@@ -86,7 +106,7 @@ export const incrementGameResetCount = async (
 
   // offchain reset count should never exceed db reset count
   if (typeof chainRematchCount === "number" && curCount >= chainRematchCount) {
-    return curCount;
+    throw new Error("Reset count exceeds chain rematch count");
   }
 
   const res = await supabase

@@ -75,7 +75,10 @@ export const wordleGameStates = (() => {
     }
   };
 
+  let resetLoading = false;
   const reset = async (gameId: GameId, isDemo: boolean) => {
+    if (resetLoading) return;
+
     const $user = get(user);
     const game = isDemo ? undefined : get(getGame)(intToEntity(gameId, true));
     const opponent = game ? ($user === game.p1 ? game.p2 : game.p1) : undefined;
@@ -83,29 +86,36 @@ export const wordleGameStates = (() => {
     const currentState = get(store).get(gameId);
     if (!currentState) return;
 
-    // Refetch game state to ensure resetCount is up to date
-    await getOrCreate(gameId, isDemo, opponent);
-
     // Prevent resetting offchain puzzle state more than onchain rematch count
     if (game && (currentState.resetCount ?? Infinity) >= game.rematchCount) {
       return;
     }
 
-    const res = await fetch("/api/wordle/reset-game", {
-      method: "POST",
-      body: JSON.stringify({
-        gameId,
-        user: $user,
-        otherPlayer: opponent,
-        chainRematchCount: game?.rematchCount,
-        isDemo,
-      }),
-    });
+    resetLoading = true;
+    try {
+      const res = await fetch("/api/wordle/reset-game", {
+        method: "POST",
+        body: JSON.stringify({
+          gameId,
+          user: $user,
+          otherPlayer: opponent,
+          chainRematchCount: game?.rematchCount,
+          isDemo,
+        }),
+      });
 
-    if (!res.ok) return;
+      // A reset can fail if the other player reset the game first, in this case,
+      // we just fetch the game state again
+      if (!res.ok) {
+        getOrCreate(gameId, isDemo, opponent);
+        return;
+      }
 
-    const gameState = (await res.json()) as WordleGameState;
-    store.update((s) => s.set(gameId, gameState));
+      const gameState = (await res.json()) as WordleGameState;
+      store.update((s) => s.set(gameId, gameState));
+    } finally {
+      resetLoading = false;
+    }
   };
 
   return {

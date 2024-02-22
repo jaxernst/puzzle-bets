@@ -30,32 +30,20 @@ export const getOrCreateLiveGame = async (
   user: string,
   opponent: string
 ) => {
-  const userHasGame = await supabaseGameStore.hasGame("wordle", gameId, user);
-  if (userHasGame) {
-    const gameState = await supabaseGameStore.getGame("wordle", gameId, user);
-    return new Game(gameState);
-  }
-
-  let game = new Game();
-  const opponentHasGame = await supabaseGameStore.hasGame(
-    "wordle",
-    gameId,
-    opponent
-  );
-
-  // If the opponent has a game entry (and user does not), create a new game entry
-  // for the user with the same solution index (ensures same solution for both players)
-  if (opponentHasGame && !userHasGame) {
-    const gameState = await supabaseGameStore.getGame(
+  // One call to get get -> returns the game state if it exists
+  let gameState = await supabaseGameStore.getGame("wordle", gameId, user);
+  if (!gameState) {
+    await supabaseGameStore.createDuelGame(
+      new Game().toString(),
       "wordle",
       gameId,
+      user,
       opponent
     );
 
-    const solutionIndex = gameState.split("-")[0];
-    game = new Game(`${solutionIndex}-`);
+    gameState = await supabaseGameStore.getGame("wordle", gameId, user);
+    if (!gameState) throw new Error("Game could not be created");
   }
 
-  await supabaseGameStore.setGame(game.toString(), "wordle", gameId, user);
-  return game;
+  return new Game(gameState);
 };

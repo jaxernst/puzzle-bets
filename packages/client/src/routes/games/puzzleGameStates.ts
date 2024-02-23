@@ -24,22 +24,30 @@ export const wordleGameStates = (() => {
   const store = writable<Map<GameId, WordleGameState>>(new Map());
 
   // Opponent is temporary, and will eventually be retrieved in the backend
+  let getOrCreateLoading = false;
   const getOrCreate = async (
     gameId: GameId,
     isDemo: boolean,
     opponent?: EvmAddress
   ) => {
+    if (getOrCreateLoading) return;
+
     const $user = get(user);
+    getOrCreateLoading = true;
 
-    const res = await fetch("/api/wordle/get-or-create-game", {
-      method: "POST",
-      body: JSON.stringify({ gameId, user: $user, opponent, isDemo }),
-    });
+    try {
+      const res = await fetch("/api/wordle/get-or-create-game", {
+        method: "POST",
+        body: JSON.stringify({ gameId, user: $user, opponent, isDemo }),
+      });
 
-    if (!res.ok) return;
+      if (!res.ok) return;
 
-    const gameState = (await res.json()) as WordleGameState;
-    store.update((s) => s.set(gameId, gameState!));
+      const gameState = (await res.json()) as WordleGameState;
+      store.update((s) => s.set(gameId, gameState!));
+    } finally {
+      getOrCreateLoading = false;
+    }
   };
 
   let guessEntering = false;

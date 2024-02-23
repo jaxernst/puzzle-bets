@@ -5,12 +5,6 @@
   import GameSelector from "./GameSelector.svelte";
   import AppHeader from "./AppHeader.svelte";
   import Confetti from "$lib/components/Confetti.svelte";
-  import {
-    deviceHash,
-    notificationPermissionGranted,
-    subscribeToPushNotifications,
-  } from "$lib/notifications/notificationUtil";
-  import { user } from "$lib/mud/mudStore";
 </script>
 
 <WalletConnector />

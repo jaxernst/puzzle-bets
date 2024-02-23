@@ -11,3 +11,13 @@ export const supabase = createClient(
     },
   }
 );
+
+export const indexerClient = createClient(
+  PUBLIC_SUPA_API_URL,
+  PRIVATE_SUPA_SERVICE_KEY,
+  {
+    db: {
+      schema: "mud",
+    },
+  }
+);

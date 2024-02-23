@@ -13,7 +13,7 @@ export async function GET({ params }: RequestEvent) {
 
   if (error) {
     console.log("error", error);
-    return new Response(null, { status: 500 });
+    return new Response(JSON.stringify(error), { status: 500 });
   }
 
   return new Response(JSON.stringify({ subscribed: data.length > 0 }), {

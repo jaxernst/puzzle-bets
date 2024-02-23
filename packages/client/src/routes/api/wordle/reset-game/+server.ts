@@ -27,6 +27,12 @@ export const POST = async ({ request, cookies }) => {
 
   if (!gameExists) return new Response("No game to reset", { status: 400 });
 
+  // Clear cookie cache for game
+  const cachedGame = cookies.get(wordleGameCacheKey(gameId));
+  if (cachedGame) {
+    cookies.delete(wordleGameCacheKey(gameId), { path: "/" });
+  }
+
   let resetCount = 0;
   try {
     resetCount = await incrementGameResetCount(
@@ -61,11 +67,6 @@ export const POST = async ({ request, cookies }) => {
       gameId,
       otherPlayer
     );
-  }
-
-  const cachedGame = cookies.get(wordleGameCacheKey(gameId));
-  if (cachedGame) {
-    cookies.set(wordleGameCacheKey(gameId), game.toString(), { path: "/" });
   }
 
   return new Response(

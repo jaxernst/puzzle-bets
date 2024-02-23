@@ -23,7 +23,6 @@
   $: gameId = intToEntity($page.params.joinGameId, true);
   $: game = $getGame(gameId);
   $: userIsEligible = $user && $user !== game?.p1;
-  $: inviteCancelled = game?.status === GameStatus.Inactive;
 
   let inviteExpired = false;
   onMount(() =>

@@ -7,8 +7,6 @@
     // const wallet = userWallet.tryConnect();
     await mud.setup(wallet);
   };
-
-  // onMount(loginAndConnect);
 </script>
 
 <svelte:head>

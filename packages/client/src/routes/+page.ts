@@ -1,7 +1,9 @@
 import { redirect } from "@sveltejs/kit";
 
-export const prerender = false;
-
 export const load = () => {
-  redirect(307, "/welcome");
+  try {
+    redirect(307, "/welcome");
+  } catch {
+    return new Response("Redirecting...", { status: 307 });
+  }
 };

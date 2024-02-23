@@ -14,12 +14,15 @@
     "lint": "pnpm run prettier && pnpm run solhint",
     "prettier": "prettier --write 'src/**/*.sol'",
     "solhint": "solhint --config ./.solhint.json 'src/**/*.sol' --fix",
-    "test": "tsc --noEmit && mud test"
+    "test": "tsc --noEmit && mud test",
+    "start-indexer": "npx -y -p @latticexyz/store-indexer@next postgres-indexer",
+    "serve-index": "pnpm postgres-frontend"
   },
   "dependencies": {
     "@latticexyz/cli": "2.0.0-next.16",
     "@latticexyz/schema-type": "2.0.0-next.16",
     "@latticexyz/store": "2.0.0-next.16",
+    "@latticexyz/store-indexer": "2.0.0-next.16",
     "@latticexyz/world": "2.0.0-next.16",
     "@latticexyz/world-modules": "2.0.0-next.16"
   },

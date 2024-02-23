@@ -1,1 +1,1 @@
-# Puzzle Bets Sveltekit Client
+# Puzzle Bets SvelteKit Client

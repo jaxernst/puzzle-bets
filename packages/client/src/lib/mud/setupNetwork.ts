@@ -3,7 +3,6 @@ import {
   fallback,
   webSocket,
   http,
-  createWalletClient,
   type Hex,
   parseEther,
   type ClientConfig,
@@ -24,6 +23,7 @@ import {
   type ContractWrite,
 } from "@latticexyz/common";
 import { createWorld } from "@latticexyz/recs";
+import { PUBLIC_INDEXER_URL } from "$env/static/public";
 
 import { Subject, share } from "rxjs";
 
@@ -83,6 +83,7 @@ export async function setupNetwork(userWallet: Wallet) {
       address: networkConfig.worldAddress as Hex,
       publicClient,
       startBlock: BigInt(networkConfig.initialBlockNumber),
+      indexerUrl: PUBLIC_INDEXER_URL,
     });
 
   /*

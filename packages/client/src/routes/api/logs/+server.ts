@@ -11,23 +11,16 @@ export const GET = async ({ request }) => {
     return new Response("Not on public chain", { status: 400 });
   }
 
-  const { data: indexBlockNumber, error: metadataError } = await indexerClient
-    .from("config")
-    .select("block_number")
-    .single();
+  const { data, error } = await indexerClient.rpc("get_indexer_records", {
+    chain: 4242,
+  });
 
-  const { data, error } = await indexerClient
-    .from("records")
-    .select(
-      "address, table_id, key_bytes, static_data, encoded_lengths, dynamic_data, block_number, log_index"
-    );
-
-  if (error || metadataError) {
+  if (error) {
     return new Response("Error fetching records", { status: 500 });
   }
 
   const logRecords = data.map(
-    (row) =>
+    (row: any) =>
       ({
         address: fallbackHex(row.address),
         eventName: "Store_SetRecord",
@@ -43,7 +36,7 @@ export const GET = async ({ request }) => {
 
   return new Response(
     JSON.stringify({
-      blockNumber: indexBlockNumber.block_number.toString(),
+      blockNumber: data[0].block_number.toString(),
       logs: logRecords,
     }),
     { status: 200 }

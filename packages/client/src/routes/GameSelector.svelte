@@ -54,18 +54,18 @@
 </script>
 
 <div
-  class="flex gap-2 sm:gap-3 items-center font-mono text-gray-100 text-xs sm:text-sm transition-all duration-500"
+  class="flex gap-2 sm:gap-3 items-center font-mono text-off-black text-xs sm:text-sm transition-all duration-500"
 >
   <button
     on:click={() => (selectedTab = "live")}
-    class={`flex transition-all duration-200 ${
-      selectedTab === "live" ? "" : "opacity-50"
+    class={`flex transition-all duration-200 py-1 rounded-lg ${
+      selectedTab === "live" ? "bg-gray-500 text-white px-2" : ""
     }`}
   >
     {#if selectedTab === "live"}
       <span
         transition:slide={{ axis: "x", duration: 200, easing: cubicOut }}
-        class="text-lime-400 min-w-0 pr-2">{activeGames.length}</span
+        class="text-lime-500 font-bold min-w-0 pr-2">{activeGames.length}</span
       >
     {/if}
     Live Games
@@ -75,8 +75,8 @@
 
   <button
     on:click={() => (selectedTab = "completed")}
-    class={`flex transition-all duration-200 ${
-      selectedTab === "completed" ? "" : "opacity-50"
+    class={`flex transition-all duration-200 py-1 rounded-lg ${
+      selectedTab === "completed" ? "bg-gray-500 text-white px-2" : ""
     }`}
   >
     {#if selectedTab === "completed"}
@@ -92,8 +92,8 @@
 
   <button
     on:click={() => (selectedTab = "archived")}
-    class={`flex transition-all duration-200 ${
-      selectedTab === "archived" ? "" : "opacity-50"
+    class={`flex transition-all duration-200 py-1 rounded-lg ${
+      selectedTab === "archived" ? "bg-gray-500 text-white px-2" : ""
     }`}
   >
     {#if selectedTab === "archived"}

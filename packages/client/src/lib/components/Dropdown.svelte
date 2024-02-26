@@ -1,16 +1,16 @@
 <script lang="ts">
-  import BackArrow from "$lib/icons/BackArrow.svelte";
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
   import AnimatedArrow from "./AnimatedArrow.svelte";
-  import { bounceInOut, bounceOut, cubicIn } from "svelte/easing";
 
   export let options: string[];
   export let placeholder = "Select an Option";
   export let onOptionSelect: (option: string) => void = () => {};
+  export let selectionOverride: string | null = null;
 
+  console.log(selectionOverride);
   let isOpen = false;
-  let selectedOption = "";
+  let selectedOption = selectionOverride ?? "";
 
   const toggleDropdown = () => {
     isOpen = !isOpen;
@@ -41,9 +41,12 @@
   });
 </script>
 
-<div class="relative overflow-visible" bind:this={dropdownButton}>
+<div
+  class="text-white relative overflow-visible text-sm"
+  bind:this={dropdownButton}
+>
   <button
-    class="flex justify-between gap-1 items-center bg-pb-yellow px-2 p-1 sm:p-2 rounded-lg text-sm font-semibold"
+    class="flex justify-between whitespace-nowrap< gap-1 items-center bg-pb-yellow px-2 py-[.35rem] sm:p-2 rounded-lg font-semibold"
     aria-haspopup="listbox"
     aria-expanded={isOpen}
     transition:slide={{ axis: "x" }}
@@ -66,13 +69,15 @@
         {#each options as option}
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <li
-            class={`rounded-[.36rem]  ${
-              option === selectedOption ? "bg-pb-yellow" : ""
+            class={`rounded-[.36rem] ${
+              option === selectedOption
+                ? "bg-pb-yellow"
+                : "hover:bg-gray-400 transition-color"
             }`}
             role="option"
             aria-selected={selectedOption === option}
           >
-            <button class="py-3 px-4" on:click={() => selectOption(option)}>
+            <button class="py-2 px-4" on:click={() => selectOption(option)}>
               {option}
             </button>
           </li>

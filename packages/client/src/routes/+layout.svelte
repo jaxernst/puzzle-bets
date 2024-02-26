@@ -1,42 +1,72 @@
 <script>
   import "./styles.css";
   import { page } from "$app/stores";
-  import WalletConnector from "$lib/components/WalletConnector.svelte";
+  import WalletConnector, {
+    loginAndConnect,
+  } from "$lib/components/WalletConnector.svelte";
   import GameSelector from "./GameSelector.svelte";
   import AppHeader from "./AppHeader.svelte";
   import Confetti from "$lib/components/Confetti.svelte";
   import Dropdown from "$lib/components/Dropdown.svelte";
   import { goto } from "$app/navigation";
+  import Plus from "$lib/icons/Plus.svelte";
+  import { user } from "$lib/mud/mudStore";
+  import { slide } from "svelte/transition";
+
+  const gameNames = ["Wordle", "Tradle", "Crossword", "Sudoku"];
+  $: gameRoute = gameNames.find((game) =>
+    $page.url.pathname.includes("games/" + game.toLowerCase())
+  );
 </script>
 
 <WalletConnector />
 <Confetti />
 
-<div class="app max-w-[40rem] mx-auto">
-  <main class="text-white flex-grow flex flex-col p-4 gap-4 sm:gap-5">
-    <AppHeader />
-    <section class="flex flex-col gap-2">
+<div class="app max-w-[36rem] mx-auto text-white">
+  <main class=" flex-grow flex flex-col p-4 gap-4 sm:gap-5">
+    {#if $user || !$page.url.pathname.includes("welcome")}
+      <section in:slide>
+        <AppHeader />
+      </section>
+    {/if}
+
+    <section class="flex items-center gap-2 gap-y-1 flex-wrap">
       <Dropdown
-        options={["Wordle", "Tradle", "Crossword", "Sudoku"]}
+        options={gameNames}
         placeholder="Select a game"
+        selectionOverride={gameRoute}
         onOptionSelect={(option) => {
           goto(`/games/${option.toLowerCase()}/demo`);
         }}
       />
-    </section>
-    <section
-      class="flex flex-col gap-2 bg-gray-600 rounded-2xl p-3 sm:p-4 shadow-inner"
-    >
-      <GameSelector />
+      {#if $page.url.pathname !== "/welcome"}
+        <button
+          class="bg-lime-500 rounded-full font-semibold text-sm sm:text-sm px-2 py-[.1rem] whitespace-nowrap disabled:opacity-60"
+          disabled={!$user}
+          >New
+        </button>
+        <button
+          class="bg-lime-500 rounded-full font-semibold text-sm sm:text-sm px-2 py-[.1rem] whitespace-nowrap disabled:opacity-60"
+          disabled={!$user}>Join</button
+        >
+        <button
+          class="bg-lime-500 rounded-full font-semibold text-sm sm:text-sm px-2 py-[.1rem] whitespace-nowrap"
+          >Practice</button
+        >
+      {/if}
     </section>
 
-    <section
-      class="flex flex-col flex-grow bg-gray-600 p-3 sm:p-4 rounded-2xl shadow-inner"
-    >
+    {#if false}
+      <section class="flex flex-col gap-2 text-off-black">
+        <GameSelector />
+      </section>
+    {/if}
+
+    <section class="flex flex-col flex-grow">
       <slot />
     </section>
-    <div class="sm:hidden h-5"></div>
   </main>
+  <div class="sm:hidden h-5"></div>
 </div>
 
 <style>

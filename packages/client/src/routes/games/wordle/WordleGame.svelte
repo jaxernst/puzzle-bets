@@ -171,9 +171,9 @@
   <div>
     <div class={`controls ${!(gameOver || paused) ? "controls-playing" : ""}`}>
       {#if won}
-        <p>You solved it!</p>
+        <p class="text-gray-500">You solved it!</p>
       {:else if data.answers.length >= 6}
-        <p>the answer was "{data.answer}"!</p>
+        <p class="text-gray-500">the answer was "{data.answer}"!</p>
         <!--
       <button
         data-key="enter"

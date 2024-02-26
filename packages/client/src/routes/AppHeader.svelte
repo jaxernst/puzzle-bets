@@ -78,13 +78,22 @@
       class="flex h-7 items-center justify-center"
       on:click={() => loginAndConnect()}
     >
-      <div class="h-6 w-6 stroke-off-black">
-        <WalletIcon />
-      </div>
-      {#if $userWallet && $mud.ready}
-        <div
-          class="self-start w-[.4rem] h-[.4rem] rounded-full bg-green-500"
-        ></div>
+      {#if !$user}
+        <button
+          class="bg-lime-500 rounded-full font-semibold text-[.8rem] px-2 py-1 whitespace-nowrap"
+          on:click={loginAndConnect}
+        >
+          Connect to play live
+        </button>
+      {:else}
+        <div class="h-6 w-6 stroke-off-black">
+          <WalletIcon />
+        </div>
+        {#if $userWallet && $mud.ready}
+          <div
+            class="self-start w-[.4rem] h-[.4rem] rounded-full bg-green-500"
+          ></div>
+        {/if}
       {/if}
     </button>
     {#if $user}

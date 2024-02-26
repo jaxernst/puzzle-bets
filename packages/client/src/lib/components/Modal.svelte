@@ -52,7 +52,7 @@
     }
   }
 
-  const initThemeColor = "rgb(200, 214, 228)";
+  const initThemeColor = "rgb(228, 234, 240)";
   $: if (show) {
     browser && setThemeColor("rgb(100, 107, 114)");
   } else {

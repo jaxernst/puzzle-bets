@@ -110,7 +110,7 @@
     dispatch("submitGuess", { guess: currentGuess });
   }}
 >
-  <div class="flex gap-3 text-xs italic scale-90">
+  <div class="flex gap-3 text-xs italic">
     <div class="flex items-center gap-1 whitespace-nowrap">
       Correct
       <div class="letter exact px-2"></div>

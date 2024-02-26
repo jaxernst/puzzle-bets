@@ -5,6 +5,8 @@
   import GameSelector from "./GameSelector.svelte";
   import AppHeader from "./AppHeader.svelte";
   import Confetti from "$lib/components/Confetti.svelte";
+  import Dropdown from "$lib/components/Dropdown.svelte";
+  import { goto } from "$app/navigation";
 </script>
 
 <WalletConnector />
@@ -14,23 +16,13 @@
   <main class="text-white flex-grow flex flex-col p-4 gap-4 sm:gap-5">
     <AppHeader />
     <section class="flex flex-col gap-2">
-      <div class="relative flex gap-2 items-center overflow-auto no-scrollbar">
-        {#each ["Wordle", "Tradle", "Crossword", "Sudoku"] as game}
-          <a
-            class={`px-2 sm:px-3 py-1 sm:py-2 self-start rounded-lg text-white tracking-wider font-semibold text-center transition-all whitespace-nowrap
-              ${
-                $page.route.id?.includes(game.toLocaleLowerCase())
-                  ? "bg-lime-500 shadow-lg"
-                  : "bg-pb-yellow"
-              }
-            `}
-            href="/games/{game.toLowerCase()}/demo"
-          >
-            {game}
-            <span class="text-xl"></span>
-          </a>
-        {/each}
-      </div>
+      <Dropdown
+        options={["Wordle", "Tradle", "Crossword", "Sudoku"]}
+        placeholder="Select a game"
+        onOptionSelect={(option) => {
+          goto(`/games/${option.toLowerCase()}/demo`);
+        }}
+      />
     </section>
     <section
       class="flex flex-col gap-2 bg-gray-600 rounded-2xl p-3 sm:p-4 shadow-inner"

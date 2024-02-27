@@ -110,7 +110,7 @@
     dispatch("submitGuess", { guess: currentGuess });
   }}
 >
-  <div class="flex gap-3 text-xs italic">
+  <div class="text-gray-600 flex gap-3 text-xs italic">
     <div class="flex items-center gap-1 whitespace-nowrap">
       Correct
       <div class="letter exact px-2"></div>
@@ -126,11 +126,7 @@
     </div>
   </div>
 
-  <div
-    class="grid self-stretch"
-    class:playing={!won}
-    class:bad-guess={badGuess}
-  >
+  <div class="grid" class:playing={!won} class:bad-guess={badGuess}>
     {#each Array.from(Array(6).keys()) as row (row)}
       {@const current = row === i}
       <h2 class="visually-hidden">Row {row + 1}</h2>
@@ -230,7 +226,6 @@
 <style>
   form {
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -266,7 +261,6 @@
     align-self: center;
     justify-self: center;
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;

@@ -54,24 +54,24 @@
 
 {#if game}
   <div class="flex flex-col gap-3 sm:gap-4 px-2">
-    <div class="text-gray-400 font-semibold italic">
+    <div class="text-gray-500 font-semibold italic">
       {#if statusLabels[game.status]()}
         {statusLabels[game.status]()}
       {/if}
     </div>
 
-    <div class="flex gap-4 items-stretch">
+    <div class="text-sm flex gap-4 items-stretch">
       <div
         class="flex flex-col justify-evenly gap-1 font-semibold text-lime-500"
       >
         <div class="">Wager</div>
         <div class="">Opponent</div>
       </div>
-      <div class="flex flex-col justify-evenly gap-1 text-gray-100">
-        <div class="text-gray-300">
+      <div class="flex flex-col justify-evenly gap-1 text-gray-500">
+        <div>
           ${betAmountUsd.toFixed(2)}
         </div>
-        <div class="text-gray-300">
+        <div>
           {#if game.opponent}
             {shortenAddress(game?.opponent)}
           {:else}

@@ -9,6 +9,7 @@
   import { flip } from "svelte/animate";
   import { page } from "$app/stores";
   import { intToEntity } from "$lib/util";
+  import { clickOutside } from "$lib/actions/clickOutside";
 
   $: nonArchivedGames = $userGames.filter(
     (g) => !$userArchivedGames.includes(g.id)
@@ -54,81 +55,97 @@
 </script>
 
 <div
-  class="flex gap-2 sm:gap-3 items-center font-mono text-off-black text-xs sm:text-sm transition-all duration-500"
+  class="flex flex-col gap-2 bg-gray-600 px-2 py-2 rounded-t-xl text-[.82rem] sm:text-sm font-semibold"
+  use:clickOutside={{
+    enabled: expandedView,
+    cb: () => (expandedView = false),
+  }}
 >
-  <button
-    on:click={() => (selectedTab = "live")}
-    class={`flex transition-all duration-200 py-1 rounded-lg ${
-      selectedTab === "live" ? "bg-gray-500 text-white px-2" : ""
-    }`}
+  <!-- svelte-ignore a11y-click-events-have-key-events -->
+  <!-- svelte-ignore a11y-no-static-element-interactions -->
+  <div
+    class="flex gap-2 sm:gap-3 items-center transition-all duration-500"
+    on:click={() => (expandedView = true)}
   >
-    {#if selectedTab === "live"}
-      <span
-        transition:slide={{ axis: "x", duration: 200, easing: cubicOut }}
-        class="text-lime-500 font-bold min-w-0 pr-2">{activeGames.length}</span
-      >
-    {/if}
-    Live Games
-  </button>
-
-  <div class="text-gray-500">|</div>
-
-  <button
-    on:click={() => (selectedTab = "completed")}
-    class={`flex transition-all duration-200 py-1 rounded-lg ${
-      selectedTab === "completed" ? "bg-gray-500 text-white px-2" : ""
-    }`}
-  >
-    {#if selectedTab === "completed"}
-      <span
-        transition:slide={{ axis: "x", duration: 200, easing: cubicOut }}
-        class="text-lime-400 min-w-0 pr-2">{completedGames.length}</span
-      >
-    {/if}
-    Completed
-  </button>
-
-  <div class="text-gray-500">|</div>
-
-  <button
-    on:click={() => (selectedTab = "archived")}
-    class={`flex transition-all duration-200 py-1 rounded-lg ${
-      selectedTab === "archived" ? "bg-gray-500 text-white px-2" : ""
-    }`}
-  >
-    {#if selectedTab === "archived"}
-      <span
-        transition:slide={{ axis: "x", duration: 200, easing: cubicOut }}
-        class="text-lime-400 min-w-0 pr-2">{archivedGames.length}</span
-      >
-    {/if}
-    Archived
-  </button>
-
-  <div class="flex-grow flex justify-end items-center">
     <button
-      class="pb-[.2rem] flex items-center"
-      on:click={() => (expandedView = !expandedView)}
+      on:click={() => (selectedTab = "live")}
+      class={`flex transition-all duration-200 py-1 rounded-lg ${
+        selectedTab === "live" ? "bg-gray-500 text-white px-2" : "opacity-50"
+      }`}
     >
-      <div
-        class={`h-4 w-4 stroke-gray-400 ${
-          expandedView ? "rotate-180" : "rotate-90"
-        } transition-transform`}
-      >
-        <Expand />
-      </div>
+      {#if selectedTab === "live"}
+        <span
+          transition:slide={{ axis: "x", duration: 200, easing: cubicOut }}
+          class="text-lime-500 font-bold min-w-0 pr-2"
+          >{activeGames.length}</span
+        >
+      {/if}
+      Live Games
     </button>
-  </div>
-</div>
 
-<div
-  class={`mt-1 flex gap-1 no-scrollbar items-center ${
-    expandedView ? "flex-wrap" : "overflow-auto"
-  }`}
->
-  {#each currentTabGames as game (game.id)}
-    <div animate:flip={{ duration: 650, easing: cubicInOut }}>
-      <GamePreviewCard {game} />
+    <div class="text-gray-500">|</div>
+
+    <button
+      on:click={() => (selectedTab = "completed")}
+      class={`flex transition-all duration-200 py-1 rounded-lg ${
+        selectedTab === "completed"
+          ? "bg-gray-500 text-white px-2"
+          : "opacity-50"
+      }`}
+    >
+      {#if selectedTab === "completed"}
+        <span
+          transition:slide={{ axis: "x", duration: 200, easing: cubicOut }}
+          class="text-lime-400 min-w-0 pr-2">{completedGames.length}</span
+        >
+      {/if}
+      Completed
+    </button>
+
+    <div class="text-gray-500">|</div>
+
+    <button
+      on:click={() => (selectedTab = "archived")}
+      class={`flex transition-all duration-200 py-1 rounded-lg ${
+        selectedTab === "archived"
+          ? "bg-gray-500 text-white px-2"
+          : "opacity-50"
+      }`}
+    >
+      {#if selectedTab === "archived"}
+        <span
+          transition:slide={{ axis: "x", duration: 200, easing: cubicOut }}
+          class="text-lime-400 min-w-0 pr-2">{archivedGames.length}</span
+        >
+      {/if}
+      Archived
+    </button>
+
+    <div class="flex-grow flex justify-end items-center">
+      <button
+        class="p-1 flex items-center"
+        on:click|stopPropagation={() => (expandedView = !expandedView)}
+      >
+        <div
+          class={`h-5 w-5 stroke-gray-400 ${
+            expandedView ? "rotate-180" : ""
+          } transition-transform`}
+        >
+          <Expand />
+        </div>
+      </button>
     </div>
-  {/each}
+  </div>
+
+  {#if expandedView}
+    <div class="h-[30vh] overflow-y-auto" transition:slide={{ duration: 500 }}>
+      <div class={`mt-1 flex flex-wrap gap-1 no-scrollbar`}>
+        {#each currentTabGames as game (game.id)}
+          <div animate:flip={{ duration: 650, easing: cubicInOut }}>
+            <GamePreviewCard {game} />
+          </div>
+        {/each}
+      </div>
+    </div>
+  {/if}
 </div>

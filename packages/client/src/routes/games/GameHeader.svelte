@@ -141,28 +141,18 @@
   </Modal>
 {/if}
 
-<div class="flex flex-col">
-  <div class="flex flex-col gap-3 items-center">
-    <div class="font-bold text-lg text-gray-600">
-      {capitalized(gameType)} (practice game)
+<div class="flex flex-col text-sm sm:text-base px-2">
+  <div
+    class={`flex items-center ${
+      !gameId ? "justify-center" : "justify-between"
+    }`}
+  >
+    <div class="font-bold text-lg text-off-black">
+      {capitalized(gameType)}
+      {gameId ? `#${entityToInt(gameId)}` : "(practice game)"}
     </div>
 
-    {#if !$user}
-      <!--<button
-          class="bg-lime-500 rounded-full px-2 py-1 font-semibold"
-          on:click={loginAndConnect}
-        >
-          Connect to play live
-        </button>-->
-    {:else if !gameId}
-      <!--<button
-          class="bg-lime-500 rounded-full px-2 py-1 font-semibold disabled:opacity-50"
-          disabled={!SUPPORTED_GAME_TYPES.includes(gameType)}
-          on:click={() => (showNewGameModal = true)}
-        >
-          Start live game
-        </button>-->
-    {:else if $liveStatus?.status === GameStatus.Pending}
+    {#if $liveStatus?.status === GameStatus.Pending}
       <button
         on:click={copyInviteUrl}
         class="whitespace-nowrap text-sm border border-lime-500 text-lime-500 font-semibold rounded-full px-2 py-1"

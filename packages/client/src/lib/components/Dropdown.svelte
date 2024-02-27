@@ -6,18 +6,16 @@
   export let options: string[];
   export let placeholder = "Select an Option";
   export let onOptionSelect: (option: string) => void = () => {};
-  export let selectionOverride: string | null = null;
+  export let selection: string | null = null;
 
-  console.log(selectionOverride);
   let isOpen = false;
-  let selectedOption = selectionOverride ?? "";
 
   const toggleDropdown = () => {
     isOpen = !isOpen;
   };
 
   const selectOption = async (option: string) => {
-    selectedOption = option;
+    selection = option;
     setTimeout(() => {
       onOptionSelect(option);
       isOpen = false;
@@ -46,13 +44,13 @@
   bind:this={dropdownButton}
 >
   <button
-    class="flex justify-between whitespace-nowrap< gap-1 items-center bg-pb-yellow px-2 py-[.35rem] sm:p-2 rounded-lg font-semibold"
+    class="flex justify-between whitespace-nowrap< gap-1 items-center bg-pb-yellow p-2 rounded-lg font-semibold"
     aria-haspopup="listbox"
     aria-expanded={isOpen}
     transition:slide={{ axis: "x" }}
     on:click={toggleDropdown}
   >
-    {selectedOption || placeholder}
+    {selection ?? placeholder}
     <AnimatedArrow
       direction={isOpen ? "up" : "down"}
       klass="fill-white h-5 w-5"
@@ -70,12 +68,12 @@
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <li
             class={`rounded-[.36rem] ${
-              option === selectedOption
+              option === selection
                 ? "bg-pb-yellow"
                 : "hover:bg-gray-400 transition-color"
             }`}
             role="option"
-            aria-selected={selectedOption === option}
+            aria-selected={selection === option}
           >
             <button class="py-2 px-4" on:click={() => selectOption(option)}>
               {option}

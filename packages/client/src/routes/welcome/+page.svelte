@@ -16,7 +16,7 @@
   <meta name="description" content="Solve puzzles with friends" />
 </svelte:head>
 
-<div class="flex flex-col gap-14 items-center justify-center flex-grow">
+<div class="flex flex-col gap-24 items-center justify-center flex-grow">
   <div class="flex flex-col gap-1 items-center">
     <div class=" h-24 w-24 fill-off-black">
       <Puzzly />

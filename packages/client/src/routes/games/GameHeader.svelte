@@ -27,6 +27,8 @@
   let liveStatus: Readable<LiveStatus | null> = readable(null);
   $: if (gameId) {
     liveStatus = liveGameStatus(gameId);
+  } else {
+    liveStatus = readable(null);
   }
 
   $: puzzleState = gameId && $puzzleStores[gameType].get(entityToInt(gameId));

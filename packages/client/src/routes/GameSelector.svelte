@@ -57,9 +57,9 @@
   let expandedView = false;
 
   const height = spring(0, {
-    stiffness: 0.07,
-    damping: 0.32,
-    precision: 0.005,
+    stiffness: 0.066,
+    damping: 0.39,
+    precision: 0.001,
   });
 
   $: if (expandedView) {

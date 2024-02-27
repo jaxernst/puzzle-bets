@@ -104,7 +104,7 @@
 </script>
 
 <div
-  class="bg-slate-600 min-w-[350px] p-5 rounded-xl flex flex-col gap-2 max-w-[450px]"
+  class="bg-gray-600 min-w-[350px] p-5 rounded-xl flex flex-col gap-2 max-w-[450px]"
 >
   <div class="flex flex-col gap-7 font-semibold">
     <div class="flex justify-between items-center gap-5">
@@ -124,14 +124,14 @@
         } gap-3`}
       >
         <div></div>
-        <div class="justify-self-center font-bold text-sm text-slate-400">
+        <div class="justify-self-center font-bold text-sm text-gray-400">
           Solved
         </div>
-        <div class="justify-self-center font-bold text-sm text-slate-400">
+        <div class="justify-self-center font-bold text-sm text-gray-400">
           Balance
         </div>
         {#if game.p1Rematch || game.p2Rematch}
-          <div class="justify-self-center font-bold text-sm text-slate-400">
+          <div class="justify-self-center font-bold text-sm text-gray-400">
             Rematch
           </div>
         {/if}
@@ -200,10 +200,10 @@
               It's a tie! Vote to rematch?
             {/if}
           </button>
-          <span class="text-slate-400 text-sm">or</span>
+          <span class="text-gray-400 text-sm">or</span>
         {/if}
         <button
-          class={`border border-pb-yellow text-slate-100 rounded-lg p-2 self-center whitespace-nowrap ${
+          class={`border border-pb-yellow text-gray-100 rounded-lg p-2 self-center whitespace-nowrap ${
             claimed ? "opacity-50" : ""
           }`}
           disabled={claimed}
@@ -211,7 +211,7 @@
           in:slide={{ axis: "x" }}
         >
           {#if claimLoading}
-            <DotLoader klass="fill-slate-100" />
+            <DotLoader klass="fill-gray-100" />
           {:else if claimed}
             {formatAsDollar(potSizeUsd / 2)} claimed!
           {:else}
@@ -221,7 +221,7 @@
       {/if}
 
       {#if $liveStatus?.submissionTimeLeft && !gameOutcome}
-        <div class="text-slate-400 text-sm italic">
+        <div class="text-gray-400 text-sm italic">
           {formatTime($liveStatus.submissionTimeLeft)} remaining...
         </div>
       {/if}

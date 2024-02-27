@@ -20,7 +20,7 @@
   <div class="group-hover:opacity-40">{shortenAddress(address)}</div>
   <button
     on:click={copyInviteUrl}
-    class="transition-all duration-200 font-normal opacity-0 group-hover:opacity-100 absolute top-0 left-0 flex justify-center items-center text-white rounded-xl bg-slate-600 bg-opacity-60 h-full w-full"
+    class="transition-all duration-200 font-normal opacity-0 group-hover:opacity-100 absolute top-0 left-0 flex justify-center items-center text-white rounded-xl bg-gray-600 bg-opacity-60 h-full w-full"
   >
     {copied ? "Copied!" : "Copy"}
   </button>

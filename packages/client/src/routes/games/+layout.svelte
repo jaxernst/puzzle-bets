@@ -42,7 +42,7 @@
     {#if game && game.status === GameStatus.Pending}
       <div class="grow flex flex-col justify-center items-center pb-14">
         <div
-          class="rounded-lg border-2 border-slate-300 text-slate-500 font-bold text-center p-6"
+          class="rounded-lg border-2 border-gray-300 text-gray-500 font-bold text-center p-6"
         >
           The puzzle will reveal for both players once the invite is accepted
           <div class="text-pb-yellow text-sm italic mt-3">

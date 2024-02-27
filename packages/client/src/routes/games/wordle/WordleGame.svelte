@@ -110,7 +110,7 @@
     dispatch("submitGuess", { guess: currentGuess });
   }}
 >
-  <div class="text-slate-600 flex gap-3 text-xs italic">
+  <div class="text-gray-600 flex gap-3 text-xs italic">
     <div class="flex items-center gap-1 whitespace-nowrap">
       Correct
       <div class="letter exact px-2"></div>
@@ -167,9 +167,9 @@
   <div>
     <div class={`controls ${!(gameOver || paused) ? "controls-playing" : ""}`}>
       {#if won}
-        <p class="text-slate-500">You solved it!</p>
+        <p class="text-gray-500">You solved it!</p>
       {:else if data.answers.length >= 6}
-        <p class="text-slate-500">the answer was "{data.answer}"!</p>
+        <p class="text-gray-500">the answer was "{data.answer}"!</p>
         <!--
       <button
         data-key="enter"

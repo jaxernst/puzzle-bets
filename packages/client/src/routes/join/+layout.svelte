@@ -44,13 +44,13 @@
     }}
   >
     <div
-      class="relative bg-slate-600 text-slate-200 p-6 rounded-xl flex flex-col gap-2 max-w-[450px]"
+      class="relative bg-gray-600 text-gray-200 p-6 rounded-xl flex flex-col gap-2 max-w-[450px]"
     >
       {#if !$mud.ready}
         <div class="self-center">
-          <DotLoader klass="fill-slate-200" />
+          <DotLoader klass="fill-gray-200" />
         </div>
-        <div class="self-center text-slate-400 text-xs">
+        <div class="self-center text-gray-400 text-xs">
           Syncing blockchain state...
         </div>
       {:else if !game}
@@ -66,7 +66,7 @@
         />
       {/if}
 
-      <a class="absolute right-2 top-0 text-slate-400" href={"/welcome"}>x</a>
+      <a class="absolute right-2 top-0 text-gray-400" href={"/welcome"}>x</a>
     </div>
   </Modal>
 {/if}

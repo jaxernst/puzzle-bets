@@ -68,7 +68,7 @@
 </script>
 
 <div
-  class="flex flex-col gap-2 bg-slate-600 px-1.5 pt-2 rounded-t-xl text-[.82rem] sm:text-sm font-semibold"
+  class="flex flex-col gap-2 bg-gray-600 px-1.5 pt-2 rounded-t-xl text-[.82rem] sm:text-sm font-semibold"
   style={`height: ${$height}px`}
   use:clickOutside={{
     enabled: expandedView,
@@ -97,7 +97,7 @@
       Live Games
     </button>
 
-    <div class="text-slate-500">|</div>
+    <div class="text-gray-500">|</div>
 
     <button
       on:click={() => (selectedTab = "completed")}
@@ -114,7 +114,7 @@
       Completed
     </button>
 
-    <div class="text-slate-500">|</div>
+    <div class="text-gray-500">|</div>
 
     <button
       on:click={() => (selectedTab = "archived")}
@@ -137,7 +137,7 @@
         on:click|stopPropagation={() => (expandedView = !expandedView)}
       >
         <div
-          class={`h-4 w-4 stroke-slate-400 ${
+          class={`h-4 w-4 stroke-gray-400 ${
             expandedView ? "rotate-180" : ""
           } transition-transform`}
         >
@@ -147,7 +147,7 @@
     </div>
   </div>
 
-  <div class="px-2 overflow-y-auto">
+  <div class="overflow-y-auto">
     <div class={`mt-1 flex flex-wrap gap-1 no-scrollbar`}>
       {#each currentTabGames as game (game.id)}
         <div animate:flip={{ duration: 650, easing: cubicInOut }}>

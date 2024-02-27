@@ -17,7 +17,7 @@
 
   $: badGuess = data.badGuess;
 
-  $: won = data.answers.at(-1) === "xxxxx";
+  $: won = data.answers[data.answers.length - 1] === "xxxxx";
   $: gameOver = won || data.answers.length >= 6;
   $: i = won ? -1 : data.answers.length; // Row index of current guess
   $: currentGuess = data.guesses[i] || "";

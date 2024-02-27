@@ -44,7 +44,7 @@
 </Modal>
 
 <div class="w-full h-full fixed">
-  <main class="h-[100dvh] flex flex-col max-w-[36rem] mx-auto text-white">
+  <main class="h-full flex flex-col max-w-[36rem] mx-auto text-white">
     {#if $user || !$page.url.pathname.includes("welcome")}
       <section in:slide class="px-3 pt-2">
         <AppHeader />
@@ -93,7 +93,6 @@
 
       <section class="flex flex-col flex-grow">
         <slot />
-        <div class="sm:hidden h-10"></div>
       </section>
     </div>
     {#if $user}

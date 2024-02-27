@@ -56,7 +56,7 @@
       klass="fill-white h-5 w-5"
     />
   </button>
-  <div class="absolute mt-2 left-1 rounded-lg shadow">
+  <div class="absolute mt-2 left-0 rounded-lg shadow">
     {#if isOpen}
       <ul
         transition:slide

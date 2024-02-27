@@ -52,9 +52,10 @@
     }
   }
 
-  const initThemeColor = "rgb(231, 231, 232)";
+  // Hack to darken the notch area (by 50%) on ios
+  const initThemeColor = "rgb(230, 230, 232)";
   $: if (show) {
-    browser && setThemeColor("rgb(100, 107, 114)");
+    browser && setThemeColor("rgb(115, 115, 116)");
   } else {
     browser && setThemeColor(initThemeColor);
   }
@@ -69,7 +70,7 @@
   <div
     bind:this={modal}
     tabindex="-1"
-    class="modal z-50 fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+    class="modal z-50 fixed left-0 top-0 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center"
     style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right);"
     on:click={clickOutside}
     aria-modal="true"
@@ -80,17 +81,3 @@
     <slot />
   </div>
 {/if}
-
-<style>
-  .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    padding-top: env(safe-area-inset-top);
-    padding-right: env(safe-area-inset-right);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-  }
-</style>

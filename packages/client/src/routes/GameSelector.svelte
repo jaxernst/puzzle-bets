@@ -78,15 +78,13 @@
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
-    class={`flex gap-2 sm:gap-3 items-center transition-all duration-500
-      ${selectedTab !== "live" ? "pl-1" : ""}
-    `}
+    class={`flex gap-2 sm:gap-3 items-center cursor-pointer transition-all duration-500 pl-2`}
     on:click={() => (expandedView = true)}
   >
     <button
       on:click={() => (selectedTab = "live")}
       class={`flex transition-all duration-200 py-1 rounded-lg ${
-        selectedTab === "live" ? "bg-gray-500 text-white px-2" : "opacity-50"
+        selectedTab === "live" ? "" : "opacity-50"
       }`}
     >
       {#if selectedTab === "live"}
@@ -104,9 +102,7 @@
     <button
       on:click={() => (selectedTab = "completed")}
       class={`flex transition-all duration-200 py-1 rounded-lg ${
-        selectedTab === "completed"
-          ? "bg-gray-500 text-white px-2"
-          : "opacity-50"
+        selectedTab === "completed" ? "" : "opacity-50"
       }`}
     >
       {#if selectedTab === "completed"}
@@ -123,9 +119,7 @@
     <button
       on:click={() => (selectedTab = "archived")}
       class={`flex transition-all duration-200 py-1 rounded-lg ${
-        selectedTab === "archived"
-          ? "bg-gray-500 text-white px-2"
-          : "opacity-50"
+        selectedTab === "archived" ? " " : "opacity-50"
       }`}
     >
       {#if selectedTab === "archived"}

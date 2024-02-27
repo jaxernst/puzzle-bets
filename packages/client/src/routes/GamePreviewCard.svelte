@@ -38,7 +38,7 @@
 
 <a
   class={`flex flex-col p-2 self-start rounded-lg text-white font-semibold font-mono  transition-all
-          ${!active ? "bg-gray-500" : "bg-lime-500"}
+          ${!active ? "bg-slate-500" : "bg-lime-500"}
         `}
   href={gameRoute(id, type)}
 >
@@ -51,7 +51,7 @@
   </div>
   <div
     class={`px-1 text-[.6em] sm:text-[.7em] italic whitespace-nowrap 
-          ${active ? "text-lime-600 font-bold" : "text-gray-200"}`}
+          ${active ? "text-lime-600 font-bold" : "text-slate-200"}`}
   >
     {#if status === GameStatus.Pending}
       waiting for opponent...

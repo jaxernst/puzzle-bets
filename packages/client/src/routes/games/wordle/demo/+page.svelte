@@ -49,7 +49,7 @@
   />
 {:else if getGameLoading}
   <div class="self-center h-[200px] flex items-center justify-center">
-    <DotLoader klass="fill-gray-500 h-10 w-10" />
+    <DotLoader klass="fill-slate-500 h-10 w-10" />
   </div>
 {/if}
 

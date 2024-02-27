@@ -71,7 +71,6 @@
     bind:this={modal}
     tabindex="-1"
     class="modal z-50 fixed left-0 top-0 w-screen h-screen bg-black bg-opacity-30 flex justify-center items-center"
-    style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right);"
     on:click={clickOutside}
     aria-modal="true"
     role="dialog"

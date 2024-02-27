@@ -77,7 +77,7 @@
     }}
   />
   {#if puzzleState.solved && !submitted && !expired}
-    <div class="w-full text-center text-gray-500">
+    <div class="w-full text-center text-slate-500">
       Submit your solution before the deadline
     </div>
   {/if}
@@ -108,6 +108,6 @@
   {/if}
 {:else if getGameLoading}
   <div class="self-center h-[200px] flex items-center justify-center">
-    <DotLoader klass="fill-gray-200 h-10 w-10" />
+    <DotLoader klass="fill-slate-200 h-10 w-10" />
   </div>
 {/if}

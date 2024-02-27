@@ -95,70 +95,70 @@
   }
 </script>
 
-<div class="bg-gray-600 p-5 rounded-xl flex flex-col gap-2 max-w-[450px]">
+<div class=" bg-slate-600 p-5 rounded-xl flex flex-col gap-2 max-w-[450px]">
   <div class="font-semibold">
     Create a new <span class="text-lime-500">{capitalized(gameType)}</span> Game
   </div>
-  <div class="text-sm text-gray-100">
+  <div class="text-sm text-slate-100">
     Enter your wager then send an invite link to your opponent. When they join
     the game, the puzzle will be revealed and the deadline clock will start
     ticking.
   </div>
   <div
-    class="py-2 px-3 sm:px-6 flex justify-between items-center text-gray-400"
+    class="py-2 px-3 sm:px-6 flex justify-between items-center text-slate-400"
   >
-    <label class="flex flex-col gap-1 text-gray-200">
-      <span class="text-sm text-gray-400">Wager (ETH)</span>
+    <label class="flex flex-col gap-1 text-slate-200">
+      <span class="text-sm text-slate-400">Wager (ETH)</span>
       <div class="flex items-center gap-1">
         <input
           type="number"
           min="0.000"
           step="0.001"
-          class="bg-gray-500 rounded-lg p-2 w-[120px]"
+          class="bg-slate-500 rounded-lg p-2 w-[120px]"
           placeholder="0.01"
           value={wagerETH}
           on:input={(event) => updateETH(parseFloat(event.target.value))}
         />
-        <div class="w-4 h-4 fill-gray-300">
+        <div class="w-4 h-4 fill-slate-300">
           <EthSymbol />
         </div>
       </div>
     </label>
     <div class="">or</div>
-    <label class="flex flex-col gap-1 text-gray-200">
-      <span class="text-sm text-gray-400">Wager (USD)</span>
+    <label class="flex flex-col gap-1 text-slate-200">
+      <span class="text-sm text-slate-400">Wager (USD)</span>
       <div class="flex items-center gap-1">
         <input
           type="number"
           min="5"
           step="1"
-          class="bg-gray-500 rounded-lg p-2 w-[120px]"
+          class="bg-slate-500 rounded-lg p-2 w-[120px]"
           placeholder="15"
           value={wagerUSD}
           on:input={(event) => updateUSD(parseFloat(event.target.value))}
         />
-        <div class=" fill-gray-300">$</div>
+        <div class=" fill-slate-300">$</div>
       </div>
     </label>
   </div>
 
   <div class="py-2 px-6 flex flex-col gap-3">
-    <div class="text-gray-400">
+    <div class="text-slate-400">
       Puzzle deadline:
       <input
         type="number"
-        class="bg-gray-500 text-gray-200 px-2 rounded-lg w-[50px]"
+        class="bg-slate-500 text-slate-200 px-2 rounded-lg w-[50px]"
         min="1"
         max="100000"
         bind:value={submissionWindowMinutes}
       /> minutes
     </div>
 
-    <div class="text-gray-400">
+    <div class="text-slate-400">
       Invite expires:
       <input
         type="number"
-        class="bg-gray-500 text-gray-200 px-2 rounded-lg w-[50px]"
+        class="bg-slate-500 text-slate-200 px-2 rounded-lg w-[50px]"
         min="1"
         max="100000"
         bind:value={inviteExpirationMinutes}
@@ -166,11 +166,11 @@
       minutes
     </div>
 
-    <div class="text-gray-400">
+    <div class="text-slate-400">
       Your name (optional):
       <input
         type="text"
-        class="border-2 border-gray-500 bg-transparent text-gray-200 px-2 rounded-lg w-[130px]"
+        class="border-2 border-slate-500 bg-transparent text-slate-200 px-2 rounded-lg w-[130px]"
         bind:value={inviteName}
         on:input|preventDefault|stopPropagation
       />
@@ -202,7 +202,7 @@
 
   {#if gameCreated && !$notifications.enabled}
     <div
-      class="whitespace-nowrap text-xs sm:text-base self-center flex items-center gap-2 text-gray-400 fill-gray-400"
+      class="whitespace-nowrap text-xs sm:text-base self-center flex items-center gap-2 text-slate-400 fill-slate-400"
     >
       Click the
       <div class="w-4 h-4"><NotificationBell /></div>

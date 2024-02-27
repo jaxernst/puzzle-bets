@@ -63,20 +63,20 @@
         />
         {#if $page.url.pathname !== "/welcome"}
           <button
-            class="text-sm rounded-lg px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-gray-300"
+            class="text-sm rounded-full px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-gray-300"
             on:click={() => (showNewGameModal = true)}
             disabled={!$user || !SUPPORTED_GAME_TYPES.includes(gameType)}
             >New
           </button>
           <button
-            class="text-sm rounded-lg px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-gray-300"
+            class="text-sm rounded-full px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-gray-300"
             on:click={() => (showNewGameModal = true)}
             disabled={true ||
               !$user ||
               !SUPPORTED_GAME_TYPES.includes(gameType)}>Join</button
           >
           <button
-            class="text-sm rounded-lg px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-gray-300"
+            class="text-sm rounded-full px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-gray-300"
             on:click={() => goto(`/games/${gameType}/demo`)}
             disabled={!SUPPORTED_GAME_TYPES.includes(gameType)}
           >

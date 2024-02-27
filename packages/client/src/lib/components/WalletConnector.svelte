@@ -40,7 +40,7 @@
 
 <Modal show={$showModal} on:close={() => ($showModal = false)}>
   <div
-    class="relative z-10 min-w-[200px] min-h-[200px] bg-gray-600 text-gray-100 flex flex-col gap-2 justify-evenly items-center rounded-lg p-6"
+    class="relative z-10 min-w-[200px] min-h-[200px] bg-neutral-800 text-neutral-100 flex flex-col gap-2 justify-evenly items-center rounded-lg p-6"
   >
     {#if $userWallet}
       <p transition:fade class={`font-semibold`}>

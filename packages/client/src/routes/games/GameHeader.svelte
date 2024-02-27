@@ -209,7 +209,7 @@
     {#if gameId && ($liveStatus?.status === GameStatus.Complete || $liveStatus?.status === GameStatus.Inactive)}
       <button
         on:click={hideOrShowGame}
-        class="w-4 h-4 fill-gray-400 rounded border-[1.4px] border-gray-400"
+        class="w-4 h-4 fill-neutral-400 rounded border-[1.4px] border-neutral-400"
       >
         {#if gameHidden}
           <Plus />

@@ -54,7 +54,7 @@
 
 {#if game}
   <div class="flex flex-col gap-3 sm:gap-4 px-2">
-    <div class="text-gray-500 font-semibold text-sm italic">
+    <div class="text-neutral-500 font-semibold text-sm italic">
       {#if statusLabels[game.status]()}
         {statusLabels[game.status]()}
       {/if}
@@ -67,7 +67,7 @@
         <div class="">Wager</div>
         <div class="">Opponent</div>
       </div>
-      <div class="flex flex-col justify-evenly gap-1 text-gray-500">
+      <div class="flex flex-col justify-evenly gap-1 text-neutral-500">
         <div>
           ${betAmountUsd.toFixed(2)}
         </div>

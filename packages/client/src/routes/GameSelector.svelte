@@ -8,7 +8,7 @@
   import Expand from "$lib/icons/Expand.svelte";
   import { flip } from "svelte/animate";
   import { page } from "$app/stores";
-  import { intToEntity } from "$lib/util";
+  import { entityToInt, intToEntity } from "$lib/util";
   import { clickOutside } from "$lib/actions/clickOutside";
   import { spring, tweened } from "svelte/motion";
 
@@ -50,7 +50,9 @@
       case "archived":
         return archivedGames;
     }
-  })();
+  })().sort((a, b) => {
+    return Number(entityToInt(b.id)) - Number(entityToInt(a.id));
+  });
 
   let expandedView = false;
 
@@ -68,7 +70,7 @@
 </script>
 
 <div
-  class="flex flex-col gap-2 bg-gray-600 px-1.5 pt-2 rounded-t-xl text-[.82rem] sm:text-sm font-semibold"
+  class="flex flex-col gap-2 bg-neutral-800 px-1.5 pt-2 rounded-t-xl text-[.82rem] sm:text-sm font-semibold"
   style={`height: ${$height}px`}
   use:clickOutside={{
     enabled: expandedView,
@@ -97,7 +99,7 @@
       Live Games
     </button>
 
-    <div class="text-gray-500">|</div>
+    <div class="text-neutral-500">|</div>
 
     <button
       on:click={() => (selectedTab = "completed")}
@@ -114,7 +116,7 @@
       Completed
     </button>
 
-    <div class="text-gray-500">|</div>
+    <div class="text-neutral-500">|</div>
 
     <button
       on:click={() => (selectedTab = "archived")}
@@ -137,7 +139,7 @@
         on:click|stopPropagation={() => (expandedView = !expandedView)}
       >
         <div
-          class={`h-4 w-4 stroke-gray-400 ${
+          class={`h-4 w-4 stroke-neutral-400 ${
             expandedView ? "rotate-180" : ""
           } transition-transform`}
         >
@@ -147,8 +149,10 @@
     </div>
   </div>
 
-  <div class="overflow-y-auto">
-    <div class={`mt-1 flex flex-wrap gap-1 no-scrollbar`}>
+  <div class="px-2 overflow-y-auto">
+    <div
+      class={`mt-1 w-full flex justify-center flex-wrap gap-1.5 no-scrollbar`}
+    >
       {#each currentTabGames as game (game.id)}
         <div animate:flip={{ duration: 650, easing: cubicInOut }}>
           <GamePreviewCard {game} />

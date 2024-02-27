@@ -60,7 +60,7 @@
     {#if isOpen}
       <ul
         transition:slide
-        class="font-semibold flex flex-col bg-gray-500 rounded-lg"
+        class="font-semibold flex flex-col bg-neutral-800 rounded-lg"
         role="listbox"
         tabindex="-1"
       >
@@ -70,7 +70,7 @@
             class={`rounded-[.36rem] ${
               option === selection
                 ? "bg-pb-yellow"
-                : "hover:bg-gray-400 transition-color"
+                : "hover:bg-neutral-700 transition-color"
             }`}
             role="option"
             aria-selected={selection === option}

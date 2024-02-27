@@ -56,21 +56,21 @@
 
     {#if $liveStatus?.inviteTimeLeft !== undefined}
       <div
-        class="italic text-gray-400 whitespace-nowrap min-w-[270px]"
+        class="italic text-neutral-400 whitespace-nowrap min-w-[270px]"
         in:slide={{ axis: "x", easing: cubicInOut }}
       >
         Invite expires in {formatTime($liveStatus.inviteTimeLeft)}...
       </div>
     {/if}
 
-    <div class="text-sm text-gray-100 p-1">
+    <div class="text-sm text-neutral-100 p-1">
       <div class="flex gap-4 py-4">
-        <div class="flex flex-col gap-1 text-gray-400">
+        <div class="flex flex-col gap-1 text-neutral-400">
           <div class="">Game Creator</div>
           <div class="">Bet Amount</div>
           <div class="">Solution Deadline</div>
         </div>
-        <div class="flex flex-col gap-1 text-gray-100">
+        <div class="flex flex-col gap-1 text-neutral-100">
           <div class="">{shortenAddress(game.p1)}</div>
           <div class="">
             {#if $ethPrice}

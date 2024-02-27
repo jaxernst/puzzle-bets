@@ -9,7 +9,12 @@
   } from "$lib/gameStores";
   import { user } from "$lib/mud/mudStore";
   import { GameStatus, type Game, type GameType } from "$lib/types";
-  import { capitalized, formatAsDollar, systemTimestamp } from "$lib/util";
+  import {
+    capitalized,
+    entityToInt,
+    formatAsDollar,
+    systemTimestamp,
+  } from "$lib/util";
   import type { Entity } from "@latticexyz/recs";
   import { formatEther, parseEther } from "viem";
 
@@ -37,21 +42,25 @@
 </script>
 
 <a
-  class={`flex flex-col p-2 self-start rounded-lg text-white font-semibold font-mono  transition-all
-          ${!active ? "bg-gray-500" : "bg-lime-500"}
+  class={`flex flex-col justify-between px-2 py-1 w-full self-start rounded-md transition-all
+          ${!active ? "bg-neutral-700" : "bg-lime-500"}
         `}
   href={gameRoute(id, type)}
 >
-  <div class="text-sm sm:text-base flex gap-1 items-center">
+  <div class="flex items-center justify-between gap-6">
+    <div class={`text-xs ${active ? "text-white" : "text-pb-yellow"}`}>
+      #{entityToInt(id)}
+    </div>
+    <div class={`text-sm ${active ? "text-white" : "text-lime-500"}`}>
+      {betAmount(id)}
+    </div>
+  </div>
+  <div class="p-1.5 flex text-base font-mono justify-center gap-1 items-center">
     {capitalized(type)}
-    <div></div>
-    <span class={`${active ? "text-white" : "text-lime-500"}`}
-      >{betAmount(id)}</span
-    >
   </div>
   <div
-    class={`px-1 text-[.6em] sm:text-[.7em] italic whitespace-nowrap 
-          ${active ? "text-lime-600 font-bold" : "text-gray-200"}`}
+    class={`text-xs tracking-wider italic whitespace-nowrap 
+          ${active ? "text-lime-700 font-bold" : "text-neutral-400"}`}
   >
     {#if status === GameStatus.Pending}
       waiting for opponent...

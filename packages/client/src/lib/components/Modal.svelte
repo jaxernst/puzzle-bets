@@ -52,10 +52,10 @@
     }
   }
 
-  // Hack to darken the notch area (by 50%) on ios
+  // Hack to darken the notch area (by 30%) on ios
   const initThemeColor = "rgb(230, 230, 232)";
   $: if (show) {
-    browser && setThemeColor("rgb(115, 115, 116)");
+    browser && setThemeColor("rgb(161, 161, 162.4)");
   } else {
     browser && setThemeColor(initThemeColor);
   }
@@ -70,7 +70,7 @@
   <div
     bind:this={modal}
     tabindex="-1"
-    class="modal z-50 fixed left-0 top-0 w-screen h-screen bg-black bg-opacity-50 flex justify-center items-center"
+    class="modal z-50 fixed left-0 top-0 w-screen h-screen bg-black bg-opacity-30 flex justify-center items-center"
     style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); padding-left: env(safe-area-inset-left); padding-right: env(safe-area-inset-right);"
     on:click={clickOutside}
     aria-modal="true"

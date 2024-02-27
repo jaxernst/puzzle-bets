@@ -24,7 +24,7 @@
     <div class="text-gray-600 text-xl sm:text-2xl font-bold">
       Welcome to Puzzle Bets.
     </div>
-    <div class="italic text-gray-400">Play puzzles, bet with friends</div>
+    <div class="text-gray-400">Play puzzles, bet with friends</div>
   </div>
   <div class="text-sm sm:text-base flex flex-col gap-2 items-center">
     {#if !$user}

@@ -3,13 +3,14 @@
   import { type GameType, GameStatus } from "$lib/types";
 
   import { slide } from "svelte/transition";
-  import { cubicInOut, cubicOut } from "svelte/easing";
+  import { cubicInOut, cubicOut, sineInOut } from "svelte/easing";
   import GamePreviewCard from "./GamePreviewCard.svelte";
   import Expand from "$lib/icons/Expand.svelte";
   import { flip } from "svelte/animate";
   import { page } from "$app/stores";
   import { intToEntity } from "$lib/util";
   import { clickOutside } from "$lib/actions/clickOutside";
+  import { spring, tweened } from "svelte/motion";
 
   $: nonArchivedGames = $userGames.filter(
     (g) => !$userArchivedGames.includes(g.id)
@@ -52,11 +53,23 @@
   })();
 
   let expandedView = false;
+
+  const height = spring(0, {
+    stiffness: 0.07,
+    damping: 0.32,
+    precision: 0.005,
+  });
+
+  $: if (expandedView) {
+    $height = 260;
+  } else {
+    $height = 65;
+  }
 </script>
 
 <div
-  class="flex flex-col gap-2 bg-gray-600 px-2 py-2 rounded-t-xl text-[.82rem] sm:text-sm font-semibold"
-  in:slide
+  class="flex flex-col gap-2 bg-gray-600 px-1.5 pt-2 rounded-t-xl text-[.82rem] sm:text-sm font-semibold"
+  style={`height: ${$height}px`}
   use:clickOutside={{
     enabled: expandedView,
     cb: () => (expandedView = false),
@@ -65,7 +78,9 @@
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
-    class="flex gap-2 sm:gap-3 items-center transition-all duration-500"
+    class={`flex gap-2 sm:gap-3 items-center transition-all duration-500
+      ${selectedTab !== "live" ? "pl-1" : ""}
+    `}
     on:click={() => (expandedView = true)}
   >
     <button
@@ -124,11 +139,11 @@
 
     <div class="flex-grow flex justify-end items-center">
       <button
-        class="p-1 flex items-center"
+        class="p-1 pb-1.5 flex items-center"
         on:click|stopPropagation={() => (expandedView = !expandedView)}
       >
         <div
-          class={`h-5 w-5 stroke-gray-400 ${
+          class={`h-4 w-4 stroke-gray-400 ${
             expandedView ? "rotate-180" : ""
           } transition-transform`}
         >
@@ -138,15 +153,13 @@
     </div>
   </div>
 
-  {#if expandedView}
-    <div class="h-[30vh] overflow-y-auto" transition:slide={{ duration: 500 }}>
-      <div class={`mt-1 flex flex-wrap gap-1 no-scrollbar`}>
-        {#each currentTabGames as game (game.id)}
-          <div animate:flip={{ duration: 650, easing: cubicInOut }}>
-            <GamePreviewCard {game} />
-          </div>
-        {/each}
-      </div>
+  <div class="overflow-y-auto">
+    <div class={`mt-1 flex flex-wrap gap-1 no-scrollbar`}>
+      {#each currentTabGames as game (game.id)}
+        <div animate:flip={{ duration: 650, easing: cubicInOut }}>
+          <GamePreviewCard {game} />
+        </div>
+      {/each}
     </div>
-  {/if}
+  </div>
 </div>

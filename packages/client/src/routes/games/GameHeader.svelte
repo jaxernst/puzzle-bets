@@ -143,11 +143,15 @@
 
 <div class="flex flex-col text-sm sm:text-base px-2">
   <div
-    class={`flex items-center ${
+    class={`flex gap-2 items-center ${
       !gameId ? "justify-center" : "justify-between"
     }`}
   >
-    <div class="font-bold text-lg text-off-black">
+    <div
+      class={`flex-grow font-bold text-lg text-off-black
+      ${!gameId ? "text-center" : ""}
+    `}
+    >
       {capitalized(gameType)}
       {gameId ? `#${entityToInt(gameId)}` : "(practice game)"}
     </div>
@@ -155,7 +159,7 @@
     {#if $liveStatus?.status === GameStatus.Pending}
       <button
         on:click={copyInviteUrl}
-        class="whitespace-nowrap text-sm border border-lime-500 text-lime-500 font-semibold rounded-full px-2 py-1"
+        class="whitespace-nowrap text-sm bg-lime-500 font-semibold rounded-full px-2 py-1"
       >
         {#if urlCopied}
           <div in:slide={{ axis: "x" }}>Invite Copied!</div>
@@ -163,7 +167,10 @@
           <div in:slide={{ axis: "x", easing: cubicOut }}>Copy Invite</div>
         {/if}
       </button>
-      <button class=" text-pb-yellow text-sm" on:click={cancelAndArchive}>
+      <button
+        class=" text-pb-yellow text-sm font-semibold"
+        on:click={cancelAndArchive}
+      >
         {#if cancellingGame}
           <DotLoader klass="fill-pb-yellow " />
         {:else}

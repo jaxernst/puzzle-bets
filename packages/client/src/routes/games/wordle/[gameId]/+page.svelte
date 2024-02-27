@@ -77,7 +77,7 @@
     }}
   />
   {#if puzzleState.solved && !submitted && !expired}
-    <div class="w-full text-center text-gray-400">
+    <div class="w-full text-center text-gray-500">
       Submit your solution before the deadline
     </div>
   {/if}

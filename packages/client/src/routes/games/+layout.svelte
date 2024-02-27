@@ -40,16 +40,18 @@
 
   {#key $page.route.id}
     {#if game && game.status === GameStatus.Pending}
-      <div
-        class="flex flex-col gap-2 sm:gap-4 grow text-center justify-center items-center font-bold sm:px-6 pb-10"
-      >
-        The puzzle will reveal for both players once the invite is accepted
-        <div class="text-gray-300 text-sm italic">
-          {#if inviteExpiry && inviteExpiry > 0}
-            Invite expires in {formatTime(inviteExpiry)}...
-          {:else if inviteExpiry !== undefined}
-            Invite Expired
-          {/if}
+      <div class="grow flex flex-col justify-center items-center pb-14">
+        <div
+          class="rounded-lg border-2 border-gray-300 text-gray-500 font-bold text-center p-6"
+        >
+          The puzzle will reveal for both players once the invite is accepted
+          <div class="text-pb-yellow text-sm italic mt-3">
+            {#if inviteExpiry && inviteExpiry > 0}
+              Invite expires in {formatTime(inviteExpiry)}...
+            {:else if inviteExpiry !== undefined}
+              Invite Expired
+            {/if}
+          </div>
         </div>
       </div>
     {:else}

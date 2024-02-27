@@ -46,7 +46,7 @@
 <div class="w-full h-full fixed">
   <main class="h-[100dvh] flex flex-col max-w-[36rem] mx-auto text-white">
     {#if $user || !$page.url.pathname.includes("welcome")}
-      <section in:slide class="px-3 pt-3">
+      <section in:slide class="px-3 pt-2">
         <AppHeader />
       </section>
     {/if}
@@ -63,22 +63,25 @@
         />
         {#if $page.url.pathname !== "/welcome"}
           <button
-            class="bg-lime-500 rounded-full font-semibold text-sm px-2 py-[.1rem] whitespace-nowrap disabled:opacity-60"
+            class="text-sm rounded-lg px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-gray-300"
             on:click={() => (showNewGameModal = true)}
             disabled={!$user || !SUPPORTED_GAME_TYPES.includes(gameType)}
             >New
           </button>
           <button
-            class="bg-lime-500 rounded-full font-semibold text-sm px-2 py-[.1rem] whitespace-nowrap disabled:opacity-60"
+            class="text-sm rounded-lg px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-gray-300"
             on:click={() => (showNewGameModal = true)}
             disabled={true ||
               !$user ||
               !SUPPORTED_GAME_TYPES.includes(gameType)}>Join</button
           >
           <button
-            class="bg-lime-500 rounded-full font-semibold text-sm px-2 py-[.1rem] whitespace-nowrap"
-            disabled={!SUPPORTED_GAME_TYPES.includes(gameType)}>Practice</button
+            class="text-sm rounded-lg px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-gray-300"
+            on:click={() => goto(`/games/${gameType}/demo`)}
+            disabled={!SUPPORTED_GAME_TYPES.includes(gameType)}
           >
+            Practice
+          </button>
         {/if}
       </section>
 

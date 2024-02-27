@@ -43,60 +43,63 @@
   <NewGameModal {gameType} />
 </Modal>
 
-<main class="h-[100dvh] flex flex-col max-w-[36rem] mx-auto text-white">
-  {#if $user || !$page.url.pathname.includes("welcome")}
-    <section in:slide class="px-3 pt-3">
-      <AppHeader />
-    </section>
-  {/if}
-
-  <div class="p-3 flex-grow flex flex-col gap-4 overflow-y-auto">
-    <section class="flex items-center gap-2 gap-y-1 flex-wrap">
-      <Dropdown
-        bind:selection={dropdownSelection}
-        options={gameNames}
-        placeholder="Select a game"
-        onOptionSelect={(option) => {
-          goto(`/games/${option.toLowerCase()}/demo`);
-        }}
-      />
-      {#if $page.url.pathname !== "/welcome"}
-        <button
-          class="bg-lime-500 rounded-full font-semibold text-sm px-2 py-[.1rem] whitespace-nowrap disabled:opacity-60"
-          on:click={() => (showNewGameModal = true)}
-          disabled={!$user || !SUPPORTED_GAME_TYPES.includes(gameType)}
-          >New
-        </button>
-        <button
-          class="bg-lime-500 rounded-full font-semibold text-sm px-2 py-[.1rem] whitespace-nowrap disabled:opacity-60"
-          on:click={() => (showNewGameModal = true)}
-          disabled={!$user || !SUPPORTED_GAME_TYPES.includes(gameType)}
-          >Join</button
-        >
-        <button
-          class="bg-lime-500 rounded-full font-semibold text-sm px-2 py-[.1rem] whitespace-nowrap"
-          disabled={!SUPPORTED_GAME_TYPES.includes(gameType)}>Practice</button
-        >
-      {/if}
-    </section>
-
-    {#if $page.url.pathname.includes("games")}
-      <div class="flex justify-center">
-        <hr class="w-3/4 border-t border-gray-300" />
-      </div>
+<div class="w-full h-full fixed">
+  <main class="h-[100dvh] flex flex-col max-w-[36rem] mx-auto text-white">
+    {#if $user || !$page.url.pathname.includes("welcome")}
+      <section in:slide class="px-3 pt-3">
+        <AppHeader />
+      </section>
     {/if}
 
-    <section class="flex flex-col flex-grow">
-      <slot />
-      <div class="sm:hidden h-10"></div>
-    </section>
-  </div>
-  {#if $user}
-    <section>
-      <GameSelector />
-    </section>
-  {/if}
-</main>
+    <div class="p-3 flex-grow flex flex-col gap-4 overflow-y-auto">
+      <section class="flex items-center gap-2 gap-y-1 flex-wrap">
+        <Dropdown
+          bind:selection={dropdownSelection}
+          options={gameNames}
+          placeholder="Select a game"
+          onOptionSelect={(option) => {
+            goto(`/games/${option.toLowerCase()}/demo`);
+          }}
+        />
+        {#if $page.url.pathname !== "/welcome"}
+          <button
+            class="bg-lime-500 rounded-full font-semibold text-sm px-2 py-[.1rem] whitespace-nowrap disabled:opacity-60"
+            on:click={() => (showNewGameModal = true)}
+            disabled={!$user || !SUPPORTED_GAME_TYPES.includes(gameType)}
+            >New
+          </button>
+          <button
+            class="bg-lime-500 rounded-full font-semibold text-sm px-2 py-[.1rem] whitespace-nowrap disabled:opacity-60"
+            on:click={() => (showNewGameModal = true)}
+            disabled={true ||
+              !$user ||
+              !SUPPORTED_GAME_TYPES.includes(gameType)}>Join</button
+          >
+          <button
+            class="bg-lime-500 rounded-full font-semibold text-sm px-2 py-[.1rem] whitespace-nowrap"
+            disabled={!SUPPORTED_GAME_TYPES.includes(gameType)}>Practice</button
+          >
+        {/if}
+      </section>
+
+      {#if $page.url.pathname.includes("games")}
+        <div class="flex justify-center">
+          <hr class="w-3/4 border-t border-gray-300" />
+        </div>
+      {/if}
+
+      <section class="flex flex-col flex-grow">
+        <slot />
+        <div class="sm:hidden h-10"></div>
+      </section>
+    </div>
+    {#if $user}
+      <section>
+        <GameSelector />
+      </section>
+    {/if}
+  </main>
+</div>
 
 <style>
   main {

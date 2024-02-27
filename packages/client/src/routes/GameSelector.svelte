@@ -56,6 +56,7 @@
 
 <div
   class="flex flex-col gap-2 bg-gray-600 px-2 py-2 rounded-t-xl text-[.82rem] sm:text-sm font-semibold"
+  in:slide
   use:clickOutside={{
     enabled: expandedView,
     cb: () => (expandedView = false),

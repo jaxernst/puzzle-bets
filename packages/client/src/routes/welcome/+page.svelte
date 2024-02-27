@@ -30,7 +30,7 @@
     {#if !$user}
       <button
         on:click={loginAndConnect}
-        class="p-3 text-white bg-lime-500 font-semibold border-2 hover:bg-lime-500 hover:shadow transition-all duration-300 rounded-xl"
+        class="p-3 text-white bg-lime-500 font-semibold hover:bg-lime-400 active:bg-lime-600 hover:shadow transition-all duration-300 rounded-xl"
       >
         Connect to Play
       </button>

@@ -1,8 +1,5 @@
-// import { PUBLIC_VAPID_KEY } from "$env/static/public";
+import { PUBLIC_VAPID_KEY } from "$env/static/public";
 import type { EvmAddress } from "$lib/types";
-
-const PUBLIC_VAPID_KEY =
-  "BGr7m29RSsrfngXARx_1nKIAb0qbA4jMRjtOVj5s1N4PeqN--L1G9tOSlWabLV4u2qhDPtewve9RQ11xKb_z_CY";
 
 export async function fetchNotificationState(address: EvmAddress) {
   const res = await fetch(

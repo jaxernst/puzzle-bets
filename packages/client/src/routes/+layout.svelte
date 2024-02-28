@@ -34,7 +34,7 @@
 <svelte:head>
   <meta name="description" content="Solve puzzles with friends" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="splash_screens/home-preview.png" />
+  <meta property="og:image" content="splash_screens/home-preview.png" />
   <meta property="og:title" content="Puzzle Bets | Welcome" />
   <meta
     property="og:description"

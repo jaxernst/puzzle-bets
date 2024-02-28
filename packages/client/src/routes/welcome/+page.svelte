@@ -13,7 +13,11 @@
 
 <svelte:head>
   <title>Puzzle Bets | Welcome</title>
-  <meta property="og:image" content="splash_screens/home-preview.png" />
+  <meta property="og:title" content="Puzzle Bets | Welcome" />
+  <meta
+    property="og:description"
+    content="Challenge your friends, solve puzzles"
+  />
 </svelte:head>
 
 <div class="flex flex-col gap-24 items-center justify-evenly flex-grow">

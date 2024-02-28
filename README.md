@@ -6,4 +6,4 @@ An onchain puzzle competition game. Solve puzzles, challenge friends, and wager 
 Currently in open development...
 
 
-
+Build with SvelteKit x [Mud](mud.dev)

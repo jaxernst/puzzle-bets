@@ -31,7 +31,11 @@
   };
 
   const reset = async () => {
-    wordleGameStates.reset(gameId, true);
+    game = undefined;
+    getGameLoading = true;
+    wordleGameStates.reset(gameId, true).finally(() => {
+      getGameLoading = false;
+    });
   };
 
   let showRestart = false;

@@ -33,7 +33,11 @@
     puzzleState &&
     onchainGame.rematchCount > (puzzleState.resetCount ?? 1e10)
   ) {
-    wordleGameStates.reset(gameId, false);
+    getGameLoading = true;
+    puzzleState = undefined;
+    wordleGameStates.reset(gameId, false).finally(() => {
+      getGameLoading = false;
+    });
   }
 
   $: enterGuess = async (guess: string) => {

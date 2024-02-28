@@ -34,9 +34,12 @@
 <svelte:head>
   <meta name="description" content="Solve puzzles with friends" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="/splash_screens/home-preview.png" />
-  <meta property="og:title" content="Puzzle Bets | Competitive Puzzles" />
-  <meta property="og:description" content="Solve puzzles with friends" />
+  <meta property="og:url" content="splash_screens/home-preview.png" />
+  <meta property="og:title" content="Puzzle Bets | Welcome" />
+  <meta
+    property="og:description"
+    content="Challenge your friends to puzzles. Solve to win the pot."
+  />
 </svelte:head>
 
 <WalletConnector />

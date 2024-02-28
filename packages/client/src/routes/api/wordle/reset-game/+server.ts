@@ -1,8 +1,5 @@
 import { wordleGameCacheKey } from "$lib/server/gameCacheKeys";
-import {
-  incrementGameResetCount,
-  supabaseGameStore,
-} from "$lib/server/gameStateStorage.js";
+import { supabaseGameStore } from "$lib/server/gameStateStorage.js";
 import { Game } from "../../../../lib/server/wordle/game.server";
 
 /** @type {import('./$types').RequestHandler} */
@@ -33,17 +30,6 @@ export const POST = async ({ request, cookies }) => {
     cookies.delete(wordleGameCacheKey(gameId), { path: "/" });
   }
 
-  let resetCount = 0;
-  try {
-    resetCount = await incrementGameResetCount(
-      gameId,
-      chainRematchCount,
-      isDemo
-    );
-  } catch {
-    return new Response("Game not resetable", { status: 403 });
-  }
-
   // gameId's that are onchain (have an associated bet) can only be reset when
   // both players vote to reset. Will need to verify both players have voted
   // and reset each players game state
@@ -52,21 +38,26 @@ export const POST = async ({ request, cookies }) => {
   // TODO: get 'chainRematchCount' with a contract read
 
   const game = new Game();
-  await supabaseGameStore.setGame(
-    game.toString(),
-    "wordle",
-    gameId,
-    user,
-    isDemo
-  );
-
-  if (otherPlayer && !isDemo) {
+  if (isDemo) {
     await supabaseGameStore.setGame(
       game.toString(),
       "wordle",
       gameId,
-      otherPlayer
+      user,
+      isDemo
     );
+  } else {
+    if (!chainRematchCount) {
+      return new Response("Missing chainRematchCount", { status: 400 });
+    }
+    const success = await supabaseGameStore.resetDuelGame(
+      gameId,
+      game.toString(),
+      chainRematchCount
+    );
+    if (!success) {
+      return new Response("Game not resetable", { status: 403 });
+    }
   }
 
   return new Response(
@@ -78,7 +69,7 @@ export const POST = async ({ request, cookies }) => {
       lost: false,
       answer: null,
       badGuess: false,
-      resetCount,
+      resetCount: chainRematchCount,
     })
   );
 };

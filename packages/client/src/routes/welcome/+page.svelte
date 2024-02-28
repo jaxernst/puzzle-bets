@@ -13,11 +13,6 @@
 
 <svelte:head>
   <title>Puzzle Bets | Welcome</title>
-  <meta name="description" content="Solve puzzles with friends" />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="YOUR_SITE_URL" />
-  <meta property="og:title" content="Puzzle Bets | Welcome" />
-  <meta property="og:description" content="Solve puzzles with friends" />
 </svelte:head>
 
 <div class="flex flex-col gap-24 items-center justify-evenly flex-grow">

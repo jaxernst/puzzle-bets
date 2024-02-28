@@ -32,7 +32,6 @@
 </script>
 
 <svelte:head>
-  <title>Puzzle Bets | Competitive Puzzles</title>
   <meta name="description" content="Solve puzzles with friends" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="/splash_screens/home-preview.png" />

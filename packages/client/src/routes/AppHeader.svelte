@@ -11,6 +11,7 @@
   import { onMount } from "svelte";
   import { notifications } from "$lib/notifications/notificationStore";
   import { getPWADisplayMode, isIosSafari } from "$lib/util";
+  import { browser } from "$app/environment";
 
   let userBalance: string;
   onMount(() => {
@@ -31,6 +32,7 @@
   };
 
   $: maybeToggleNotifications = () => {
+    if (!browser) return;
     if ($notifications.enabled) return $notifications.toggle();
 
     // Before enabling notifications, make sure device supports it. If we're on

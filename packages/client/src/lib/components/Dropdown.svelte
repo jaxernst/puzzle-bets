@@ -2,6 +2,7 @@
   import { onDestroy, onMount } from "svelte";
   import { slide } from "svelte/transition";
   import AnimatedArrow from "./AnimatedArrow.svelte";
+  import { browser } from "$app/environment";
 
   export let options: string[];
   export let placeholder = "Select an Option";
@@ -31,10 +32,12 @@
   };
 
   onMount(() => {
+    if (!browser) return;
     document.addEventListener("click", handleClickOutside);
   });
 
   onDestroy(() => {
+    if (!browser) return;
     document.removeEventListener("click", handleClickOutside);
   });
 </script>

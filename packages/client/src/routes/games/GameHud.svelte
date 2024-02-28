@@ -53,12 +53,17 @@
 </script>
 
 {#if game}
-  <div class="flex flex-col gap-3 sm:gap-4 px-2">
+  <div class="flex flex-col gap-2 sm:gap-3 px-2">
     <div class="text-neutral-500 font-semibold text-sm italic">
       {#if statusLabels[game.status]()}
         {statusLabels[game.status]()}
       {/if}
     </div>
+    {#if dueIn !== undefined && dueIn > 0}
+      <div class="text-neutral-500 text-sm italic">
+        (Win by being the sole player to solve and submit before the deadline)
+      </div>
+    {/if}
 
     <div class="text-sm flex gap-4 items-stretch">
       <div

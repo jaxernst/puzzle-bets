@@ -55,7 +55,9 @@
       {betAmount(id)}
     </div>
   </div>
-  <div class="p-1.5 flex text-base font-mono justify-center gap-1 items-center">
+  <div
+    class="p-1 pt-0 flex text-base font-mono justify-center gap-1 items-center"
+  >
     {capitalized(type)}
   </div>
   <div

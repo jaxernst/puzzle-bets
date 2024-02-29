@@ -151,7 +151,7 @@
 
   <div class="px-2 overflow-y-auto">
     <div
-      class={`mt-1 w-full flex justify-center flex-wrap gap-1.5 no-scrollbar`}
+      class={`mt-1 w-full grid grid-cols-2 sm:grid-cols-3 gap-1 no-scrollbar`}
     >
       {#each currentTabGames as game (game.id)}
         <div animate:flip={{ duration: 650, easing: cubicInOut }}>

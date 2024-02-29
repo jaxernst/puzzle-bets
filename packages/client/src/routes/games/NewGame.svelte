@@ -17,8 +17,8 @@
   export let gameType: GameType;
 
   // Game params
-  let wagerETH: number = 0.001;
-  let wagerUSD: number = wagerETH * $ethPrice;
+  let wagerUSD: number = 2.5;
+  let wagerETH: number = wagerUSD / $ethPrice;
   let submissionWindowMinutes = 8;
   let inviteExpirationMinutes = 20;
   let inviteName: string | null = null;
@@ -105,14 +105,34 @@
   <div class="font-semibold">
     Create a new <span class="text-lime-500">{capitalized(gameType)}</span> Game
   </div>
+
   <div class="text-sm text-neutral-100">
     Enter your wager then send an invite link to your opponent. When they join
     the game, the puzzle will be revealed and the deadline clock will start
     ticking.
   </div>
+
   <div
-    class="py-2 px-3 sm:px-6 flex justify-between items-center text-neutral-400"
+    class="py-2 px-2 sm:px-7 flex justify-between items-center text-neutral-400"
   >
+    <label class="flex flex-col gap-1 text-neutral-200">
+      <span class="text-sm text-neutral-400">Wager (USD)</span>
+      <div class="flex items-center gap-1">
+        <input
+          type="number"
+          min="5"
+          step="1"
+          class="bg-neutral-700 rounded-lg p-2 w-[120px]"
+          placeholder="15"
+          value={wagerUSD}
+          on:input={(event) => updateUSD(event.target.value)}
+        />
+        <div class=" fill-neutral-300">$</div>
+      </div>
+    </label>
+
+    <div class="pt-3">or</div>
+
     <label class="flex flex-col gap-1 text-neutral-200">
       <span class="text-sm text-neutral-400">Wager (ETH)</span>
       <div class="flex items-center gap-1">
@@ -128,22 +148,6 @@
         <div class="w-4 h-4 fill-neutral-300">
           <EthSymbol />
         </div>
-      </div>
-    </label>
-    <div class="">or</div>
-    <label class="flex flex-col gap-1 text-neutral-200">
-      <span class="text-sm text-neutral-400">Wager (USD)</span>
-      <div class="flex items-center gap-1">
-        <input
-          type="number"
-          min="5"
-          step="1"
-          class="bg-neutral-700 rounded-lg p-2 w-[120px]"
-          placeholder="15"
-          value={wagerUSD}
-          on:input={(event) => updateUSD(event.target.value)}
-        />
-        <div class=" fill-neutral-300">$</div>
       </div>
     </label>
   </div>

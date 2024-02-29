@@ -42,10 +42,10 @@
     {#if game && game.status === GameStatus.Pending}
       <div class="grow flex flex-col justify-center items-center pb-14">
         <div
-          class="rounded-lg border-2 border-neutral-300 text-neutral-500 font-bold text-center p-6"
+          class="rounded-lg border-2 border-neutral-300 text-neutral-700 font-bold text-center text-sm p-6"
         >
           The puzzle will reveal for both players once the invite is accepted
-          <div class="text-pb-yellow text-sm italic mt-3">
+          <div class="text-neutral-500 font-medium text-sm italic mt-3">
             {#if inviteExpiry && inviteExpiry > 0}
               Invite expires in {formatTime(inviteExpiry)}...
             {:else if inviteExpiry !== undefined}

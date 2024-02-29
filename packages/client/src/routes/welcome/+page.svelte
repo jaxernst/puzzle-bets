@@ -44,12 +44,12 @@
       <div class="text-neutral-400 text-xs">or</div>
     {/if}
 
-    <button class="font-semibold text-neutral-500 flex items-center">
+    <a href="/about" class="font-semibold text-neutral-500 flex items-center">
       Learn more
       <AnimatedArrow
         direction="down"
         klass="h-5 w-5 fill-neutral-600 stroke-neutral-400"
       />
-    </button>
+    </a>
   </div>
 </div>

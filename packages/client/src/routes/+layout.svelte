@@ -29,6 +29,8 @@
 
   let showResultsModal = false;
   let showNewGameModal = false;
+
+  const homeRoutes = ["/", "/welcome", "/about"];
 </script>
 
 <WalletConnector />
@@ -45,7 +47,7 @@
 
 <div class="w-full h-full fixed">
   <main class="h-full flex flex-col max-w-[36rem] mx-auto text-white">
-    {#if $user || !$page.url.pathname.includes("welcome")}
+    {#if $user || !homeRoutes.includes($page.url.pathname)}
       <section in:slide class="px-3 pt-2">
         <AppHeader />
       </section>
@@ -61,7 +63,7 @@
             goto(`/games/${option.toLowerCase()}/demo`);
           }}
         />
-        {#if $page.url.pathname !== "/welcome"}
+        {#if !homeRoutes.includes($page.url.pathname)}
           <button
             class="text-sm rounded-full px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-neutral-300"
             on:click={() => (showNewGameModal = true)}

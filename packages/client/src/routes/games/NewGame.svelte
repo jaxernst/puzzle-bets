@@ -23,12 +23,18 @@
   let inviteExpirationMinutes = 20;
   let inviteName: string | null = null;
 
-  function updateETH(value: number) {
+  function updateETH(input: string) {
+    const value = parseFloat(input);
+    if (isNaN(value)) return;
+
     wagerETH = value;
     wagerUSD = wagerETH * $ethPrice;
   }
 
-  function updateUSD(value: number) {
+  function updateUSD(input: string) {
+    const value = parseFloat(input);
+    if (isNaN(value)) return;
+
     wagerUSD = value;
     wagerETH = wagerUSD / $ethPrice;
   }
@@ -112,12 +118,12 @@
       <div class="flex items-center gap-1">
         <input
           type="number"
-          min="0.000"
+          min="0"
           step="0.001"
           class="bg-neutral-700 rounded-lg p-2 w-[120px]"
           placeholder="0.01"
           value={wagerETH}
-          on:input={(event) => updateETH(parseFloat(event.target.value))}
+          on:input={(event) => updateETH(event.target.value)}
         />
         <div class="w-4 h-4 fill-neutral-300">
           <EthSymbol />
@@ -135,7 +141,7 @@
           class="bg-neutral-700 rounded-lg p-2 w-[120px]"
           placeholder="15"
           value={wagerUSD}
-          on:input={(event) => updateUSD(parseFloat(event.target.value))}
+          on:input={(event) => updateUSD(event.target.value)}
         />
         <div class=" fill-neutral-300">$</div>
       </div>

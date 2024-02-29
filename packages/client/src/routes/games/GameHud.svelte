@@ -2,7 +2,7 @@
   import { liveGameStatus, userGames, userSolvedGame } from "$lib/gameStores";
   import { entityToInt, formatTime, shortenAddress } from "$lib/util";
   import { type Entity } from "@latticexyz/recs";
-  import { InvalidAbiItemError, formatEther } from "viem";
+  import { formatEther } from "viem";
   import { ethPrice } from "$lib/ethPrice";
   import { user } from "$lib/mud/mudStore";
   import { puzzleStores } from "./puzzleGameStates";

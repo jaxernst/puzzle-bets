@@ -11,10 +11,11 @@
   import { goto } from "$app/navigation";
   import Modal from "$lib/components/Modal.svelte";
   import NewGameModal from "./games/NewGame.svelte";
+  import GameResults from "./games/GameResults.svelte";
   import { user } from "$lib/mud/mudStore";
   import { slide } from "svelte/transition";
   import { intToEntity } from "$lib/util";
-  import type { GameType } from "$lib/types";
+  import { type GameType } from "$lib/types";
   import { SUPPORTED_GAME_TYPES } from "$lib/constants";
 
   const gameNames = ["Wordle", "Tradle", "Crossword", "Sudoku"];

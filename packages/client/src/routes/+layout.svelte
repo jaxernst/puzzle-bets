@@ -7,43 +7,21 @@
   import GameSelector from "./GameSelector.svelte";
   import AppHeader from "./AppHeader.svelte";
   import Confetti from "$lib/components/Confetti.svelte";
-  import Dropdown from "$lib/components/Dropdown.svelte";
-  import { goto } from "$app/navigation";
-  import Modal from "$lib/components/Modal.svelte";
-  import NewGameModal from "./games/NewGame.svelte";
-  import GameResults from "./games/GameResults.svelte";
   import { user } from "$lib/mud/mudStore";
   import { slide } from "svelte/transition";
-  import { intToEntity } from "$lib/util";
   import { type GameType } from "$lib/types";
-  import { SUPPORTED_GAME_TYPES } from "$lib/constants";
+  import GameDropdownControls from "./GameDropdownControls.svelte";
 
   const gameNames = ["Wordle", "Connections", "Crossword", "Sudoku"];
   $: gameRoute = gameNames.find((game) =>
     $page.url.pathname.includes("games/" + game.toLowerCase())
   );
 
-  $: dropdownSelection = gameRoute ?? null;
-  $: gameType = (dropdownSelection?.toLowerCase() ?? "wordle") as GameType;
-  $: gameId = intToEntity($page.params.gameId);
-
-  let showResultsModal = false;
-  let showNewGameModal = false;
-
   const homeRoutes = ["/", "/welcome", "/about"];
 </script>
 
 <WalletConnector />
 <Confetti />
-
-<Modal
-  show={showNewGameModal}
-  on:close={() => {
-    showNewGameModal = false;
-  }}
->
-  <NewGameModal {gameType} />
-</Modal>
 
 <div class="w-full h-full fixed">
   <main class="h-full flex flex-col max-w-[36rem] mx-auto text-white">
@@ -55,36 +33,7 @@
 
     <div class="p-3 flex-grow flex flex-col gap-4 overflow-y-auto">
       <section class="flex items-center gap-2 gap-y-1 flex-wrap">
-        <Dropdown
-          bind:selection={dropdownSelection}
-          options={gameNames}
-          placeholder="Select a game"
-          onOptionSelect={(option) => {
-            goto(`/games/${option.toLowerCase()}/demo`);
-          }}
-        />
-        {#if !homeRoutes.includes($page.url.pathname)}
-          <button
-            class="text-sm rounded-full px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-neutral-300"
-            on:click={() => (showNewGameModal = true)}
-            disabled={!$user || !SUPPORTED_GAME_TYPES.includes(gameType)}
-            >New
-          </button>
-          <button
-            class="text-sm rounded-full px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-neutral-300"
-            on:click={() => (showNewGameModal = true)}
-            disabled={true ||
-              !$user ||
-              !SUPPORTED_GAME_TYPES.includes(gameType)}>Join</button
-          >
-          <button
-            class="text-sm rounded-full px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-neutral-300"
-            on:click={() => goto(`/games/${gameType}/demo`)}
-            disabled={!SUPPORTED_GAME_TYPES.includes(gameType)}
-          >
-            Practice
-          </button>
-        {/if}
+        <GameDropdownControls />
       </section>
 
       {#if $page.url.pathname.includes("games")}

@@ -210,6 +210,12 @@
     <div class="text-red-500 text-sm">{createGameError}</div>
   {/if}
 
+  {#if createdGameId}
+    <div class="text-lime-500 w-full text-center">
+      Game Id: {createdGameId}
+    </div>
+  {/if}
+
   {#if gameCreated && !$notifications.enabled}
     <div
       class="whitespace-nowrap text-xs sm:text-base self-center flex items-center gap-2 text-neutral-400 fill-neutral-400"

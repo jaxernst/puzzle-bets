@@ -20,19 +20,27 @@
     }
   });
 
-  $: gameId = intToEntity($page.params.joinGameId, true);
-  $: game = $getGame(gameId);
+  $: gameId = isNaN(parseInt($page.params.joinGameId))
+    ? null
+    : intToEntity($page.params.joinGameId, true);
+
+  $: game = gameId && $getGame(gameId);
   $: userIsEligible = $user && $user !== game?.p1;
 
   let inviteExpired = false;
-  onMount(() =>
-    setInterval(() => {
-      if (!game) return;
+  const checkInviteExpired = (inviteExpirationTime: bigint) => {
+    const tDiff = Number(inviteExpirationTime) - systemTimestamp();
+    if (tDiff <= 0) inviteExpired = true;
+  };
 
-      const tDiff = Number(game.inviteExpiration) - systemTimestamp();
-      if (tDiff <= 0) inviteExpired = true;
-    }, 1000)
-  );
+  let intervalTimer: any;
+  $: if (game && !intervalTimer) {
+    checkInviteExpired(game.inviteExpiration);
+    intervalTimer = setInterval(
+      () => checkInviteExpired(game!.inviteExpiration),
+      1000
+    );
+  }
 </script>
 
 {#if $user}
@@ -53,7 +61,7 @@
         <div class="self-center text-neutral-400 text-xs">
           Syncing blockchain state...
         </div>
-      {:else if !game}
+      {:else if !gameId || !game}
         Game not found
       {:else if !userIsEligible}
         You are not elligible for this game

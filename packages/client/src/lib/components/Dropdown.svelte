@@ -47,7 +47,7 @@
   bind:this={dropdownButton}
 >
   <button
-    class="flex justify-between whitespace-nowrap< gap-1 items-center bg-pb-yellow p-2 rounded-lg font-semibold"
+    class="flex justify-between whitespace-nowrap gap-1 items-center bg-pb-yellow p-2 rounded-lg font-semibold"
     aria-haspopup="listbox"
     aria-expanded={isOpen}
     transition:slide={{ axis: "x" }}
@@ -59,7 +59,7 @@
       klass="fill-white h-5 w-5"
     />
   </button>
-  <div class="absolute mt-2 left-0 rounded-lg shadow">
+  <div class="absolute z-50 mt-2 left-0 rounded-lg shadow">
     {#if isOpen}
       <ul
         transition:slide

@@ -72,6 +72,8 @@
    * desktop users can use the keyboard to play the game
    */
   function keydown(event: KeyboardEvent) {
+    const activeElement = document.activeElement;
+    if (activeElement?.tagName === "INPUT") return;
     if (event.metaKey) return;
 
     if (event.key === "Enter" && !submittable) return;

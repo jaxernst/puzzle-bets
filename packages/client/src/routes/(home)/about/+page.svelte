@@ -32,7 +32,7 @@
       />
     </a>
 
-    <h1 class="text-neutral-800 font-semibold my-4 text-3xl">The Game</h1>
+    <h1 class="text-neutral-800 font-semibold my-4 text-2xl">The Game</h1>
 
     <p class="py-1 text-neutral-600 font-medium">
       Puzzle bets is a player vs player onchain competitive puzzle game. Players

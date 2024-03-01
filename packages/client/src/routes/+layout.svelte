@@ -18,7 +18,7 @@
   import { type GameType } from "$lib/types";
   import { SUPPORTED_GAME_TYPES } from "$lib/constants";
 
-  const gameNames = ["Wordle", "Tradle", "Crossword", "Sudoku"];
+  const gameNames = ["Wordle", "Connections", "Crossword", "Sudoku"];
   $: gameRoute = gameNames.find((game) =>
     $page.url.pathname.includes("games/" + game.toLowerCase())
   );

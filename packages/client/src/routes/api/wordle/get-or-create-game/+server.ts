@@ -1,6 +1,6 @@
 import { wordleGameCacheKey } from "$lib/server/gameCacheKeys";
 import { getGameResetCount } from "$lib/server/gameStateStorage";
-import { Game } from "../../../../lib/server/wordle/game.server";
+import { Game } from "../../../../lib/server/wordle/game";
 import { getOrCreateDemo, getOrCreateLiveGame } from "./getOrCreate";
 
 export const POST = async ({ request, cookies }): Promise<Response> => {

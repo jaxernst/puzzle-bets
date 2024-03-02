@@ -1,5 +1,4 @@
 import { derived, get, writable } from "svelte/store";
-
 import { mud, user } from "./mud/mudStore";
 import {
   Has,
@@ -12,16 +11,16 @@ import {
 import {
   GameStatus,
   gameNumberToType,
-  type Game,
   type EvmAddress,
   type GameType,
 } from "$lib/types";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
 import type { SetupNetworkResult } from "./mud/setupNetwork";
-import { systemTimestamp, timeRemaining, intToEntity } from "./util";
+import { timeRemaining, intToEntity } from "./util";
+import { browser } from "$app/environment";
 
 export const userGames = derived([mud, user], ([$mud, $user]) => {
-  if (!$mud || !$mud.ready || !$user) return [];
+  if (!$mud?.ready || !$user) return [];
 
   const p1Games = runQuery([
     Has($mud.components.GameStatus),
@@ -83,10 +82,6 @@ export type LiveStatus = {
 /**
  * Get an auto-updating game status store with countdown timers for invite deadlines
  * and puzzle submission deadlines
- 
- * @notice Game status will auto update after the submission window
- * closes, even though the smart contract state will not update until either
- * user claims the pot
  **/
 export function liveGameStatus(gameId: Entity) {
   const store = writable<LiveStatus | null>(null);

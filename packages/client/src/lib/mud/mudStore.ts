@@ -16,12 +16,6 @@ import { createSystemCalls } from "./createSystemCalls";
 import { userWallet } from "$lib/mud/connectWallet";
 import { PUBLIC_CHAIN_ID } from "$env/static/public";
 
-enum Status {
-  Inactive,
-  Active,
-  Complete,
-}
-
 export const mud = (() => {
   const mud = writable<SetupNetworkResult>();
   const systemCalls = derived(mud, ($mud) => {

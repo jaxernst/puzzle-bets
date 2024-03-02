@@ -1,6 +1,6 @@
 import { wordleGameCacheKey } from "$lib/server/gameCacheKeys";
 import { supabaseGameStore } from "$lib/server/gameStateStorage";
-import { Game } from "../../../../lib/server/wordle/game.server";
+import { Game } from "../../../../lib/server/wordle/game";
 
 export const POST = async ({ request, cookies }): Promise<Response> => {
   const { guess, gameId, user, isDemo } = (await request.json()) as {

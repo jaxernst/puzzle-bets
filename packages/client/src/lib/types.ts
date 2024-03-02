@@ -31,18 +31,18 @@ export type StartedGame = {
   rematchCount: number;
 };
 
-export type GameType = "wordle" | "tradle" | "crossword" | "sudoku";
+export type GameType = "wordle" | "connections" | "crossword" | "sudoku";
 
 export const gameTypeToNumber: Record<GameType, number> = {
   wordle: 0,
-  tradle: 1,
+  connections: 1,
   crossword: 2,
   sudoku: 3,
 };
 
 export const gameNumberToType: Record<number, GameType> = {
   0: "wordle",
-  1: "tradle",
+  1: "connections",
 };
 
 export enum GameStatus {

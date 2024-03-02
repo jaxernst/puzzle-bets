@@ -2,6 +2,8 @@
   import { browser } from "$app/environment";
   import { createEventDispatcher } from "svelte";
   import { onMount } from "svelte";
+  import { cubicOut } from "svelte/easing";
+  import { fade } from "svelte/transition";
 
   export let show: boolean;
   export let title: string = "";
@@ -68,6 +70,7 @@
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
   <div
+    transition:fade={{ duration: 150, easing: cubicOut }}
     bind:this={modal}
     tabindex="-1"
     class="modal z-50 fixed left-0 top-0 w-screen h-screen bg-black bg-opacity-30 flex justify-center items-center"

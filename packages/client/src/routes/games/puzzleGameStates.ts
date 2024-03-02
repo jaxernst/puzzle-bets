@@ -139,7 +139,7 @@ export const puzzleStores = derived(
   ([$wordleGameStates]) => {
     return {
       wordle: $wordleGameStates,
-      tradle: new Map(),
+      connections: new Map(),
       crossword: new Map(),
       sudoku: new Map(),
     };

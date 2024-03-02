@@ -19,10 +19,6 @@
 <svelte:head>
   <title>Puzzle Bets | Welcome</title>
   <meta property="og:title" content="Puzzle Bets | Welcome" />
-  <meta
-    property="og:description"
-    content="Challenge your friends, solve puzzles"
-  />
 </svelte:head>
 
 <div

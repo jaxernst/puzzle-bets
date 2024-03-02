@@ -18,14 +18,8 @@
     (g) => parseInt(g.id, 16).toString() === $page.params.gameId
   );
 
-  let getGameLoading = false;
-  $: if (!getGameLoading && !puzzleState && $user && onchainGame?.opponent) {
-    getGameLoading = true;
-    wordleGameStates
-      .getOrCreate(gameId, false, onchainGame.opponent)
-      .finally(() => {
-        getGameLoading = false;
-      });
+  $: if (!puzzleState && $user && onchainGame?.opponent) {
+    wordleGameStates.getOrCreate(gameId, false, onchainGame.opponent);
   }
 
   $: if (
@@ -33,11 +27,7 @@
     puzzleState &&
     onchainGame.rematchCount > (puzzleState.resetCount ?? 1e10)
   ) {
-    getGameLoading = true;
-    puzzleState = undefined;
-    wordleGameStates.reset(gameId, false).finally(() => {
-      getGameLoading = false;
-    });
+    wordleGameStates.reset(gameId, false);
   }
 
   $: enterGuess = async (guess: string) => {
@@ -110,7 +100,7 @@
       </button>
     </div>
   {/if}
-{:else if getGameLoading}
+{:else if !puzzleState}
   <div class="self-center h-[200px] flex items-center justify-center">
     <DotLoader klass="fill-neutral-200 h-10 w-10" />
   </div>

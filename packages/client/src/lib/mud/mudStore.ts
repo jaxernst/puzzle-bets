@@ -33,7 +33,6 @@ export const mud = (() => {
      */
     Object.entries(network.components).forEach(([componentName, component]) => {
       return (component as Component).update$.subscribe((update) => {
-        console.log("Component update", componentName, update);
         mud.update((mud) => ({
           ...mud,
           components: {

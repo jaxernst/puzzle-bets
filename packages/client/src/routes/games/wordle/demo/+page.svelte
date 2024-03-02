@@ -14,12 +14,8 @@
 
   $: game = $wordleGameStates.get(gameId);
 
-  let getGameLoading = false;
   $: if (!game) {
-    getGameLoading = true;
-    wordleGameStates.getOrCreate(gameId, true).finally(() => {
-      getGameLoading = false;
-    });
+    wordleGameStates.getOrCreate(gameId, true);
   }
 
   const enterGuess = async (guess: string) => {
@@ -31,11 +27,7 @@
   };
 
   const reset = async () => {
-    game = undefined;
-    getGameLoading = true;
-    wordleGameStates.reset(gameId, true).finally(() => {
-      getGameLoading = false;
-    });
+    wordleGameStates.reset(gameId, true);
   };
 
   let showRestart = false;
@@ -51,7 +43,7 @@
       showRestart = true;
     }}
   />
-{:else if getGameLoading}
+{:else if !game}
   <div class="self-center h-[200px] flex items-center justify-center">
     <DotLoader klass="fill-neutral-500 h-10 w-10" />
   </div>

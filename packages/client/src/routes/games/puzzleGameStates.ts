@@ -20,6 +20,15 @@ export interface WordleGameState extends PuzzleState {
 
 type GameId = string;
 
+const emptyWordleState: WordleGameState = {
+  answers: [],
+  answer: null,
+  guesses: [],
+  badGuess: false,
+  solved: false,
+  lost: false,
+};
+
 export const wordleGameStates = (() => {
   const store = writable<Map<GameId, WordleGameState>>(new Map());
 
@@ -31,7 +40,6 @@ export const wordleGameStates = (() => {
     opponent?: EvmAddress
   ) => {
     if (getOrCreateLoading) return;
-
     const $user = get(user);
     getOrCreateLoading = true;
 
@@ -74,6 +82,7 @@ export const wordleGameStates = (() => {
         WordleGameState,
         "resetCount"
       >;
+
       store.update((s) => {
         let resetCount = s.get(gameId)?.resetCount;
         return s.set(gameId, { ...gameState!, resetCount });
@@ -92,15 +101,22 @@ export const wordleGameStates = (() => {
     const opponent = game ? ($user === game.p1 ? game.p2 : game.p1) : undefined;
 
     const currentState = get(store).get(gameId);
-    if (!currentState) return;
 
     // Prevent resetting offchain puzzle state more than onchain rematch count
-    if (game && (currentState.resetCount ?? Infinity) >= game.rematchCount) {
+    if (game && (currentState?.resetCount ?? Infinity) >= game.rematchCount) {
       return;
     }
 
     resetLoading = true;
     try {
+      // Clear the current game state while maintaining reset count
+      store.update((s) =>
+        s.set(gameId, {
+          ...emptyWordleState,
+          resetCount: (currentState?.resetCount ?? 0) + 1,
+        })
+      );
+
       const res = await fetch("/api/wordle/reset-game", {
         method: "POST",
         body: JSON.stringify({

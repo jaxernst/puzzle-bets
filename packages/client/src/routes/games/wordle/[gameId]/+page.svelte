@@ -19,7 +19,7 @@
   );
 
   let getGameLoading = false;
-  $: if (!puzzleState && $user && onchainGame && onchainGame.opponent) {
+  $: if (!getGameLoading && !puzzleState && $user && onchainGame?.opponent) {
     getGameLoading = true;
     wordleGameStates
       .getOrCreate(gameId, false, onchainGame.opponent)

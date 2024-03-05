@@ -1,10 +1,12 @@
 <script>
   export let data;
 
-  let { inviteMessage, title } = data;
+  let { memo, title } = data;
 </script>
 
 <svelte:head>
   <title>{title}</title>
-  <meta name="description" content={inviteMessage} />
+  <meta property="og:title" content={title} />
+  <meta name="description" content={memo} />
+  <meta property="og:description" content={memo} />
 </svelte:head>

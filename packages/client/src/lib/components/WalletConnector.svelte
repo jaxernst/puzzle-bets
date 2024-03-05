@@ -48,7 +48,7 @@
       </p>
     {:else}
       <div class="font-semibold text-lg">Sign in to Puzzle Bets</div>
-      <div class="mx-3 border-l px-1 border-neutral-600">
+      <div class="mx-3 border-l px-1 border-neutral-600 max-w-[350px]">
         <div class="p-1 text-xs text-neutral-400">Testnet Sign In</div>
         <ul class="p-3 flex flex-col gap-2 text-sm text-neutral-300">
           <li class="ml-3 list-disc">

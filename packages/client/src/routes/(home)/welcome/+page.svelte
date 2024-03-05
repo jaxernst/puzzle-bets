@@ -5,7 +5,7 @@
   import Puzzly from "$lib/icons/puzzly.svelte";
   import { mud, user } from "$lib/mud/mudStore";
   import { cubicOut } from "svelte/easing";
-  import { fade, slide } from "svelte/transition";
+  import { fade, fly } from "svelte/transition";
 
   const loginAndConnect = async () => {
     const wallet = await promptConnectWallet();
@@ -19,6 +19,10 @@
 <svelte:head>
   <title>Puzzle Bets | Welcome</title>
   <meta property="og:title" content="Puzzle Bets | Welcome" />
+  <meta
+    property="og:description"
+    content="Challenge your friends, solve puzzles"
+  />
 </svelte:head>
 
 <div
@@ -31,8 +35,14 @@
         <Puzzly />
       </div>
     </div>
-    <div class="text-off-black text-xl sm:text-2xl font-bold">
+    <div class="relative text-off-black text-xl sm:text-2xl font-bold">
       Welcome to Puzzle Bets.
+      <div
+        in:fade={{ duration: 500, delay: 600 }}
+        class="text-[.6rem] font-mono absolute -top-5 -right-10 rotate-12"
+      >
+        (Testnet beta)
+      </div>
     </div>
     <div class="text-neutral-400">Play puzzles, compete with friends</div>
   </div>

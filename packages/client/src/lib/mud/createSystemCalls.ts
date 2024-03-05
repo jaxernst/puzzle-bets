@@ -1,16 +1,15 @@
-/*
- * Create the system calls that the client can use to ask
- * for changes in the World state (using the System contracts).
- */
-
-import { runQuery, type Entity } from "@latticexyz/recs";
+import { type Entity } from "@latticexyz/recs";
 import type { SetupNetworkResult } from "./setupNetwork";
 import { gameTypeToNumber, type GameType } from "../types";
-import { formatEther, parseEther } from "viem";
+import { parseEther } from "viem";
 import { systemTimestamp } from "$lib/util";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
+/*
+ * Create the system calls that the client can use to ask
+ * for changes in the World state (using the System contracts).
+ */
 export function createSystemCalls({
   worldContract,
   waitForTransaction,

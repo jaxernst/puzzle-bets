@@ -1,3 +1,4 @@
+import { browser } from "$app/environment";
 import type { Entity } from "@latticexyz/recs";
 import { formatEther, numberToHex, padHex } from "viem";
 
@@ -196,6 +197,8 @@ export const weiToDollar = (wei: bigint, ethPrice: number) => {
 };
 
 export const isIosSafari = () => {
+  if (!browser) return false;
+
   const ua = window.navigator.userAgent;
   const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
   const webkit = !!ua.match(/WebKit/i);
@@ -203,6 +206,7 @@ export const isIosSafari = () => {
 };
 
 export function getPWADisplayMode() {
+  if (!browser) return;
   const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
   if (document.referrer.startsWith("android-app://")) {
     return "twa";

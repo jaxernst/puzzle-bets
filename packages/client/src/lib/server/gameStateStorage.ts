@@ -1,5 +1,5 @@
 import { PUBLIC_CHAIN_ID } from "$env/static/public";
-import type { EvmAddress, Game, GameType } from "$lib/types";
+import type { GameType } from "$lib/types";
 import { supabase } from "./supabaseClient";
 
 const chainId = PUBLIC_CHAIN_ID;

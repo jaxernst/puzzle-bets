@@ -39,6 +39,10 @@
       can challenge each other to puzzles, and place wagers on the results.
     </p>
 
+    <p class=" mt-3 py-1 text-neutral-500 font-medium">
+      Currently, only Wordle is supported, but more puzzles are coming soon!
+    </p>
+
     <h2 class="mt-4 text-xl text-lime-500 font-bold">How to Play</h2>
     <p class="py-1 text-neutral-600 font-medium">
       Players challenge each other by creating games and sharing invite links.

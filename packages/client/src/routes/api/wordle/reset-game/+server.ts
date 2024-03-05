@@ -1,6 +1,6 @@
 import { wordleGameCacheKey } from "$lib/server/gameCacheKeys";
 import { supabaseGameStore } from "$lib/server/gameStateStorage.js";
-import { Game } from "../../../../lib/server/wordle/game.server";
+import { Game } from "../../../../lib/server/wordle/game";
 
 /** @type {import('./$types').RequestHandler} */
 export const POST = async ({ request, cookies }) => {

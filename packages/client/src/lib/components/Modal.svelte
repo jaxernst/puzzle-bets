@@ -63,9 +63,6 @@
   }
 </script>
 
-<!-- Trigger button in parent component -->
-<!-- <button on:click={() => (show = true)}>Open Modal</button> -->
-
 {#if show}
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->

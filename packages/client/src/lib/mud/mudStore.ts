@@ -16,12 +16,6 @@ import { createSystemCalls } from "./createSystemCalls";
 import { userWallet } from "$lib/mud/connectWallet";
 import { PUBLIC_CHAIN_ID } from "$env/static/public";
 
-enum Status {
-  Inactive,
-  Active,
-  Complete,
-}
-
 export const mud = (() => {
   const mud = writable<SetupNetworkResult>();
   const systemCalls = derived(mud, ($mud) => {
@@ -39,7 +33,6 @@ export const mud = (() => {
      */
     Object.entries(network.components).forEach(([componentName, component]) => {
       return (component as Component).update$.subscribe((update) => {
-        console.log("Component update", componentName, update);
         mud.update((mud) => ({
           ...mud,
           components: {

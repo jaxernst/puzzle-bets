@@ -36,11 +36,11 @@ export async function load({ url }) {
     title += ` You've been challenged to a ${challengeAmountString}${gameType} game`;
   }
 
-  const inviteMessage =
+  const description =
     "Accept the challenge and solve the puzzle to win the pot";
 
   return {
-    inviteMessage,
+    description,
     title,
   };
 }

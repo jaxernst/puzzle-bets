@@ -9,6 +9,7 @@
   import { clickOutside } from "$lib/actions/clickOutside";
   import Modal from "$lib/components/Modal.svelte";
   import NewGame from "./games/NewGame.svelte";
+  import { slide } from "svelte/transition";
 
   const gameNames = ["Wordle", "Connections", "Crossword", "Sudoku"];
   $: gameRoute = gameNames.find((game) =>
@@ -43,14 +44,14 @@
   }}
 />
 {#if !homeRoutes.includes($page.url.pathname)}
-  <button
-    class="text-sm rounded-full px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-neutral-300"
-    on:click={() => (showNewGameModal = true)}
-    disabled={!$user || !SUPPORTED_GAME_TYPES.includes(gameType)}
-    >New
-  </button>
-
-  {#if showJoinGameInput}
+  {#if !showJoinGameInput}
+    <button
+      class="text-sm rounded-full px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-neutral-300"
+      on:click={() => (showNewGameModal = true)}
+      disabled={!$user || !SUPPORTED_GAME_TYPES.includes(gameType)}
+      >New
+    </button>
+  {:else}
     <form
       class="flex flex-col gap-2"
       on:submit|preventDefault={() => {
@@ -64,6 +65,7 @@
         type="text"
         class="text-sm w-[90px] rounded-full px-2 border border-lime-500 bg-neutral-100 text-neutral-900 font-semibold"
         placeholder="Game ID"
+        in:slide={{ axis: "x" }}
         bind:value={inputGameId}
         use:clickOutside={{
           enabled: showJoinGameInput,
@@ -74,6 +76,7 @@
       />
     </form>
   {/if}
+
   <button
     class="text-sm rounded-full px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-neutral-300"
     on:click|stopPropagation={() => {
@@ -84,8 +87,11 @@
         showJoinGameInput = true;
       }
     }}
-    disabled={!$user || !SUPPORTED_GAME_TYPES.includes(gameType)}>Join</button
+    disabled={!$user || !SUPPORTED_GAME_TYPES.includes(gameType)}
   >
+    Join
+  </button>
+
   <button
     class="text-sm rounded-full px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-neutral-300"
     on:click={() => goto(`/games/${gameType}/demo`)}

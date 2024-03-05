@@ -7,24 +7,29 @@
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
   import CopyableAddress from "$lib/components/CopyableAddress.svelte";
   import NotificationBell from "$lib/icons/NotificationBell.svelte";
-  import { formatEther } from "viem";
+  import { formatEther, type PublicClient } from "viem";
   import { onMount } from "svelte";
   import { notifications } from "$lib/notifications/notificationStore";
   import { getPWADisplayMode, isIosSafari } from "$lib/util";
   import { browser } from "$app/environment";
+  import type { EvmAddress } from "$lib/types";
 
   let userBalance: string;
-  onMount(() => {
-    setInterval(async () => {
-      if (!$user || !$mud?.ready) return;
+  const checkBalance = async (user: EvmAddress, publicClient: PublicClient) => {
+    console.log("checking balance");
+    const balance = await $mud.network.publicClient.getBalance({
+      address: user,
+    });
 
-      const balance = await $mud.network.publicClient.getBalance({
-        address: $user,
-      });
+    userBalance = Number(formatEther(balance)).toFixed(4);
+  };
 
-      userBalance = Number(formatEther(balance)).toFixed(4);
-    }, 4000);
-  });
+  let intervalSet = false;
+  $: if (!intervalSet && $user && $mud?.network?.publicClient) {
+    intervalSet = true;
+    checkBalance($user, $mud.network.publicClient);
+    setInterval(() => checkBalance($user!, $mud.network.publicClient), 5000);
+  }
 
   const loginAndConnect = async () => {
     const wallet = await promptConnectWallet();

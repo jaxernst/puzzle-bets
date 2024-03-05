@@ -1,5 +1,19 @@
 import { capitalized, formatAsDollar } from "$lib/util";
 
+function getGameType(url: URL) {
+  const gameType = url?.searchParams.get("gameType") ?? "game";
+  return capitalized(gameType);
+}
+
+function getSenderName(url: URL) {
+  const senderNameParam = url?.searchParams.get("from");
+  return senderNameParam ? senderNameParam.split("_").join(" ") : null;
+}
+
+function formatChallengeAmount(usdValue: string) {
+  return usdValue ? `${formatAsDollar(Number(usdValue))} ` : "";
+}
+
 export async function load({ url }) {
   const gameTypeParam = url?.searchParams.get("gameType");
   const gameType = gameTypeParam ? capitalized(gameTypeParam) : "";
@@ -15,17 +29,18 @@ export async function load({ url }) {
     ? formatAsDollar(Number(usdValue)) + " "
     : "";
 
-  let memo = "";
+  let title = "Puzzle Bets!";
   if (senderName) {
-    memo = `${senderName} challenged you to a ${challengeAmountString}${gameType} game`;
+    title += ` ${senderName} challenged you to a ${challengeAmountString}${gameType} game`;
   } else {
-    memo = `You've been challenged to a ${challengeAmountString}${gameType} game`;
+    title += ` You've been challenged to a ${challengeAmountString}${gameType} game`;
   }
 
-  const title = "Puzzle Bets! You've been challenged";
+  const description =
+    "Accept the challenge and solve the puzzle to win the pot";
 
   return {
-    memo,
+    description,
     title,
   };
 }

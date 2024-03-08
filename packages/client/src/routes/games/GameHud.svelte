@@ -61,7 +61,7 @@
     </div>
     {#if dueIn !== undefined && dueIn > 0}
       <div class="text-neutral-500 text-sm italic">
-        (Win by being the sole player to solve + submit before the deadline)
+        * Win by being the sole player to solve + submit before the deadline
       </div>
     {/if}
 

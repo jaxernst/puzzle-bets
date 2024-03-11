@@ -14,6 +14,7 @@
   import { slide } from "svelte/transition";
   import { formatEther } from "viem";
   import { puzzleStores } from "./puzzleGameStates";
+  import { notifications } from "$lib/notifications/notificationStore";
 
   export let gameId: Entity;
   export let onClaimed = () => {};
@@ -72,7 +73,10 @@
     }
   };
 
-  $: votedRematch = $user === game.p1 ? game.p1Rematch : game.p2Rematch;
+  $: [userVotedRematch, opponentVotedRematch] =
+    $user === game.p1
+      ? [game.p1Rematch, game.p2Rematch]
+      : [game.p2Rematch, game.p1Rematch];
 
   let startingRematchCount: number | null = null;
   $: if (startingRematchCount === null && game) {
@@ -93,7 +97,14 @@
     voteRematchLoading = true;
     voteRematchError = null;
     try {
+      const willTriggerRematch = opponentVotedRematch;
       await $mud.systemCalls.voteRematch(gameId);
+
+      if (willTriggerRematch) {
+        fetch(`/api/notifications/${game.p1}/notify-game-rematch`, {
+          method: "POST",
+        });
+      }
     } catch (e: any) {
       console.error(e);
       voteRematchError = e.shortMessage ?? "error occurred";
@@ -186,15 +197,15 @@
         {#if !claimed && !opponentClaimed}
           <button
             class={`bg-lime-500 rounded-lg p-2 self-center whitespace-nowrap ${
-              votedRematch ? "opacity-50" : ""
+              userVotedRematch ? "opacity-50" : ""
             }`}
-            disabled={votedRematch}
+            disabled={userVotedRematch}
             on:click={voteRematch}
             in:slide={{ axis: "x" }}
           >
             {#if voteRematchLoading}
               <DotLoader />
-            {:else if votedRematch}
+            {:else if userVotedRematch}
               Voted to rematch
             {:else}
               It's a tie! Vote to rematch?

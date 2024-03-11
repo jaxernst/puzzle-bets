@@ -59,14 +59,14 @@ contract PuzzleGameSystem is System {
   }
 
   function voteRematch(bytes32 gameId) public playerOnly(gameId) {
-    address p1 = Player1.get(gameId);
-    address p2 = Player2.get(gameId);
-    uint buyIn = BuyIn.get(gameId);
-
     // Can't restart if either player has withdrawn
-    require(Balance.get(gameId, p1) >= buyIn && Balance.get(gameId, p2) >= buyIn, "Cannot restart, a player withdrew");
+    Status status = GameStatus.get(gameId);
+    require(status == Status.Active, "Game is not active");
 
     VoteRematch.set(gameId, _msgSender(), true);
+
+    address p1 = Player1.get(gameId);
+    address p2 = Player2.get(gameId);
 
     if (VoteRematch.get(gameId, p1) && VoteRematch.get(gameId, p2)) {
       Solved.set(gameId, p1, false);
@@ -129,11 +129,8 @@ contract PuzzleGameSystem is System {
 
     // Tie condition, each player can claim their deposit back
     _returnPlayerDeposit(gameId);
-
-    // If opponent has also claimed their deposit, mark as complete
-    if (Balance.get(gameId, them) == 0) {
-      GameStatus.set(gameId, Status.Complete);
-    }
+    // Mark game complete after either player withdraws
+    GameStatus.set(gameId, Status.Complete);
   }
 
   function _startGame(bytes32 gameId) private {

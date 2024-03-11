@@ -53,7 +53,7 @@
         <ul class="p-3 flex flex-col gap-2 text-sm text-neutral-300">
           <li class="ml-3 list-disc">
             Connecting will create an in-browser wallet and fund it with testnet
-            eth (monopoly money)
+            eth
           </li>
           <li class="ml-3 list-disc">
             Your games and account are specific to the browser you are currently
@@ -75,7 +75,7 @@
     {/if}
 
     <button
-      class="absolute right-2 top-2 text-zinc-400 font-bold"
+      class="absolute right-2 top-1 text-zinc-400 font-bold"
       on:click={() => showModal.set(false)}
     >
       x

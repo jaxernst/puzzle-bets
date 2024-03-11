@@ -62,7 +62,9 @@ export const mud = (() => {
      */
     return await new Promise((resolve) => {
       stateSynced.subscribe((synced) => {
-        if (synced) resolve(true);
+        if (synced) {
+          setTimeout(() => resolve(true), 50);
+        }
       });
     });
   };

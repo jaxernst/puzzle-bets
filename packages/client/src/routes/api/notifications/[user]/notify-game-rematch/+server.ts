@@ -18,8 +18,8 @@ export const POST = async ({ params }) => {
   for (const { subscription } of subscriptions) {
     try {
       await sendPushNotification(
-        "Puzzle Started!",
-        "Your opponent has joined a game with you, solve the puzzle before time runs out",
+        "Puzzle Match Restarted!",
+        "Both players have voted to rematch, solve the puzzle before time runs out.",
         subscription as any
       );
     } catch (e: any) {

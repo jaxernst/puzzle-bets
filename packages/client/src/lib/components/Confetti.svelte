@@ -1,7 +1,7 @@
 <script context="module">
   import { browser } from "$app/environment";
   import { prefersReducedMotion } from "$lib/accessibility";
-  import { writable } from "svelte/store";
+  import { writable, derived } from "svelte/store";
 
   const trigger = writable(0);
 
@@ -9,12 +9,21 @@
     trigger.update((n) => n + 1);
   };
 
-  let stageWidth = 800;
-  let stageHeight = 2000;
+  // Using writable stores to dynamically update stage dimensions
+  let stageWidth = writable(800);
+  let stageHeight = writable(2000);
+
+  // Update stage dimensions based on browser environment
   if (browser) {
-    stageWidth = window.innerWidth;
-    // Add a margin so confetti falls below end of screen
-    stageHeight = window.innerHeight * 1.4;
+    // Immediately set initial values
+    stageWidth.set(window.innerWidth);
+    stageHeight.set(window.innerHeight * 1.4);
+
+    // Update dimensions on window resize
+    window.addEventListener("resize", () => {
+      stageWidth.set(window.innerWidth);
+      stageHeight.set(window.innerHeight * 1.4);
+    });
   }
 </script>
 
@@ -29,8 +38,8 @@
       use:confetti={{
         particleCount: $prefersReducedMotion ? 0 : undefined,
         force: 0.7,
-        stageWidth,
-        stageHeight,
+        stageWidth: $stageWidth, // Use $ to access store value
+        stageHeight: $stageHeight, // Use $ to access store value
         colors: ["#EACB28", "#40b3ff", "#676778", "rgb(132, 204, 22)"],
       }}
     />

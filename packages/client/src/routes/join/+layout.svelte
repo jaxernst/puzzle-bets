@@ -67,6 +67,8 @@
         You are not elligible for this game
       {:else if inviteExpired || game?.status === GameStatus.Inactive}
         Game invite expired
+      {:else if game?.status === GameStatus.Active || game?.status === GameStatus.Complete}
+        Game already started!
       {:else}
         <JoinGame
           {gameId}

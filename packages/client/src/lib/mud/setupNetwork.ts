@@ -24,6 +24,7 @@ import {
 import { createWorld } from "@latticexyz/recs";
 import { browser } from "$app/environment";
 import { Subject, share } from "rxjs";
+import { track } from "@vercel/analytics";
 
 export const world = createWorld();
 
@@ -101,8 +102,8 @@ export async function setupNetwork(userWallet: Wallet) {
       const lowBalance = balance < parseEther(".1");
       if (lowBalance) {
         console.info("[Dev Faucet]: Balance is low, dripping funds to player");
-        // Double drip
-        await faucet.dripDev({ address });
+
+        track("drip_funds", { address });
         await faucet.dripDev({ address });
       }
     };

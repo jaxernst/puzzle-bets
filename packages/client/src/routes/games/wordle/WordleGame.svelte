@@ -308,16 +308,17 @@
   }
 
   .letter.exact {
-    background: var(--color-theme-2);
+    background: var(--color-theme-1);
     color: white;
   }
 
   .letter.close {
-    border: 2px solid var(--color-theme-2);
+    background: var(--color-theme-2);
+    color: white;
   }
 
   .selected {
-    outline: 2px solid var(--color-theme-1);
+    outline: 2px solid rgb(82 82 82);
   }
 
   .controls {
@@ -358,7 +359,7 @@
   }
 
   .keyboard button.exact {
-    background: var(--color-theme-2);
+    background: var(--color-theme-1);
     color: white;
   }
 

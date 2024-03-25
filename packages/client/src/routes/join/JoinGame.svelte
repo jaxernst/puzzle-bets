@@ -63,8 +63,18 @@
       </div>
     {/if}
 
-    <div class="text-sm text-neutral-100 p-1">
-      <div class="flex gap-4 py-4">
+    {#if gameType === "wordle"}
+      <ul class="list-disc text-sm pt-4 pb-2 px-4 flex flex-col gap-2">
+        <li>
+          Be the sole player to solve and submit the Wordle before the deadline
+        </li>
+
+        <li>Vote to rematch in the event of a tie</li>
+      </ul>
+    {/if}
+
+    <div class="text-sm text-neutral-100 px-1 py-4">
+      <div class="flex gap-4">
         <div class="flex flex-col gap-1 text-neutral-400">
           <div class="">Game Creator</div>
           <div class="">Bet Amount</div>

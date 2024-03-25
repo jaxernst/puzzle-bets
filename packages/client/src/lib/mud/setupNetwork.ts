@@ -85,11 +85,6 @@ export async function setupNetwork(userWallet: Wallet) {
       indexerUrl: browser ? window.location.origin : undefined,
     });
 
-  /*
-   * If there is a faucet, request (test) ETH if you have
-   * less than 1 ETH. Repeat every 20 seconds to ensure you don't
-   * run out.
-   */
   if (networkConfig.faucetServiceUrl) {
     const address = userWallet.account.address;
     console.info("[Dev Faucet]: Player address -> ", address);

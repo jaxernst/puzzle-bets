@@ -1,6 +1,7 @@
 import { createBurnerAccount, getBurnerPrivateKey } from "@latticexyz/common";
 import { createWalletClient } from "viem";
 import { networkConfig, type Wallet } from "./setupNetwork";
+import { transactionQueue, writeObserver } from "@latticexyz/common/actions";
 import { writable } from "svelte/store";
 
 export const userWallet = (() => {
@@ -16,7 +17,7 @@ export const userWallet = (() => {
     const client = createWalletClient({
       ...networkConfig,
       account: burnerAccount,
-    });
+    }).extend(transactionQueue());
 
     wallet.set(client);
     return client;

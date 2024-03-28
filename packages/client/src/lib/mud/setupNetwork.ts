@@ -10,6 +10,7 @@ import {
   type Transport,
   type Account,
   type Chain,
+  createWalletClient,
 } from "viem";
 
 import { createFaucetService } from "@latticexyz/services/faucet";
@@ -17,7 +18,8 @@ import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs";
 import { getNetworkConfig } from "./getNetworkConfig";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
 import {
-  getContract,
+  createBurnerAccount,
+  getBurnerPrivateKey,
   transportObserver,
   type ContractWrite,
 } from "@latticexyz/common";
@@ -25,6 +27,7 @@ import { createWorld } from "@latticexyz/recs";
 import { browser } from "$app/environment";
 import { Subject, share } from "rxjs";
 import { track } from "@vercel/analytics";
+import { transactionQueue, writeObserver } from "@latticexyz/common/actions";
 
 export const world = createWorld();
 
@@ -43,7 +46,6 @@ export type Wallet = WalletClient<Transport, Chain, Account>;
 
 export const networkConfig = {
   ...getNetworkConfig(),
-  transport: transportObserver(fallback([webSocket(), http()])),
   pollingInterval: 1000,
 } as const satisfies ClientConfig;
 
@@ -58,6 +60,10 @@ export async function setupNetwork(userWallet: Wallet) {
    */
   const write$ = new Subject<ContractWrite>();
 
+  const burnerAccount = createBurnerAccount(getBurnerPrivateKey());
+
+  const client = userWallet.extend(transactionQueue()).extend(writeObserver());
+
   /*
    * Create an object for communicating with the deployed World.
    */
@@ -66,7 +72,6 @@ export async function setupNetwork(userWallet: Wallet) {
     abi: IWorldAbi,
     publicClient,
     walletClient: userWallet,
-    onWrite: (write) => write$.next(write),
   });
 
   /*

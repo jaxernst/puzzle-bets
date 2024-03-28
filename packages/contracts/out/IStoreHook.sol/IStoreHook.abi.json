@@ -44,7 +44,7 @@
       {
         "name": "encodedLengths",
         "type": "bytes32",
-        "internalType": "PackedCounter"
+        "internalType": "EncodedLengths"
       },
       {
         "name": "dynamicData",
@@ -92,7 +92,7 @@
       {
         "name": "encodedLengths",
         "type": "bytes32",
-        "internalType": "PackedCounter"
+        "internalType": "EncodedLengths"
       },
       {
         "name": "data",
@@ -176,7 +176,7 @@
       {
         "name": "encodedLengths",
         "type": "bytes32",
-        "internalType": "PackedCounter"
+        "internalType": "EncodedLengths"
       },
       {
         "name": "dynamicData",
@@ -224,7 +224,7 @@
       {
         "name": "encodedLengths",
         "type": "bytes32",
-        "internalType": "PackedCounter"
+        "internalType": "EncodedLengths"
       },
       {
         "name": "data",

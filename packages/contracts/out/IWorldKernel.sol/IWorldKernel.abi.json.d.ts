@@ -70,7 +70,7 @@ declare const abi: [
     "name": "initialize",
     "inputs": [
       {
-        "name": "coreModule",
+        "name": "initModule",
         "type": "address",
         "internalType": "contract IModule"
       }
@@ -88,7 +88,7 @@ declare const abi: [
         "internalType": "contract IModule"
       },
       {
-        "name": "args",
+        "name": "encodedArgs",
         "type": "bytes",
         "internalType": "bytes"
       }
@@ -121,6 +121,32 @@ declare const abi: [
       }
     ],
     "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "Module_AlreadyInstalled",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "Module_MissingDependency",
+    "inputs": [
+      {
+        "name": "dependency",
+        "type": "address",
+        "internalType": "address"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "Module_NonRootInstallNotSupported",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "Module_RootInstallNotSupported",
+    "inputs": []
   },
   {
     "type": "error",

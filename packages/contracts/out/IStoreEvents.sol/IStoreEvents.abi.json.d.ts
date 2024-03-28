@@ -1,6 +1,19 @@
 declare const abi: [
   {
     "type": "event",
+    "name": "HelloStore",
+    "inputs": [
+      {
+        "name": "storeVersion",
+        "type": "bytes32",
+        "indexed": true,
+        "internalType": "bytes32"
+      }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
     "name": "Store_DeleteRecord",
     "inputs": [
       {
@@ -44,7 +57,7 @@ declare const abi: [
         "name": "encodedLengths",
         "type": "bytes32",
         "indexed": false,
-        "internalType": "PackedCounter"
+        "internalType": "EncodedLengths"
       },
       {
         "name": "dynamicData",
@@ -72,6 +85,12 @@ declare const abi: [
         "internalType": "bytes32[]"
       },
       {
+        "name": "dynamicFieldIndex",
+        "type": "uint8",
+        "indexed": false,
+        "internalType": "uint8"
+      },
+      {
         "name": "start",
         "type": "uint48",
         "indexed": false,
@@ -87,7 +106,7 @@ declare const abi: [
         "name": "encodedLengths",
         "type": "bytes32",
         "indexed": false,
-        "internalType": "PackedCounter"
+        "internalType": "EncodedLengths"
       },
       {
         "name": "data",

@@ -1,6 +1,11 @@
-import { mudConfig } from "@latticexyz/world/register";
-
-export default mudConfig({
+import { defineWorld } from "@latticexyz/world";
+/**
+ * TODO
+ * - Add 'puzzle master' verifications
+ * - Add a fee take mechanism
+ * - Add 'public' / 'private' matches
+ */
+export default defineWorld({
   namespace: "games",
   enums: {
     Status: ["Inactive", "Pending", "Active", "Complete"],
@@ -13,38 +18,35 @@ export default mudConfig({
     SubmissionWindow: "uint32",
     InviteExpiration: "uint256",
     GameStartTime: "uint256",
+    PuzzleMasterEoa: "address",
     Player1: "address",
     Player2: "address",
+    RematchCount: "uint16",
 
     Solved: {
-      keySchema: {
+      schema: {
         gameId: "bytes32",
         player: "address",
+        value: "bool",
       },
-      valueSchema: "bool",
+      key: ["gameId", "player"],
     },
     Balance: {
-      keySchema: {
+      schema: {
         gameId: "bytes32",
         player: "address",
+        value: "uint256",
       },
-      valueSchema: "uint256",
-    },
-    OtherPlayer: {
-      keySchema: {
-        gameId: "bytes32",
-        me: "address",
-      },
-      valueSchema: "address",
+      key: ["gameId", "player"],
     },
 
-    RematchCount: "uint16",
     VoteRematch: {
-      keySchema: {
+      schema: {
         gameId: "bytes32",
         me: "address",
+        value: "bool",
       },
-      valueSchema: "bool",
+      key: ["gameId", "me"],
     },
   },
 

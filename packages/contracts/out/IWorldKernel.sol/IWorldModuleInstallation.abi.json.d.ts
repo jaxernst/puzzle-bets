@@ -9,7 +9,7 @@ declare const abi: [
         "internalType": "contract IModule"
       },
       {
-        "name": "args",
+        "name": "encodedArgs",
         "type": "bytes",
         "internalType": "bytes"
       }

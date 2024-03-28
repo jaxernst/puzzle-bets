@@ -307,7 +307,7 @@
       {
         "name": "encodedLengths",
         "type": "bytes32",
-        "internalType": "PackedCounter"
+        "internalType": "EncodedLengths"
       },
       {
         "name": "dynamicData",
@@ -341,7 +341,7 @@
       {
         "name": "encodedLengths",
         "type": "bytes32",
-        "internalType": "PackedCounter"
+        "internalType": "EncodedLengths"
       },
       {
         "name": "dynamicData",
@@ -632,7 +632,7 @@
       {
         "name": "encodedLengths",
         "type": "bytes32",
-        "internalType": "PackedCounter"
+        "internalType": "EncodedLengths"
       },
       {
         "name": "dynamicData",
@@ -831,7 +831,7 @@
         "name": "encodedLengths",
         "type": "bytes32",
         "indexed": false,
-        "internalType": "PackedCounter"
+        "internalType": "EncodedLengths"
       },
       {
         "name": "dynamicData",
@@ -859,6 +859,12 @@
         "internalType": "bytes32[]"
       },
       {
+        "name": "dynamicFieldIndex",
+        "type": "uint8",
+        "indexed": false,
+        "internalType": "uint8"
+      },
+      {
         "name": "start",
         "type": "uint48",
         "indexed": false,
@@ -874,7 +880,7 @@
         "name": "encodedLengths",
         "type": "bytes32",
         "indexed": false,
-        "internalType": "PackedCounter"
+        "internalType": "EncodedLengths"
       },
       {
         "name": "data",
@@ -915,6 +921,140 @@
       }
     ],
     "anonymous": false
+  },
+  {
+    "type": "error",
+    "name": "EncodedLengths_InvalidLength",
+    "inputs": [
+      {
+        "name": "length",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FieldLayout_Empty",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "FieldLayout_InvalidStaticDataLength",
+    "inputs": [
+      {
+        "name": "staticDataLength",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "computedStaticDataLength",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FieldLayout_StaticLengthDoesNotFitInAWord",
+    "inputs": [
+      {
+        "name": "index",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FieldLayout_StaticLengthIsNotZero",
+    "inputs": [
+      {
+        "name": "index",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FieldLayout_StaticLengthIsZero",
+    "inputs": [
+      {
+        "name": "index",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FieldLayout_TooManyDynamicFields",
+    "inputs": [
+      {
+        "name": "numFields",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "maxFields",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "FieldLayout_TooManyFields",
+    "inputs": [
+      {
+        "name": "numFields",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "maxFields",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "Schema_InvalidLength",
+    "inputs": [
+      {
+        "name": "length",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
+  },
+  {
+    "type": "error",
+    "name": "Schema_StaticTypeAfterDynamicType",
+    "inputs": []
+  },
+  {
+    "type": "error",
+    "name": "Slice_OutOfBounds",
+    "inputs": [
+      {
+        "name": "data",
+        "type": "bytes",
+        "internalType": "bytes"
+      },
+      {
+        "name": "start",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "end",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ]
   },
   {
     "type": "error",

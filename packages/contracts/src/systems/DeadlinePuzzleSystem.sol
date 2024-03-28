@@ -6,19 +6,35 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { RESOURCE_NAMESPACE } from "@latticexyz/world/src/worldResourceTypes.sol";
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { ResourceIdLib } from "@latticexyz/store/src/ResourceId.sol";
-import { RematchCount, Balance, BuyIn, GameType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch } from "../codegen/index.sol";
+import { SolutionVerificationLib } from "../library/SolutionVerification.sol";
+import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, GameType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch } from "../codegen/index.sol";
 import { Status, Game } from "../codegen/common.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 
-contract PuzzleGameSystem is System {
+/**
+ * The System facillitates games between two players. Games are played in a syncronous fashion, where
+ * the game starts for both players once the 2nd player joins. Both players will have the same amount of time to submit
+ * a verified solution.
+ *
+ * Solution verification: When creating a game, a 'puzzle master' address can be provided. The puzzle master is an
+ * address that can attest to the validity of a solution, and players must submit a signed message from the master
+ * in order to verify their solution.
+ */
+contract DeadlinePuzzleSystem is System {
   modifier playerOnly(bytes32 gameId) {
     address sender = _msgSender();
     require(sender == Player1.get(gameId) || sender == Player2.get(gameId), "Not game player");
     _;
   }
 
-  function newGame(Game gameType, uint32 submissionWindowSeconds, uint inviteExpirationTimestamp) public payable {
+  function newGame(
+    Game gameType,
+    uint32 submissionWindowSeconds,
+    uint inviteExpirationTimestamp,
+    address puzzleMaster,
+    address opponent
+  ) public payable {
     address creator = _msgSender();
     uint betAmount = _msgValue();
 
@@ -29,12 +45,22 @@ contract PuzzleGameSystem is System {
     InviteExpiration.set(gameId, inviteExpirationTimestamp);
 
     Player1.set(gameId, creator);
+    Player2.set(gameId, opponent); // Opponent can be set to 0 address (allows anyone to join)
+
     Balance.set(gameId, creator, betAmount);
     BuyIn.set(gameId, betAmount);
+    PuzzleMasterEoa.set(gameId, puzzleMaster);
   }
 
   function joinGame(bytes32 gameId) public payable {
     Status status = GameStatus.get(gameId);
+    address specifiedPlayer2 = Player2.get(gameId);
+    if (specifiedPlayer2 == address(0)) {
+      require(specifiedPlayer2 == _msgSender(), "You are not the specified player2");
+    } else {
+      Player2.set(gameId, _msgSender());
+    }
+
     uint betAmount = BuyIn.get(gameId);
 
     require(status == Status.Pending, "Game is not pending");
@@ -42,16 +68,24 @@ contract PuzzleGameSystem is System {
     require(_msgValue() >= betAmount, "You must deposit to join the game");
 
     Balance.set(gameId, _msgSender(), betAmount);
-    Player2.set(gameId, _msgSender());
 
     _startGame(gameId);
   }
 
-  function submitSolution(bytes32 gameId) public playerOnly(gameId) {
+  function submitSolution(bytes32 gameId, bytes memory puzzleMasterSignature) public playerOnly(gameId) {
     Status status = GameStatus.get(gameId);
     uint32 submissionWindow = SubmissionWindow.get(gameId);
     uint startTime = GameStartTime.get(gameId);
 
+    bool solved = SolutionVerificationLib.verify({
+      gameId: gameId,
+      player: _msgSender(),
+      solutionIndex: 1,
+      puzzleMaster: PuzzleMasterEoa.get(gameId),
+      puzzleMasterSignature: puzzleMasterSignature
+    });
+
+    require(solved, "Puzzle master signature invalid");
     require(status == Status.Active, "Game is not active");
     require(block.timestamp <= startTime + submissionWindow, "Submission window closed");
 
@@ -157,3 +191,13 @@ contract PuzzleGameSystem is System {
     IWorld(_world()).transferBalanceToAddress(ResourceIdLib.encode(RESOURCE_NAMESPACE, "games"), to, amount);
   }
 }
+
+/* Exploring other system designs for games
+
+
+GameCreationSystem:
+  new()
+  join()
+
+
+*/

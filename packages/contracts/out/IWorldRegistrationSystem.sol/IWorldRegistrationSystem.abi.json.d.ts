@@ -97,9 +97,9 @@ declare const abi: [
         "internalType": "string"
       },
       {
-        "name": "systemFunctionSelector",
-        "type": "bytes4",
-        "internalType": "bytes4"
+        "name": "systemFunctionSignature",
+        "type": "string",
+        "internalType": "string"
       }
     ],
     "outputs": [

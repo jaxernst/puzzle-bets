@@ -4,7 +4,7 @@ declare const abi: [
     "name": "install",
     "inputs": [
       {
-        "name": "args",
+        "name": "encodedArgs",
         "type": "bytes",
         "internalType": "bytes"
       }
@@ -17,7 +17,7 @@ declare const abi: [
     "name": "installRoot",
     "inputs": [
       {
-        "name": "args",
+        "name": "encodedArgs",
         "type": "bytes",
         "internalType": "bytes"
       }

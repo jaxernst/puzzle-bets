@@ -32,8 +32,8 @@ contract DeadlinePuzzleSystem is System {
     Game gameType,
     uint32 submissionWindowSeconds,
     uint inviteExpirationTimestamp,
-    address puzzleMaster,
-    address opponent
+    address opponent,
+    address puzzleMaster
   ) public payable {
     address creator = _msgSender();
     uint betAmount = _msgValue();

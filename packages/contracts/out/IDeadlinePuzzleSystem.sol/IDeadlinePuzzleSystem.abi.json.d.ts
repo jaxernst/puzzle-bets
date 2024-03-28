@@ -58,12 +58,12 @@ declare const abi: [
         "internalType": "uint256"
       },
       {
-        "name": "puzzleMaster",
+        "name": "opponent",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "opponent",
+        "name": "puzzleMaster",
         "type": "address",
         "internalType": "address"
       }

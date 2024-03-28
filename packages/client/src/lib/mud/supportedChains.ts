@@ -4,7 +4,6 @@ import { type MUDChain, mudFoundry } from "@latticexyz/common/chains";
 const latticeTestnet = {
   name: "Lattice Testnet",
   id: 4242,
-  network: "lattice-testnet",
   nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
   rpcUrls: {
     default: {

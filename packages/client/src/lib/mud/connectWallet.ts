@@ -1,11 +1,9 @@
 import { createBurnerAccount, getBurnerPrivateKey } from "@latticexyz/common";
-import { createWalletClient } from "viem";
-import { networkConfig, type Wallet } from "./setupNetwork";
-import { transactionQueue, writeObserver } from "@latticexyz/common/actions";
+import { createWalletClient, type Account } from "viem";
 import { writable } from "svelte/store";
 
 export const userWallet = (() => {
-  const wallet = writable<Wallet | undefined>();
+  const account = writable<Account | undefined>();
 
   const connect = () => {
     // Call to auth provider to get wallet client (signer)
@@ -14,17 +12,13 @@ export const userWallet = (() => {
 
   const connectBurner = () => {
     const burnerAccount = createBurnerAccount(getBurnerPrivateKey());
-    const client = createWalletClient({
-      ...networkConfig,
-      account: burnerAccount,
-    }).extend(transactionQueue());
 
-    wallet.set(client);
-    return client;
+    account.set(burnerAccount);
+    return burnerAccount;
   };
 
   return {
-    ...wallet,
+    subscribe: account.subscribe,
     tryConnect: connectBurner,
   };
 })();

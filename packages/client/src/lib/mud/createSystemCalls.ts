@@ -1,8 +1,9 @@
 import { type Entity } from "@latticexyz/recs";
 import type { SetupNetworkResult } from "./setupNetwork";
-import { gameTypeToNumber, type GameType } from "../types";
-import { parseEther } from "viem";
+import { gameTypeToNumber, type EvmAddress, type GameType } from "../types";
+import { parseEther, zeroAddress } from "viem";
 import { systemTimestamp } from "$lib/util";
+import { env } from "$env/dynamic/public";
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>;
 
@@ -18,7 +19,8 @@ export function createSystemCalls({
     gameType: GameType,
     wagerEth: number,
     submissionWindowMinutes: number,
-    inviteExpirationMinutes: number
+    inviteExpirationMinutes: number,
+    specifiedOpponent: EvmAddress = zeroAddress
   ) => {
     const inviteExpirationTimestamp = BigInt(
       systemTimestamp() + inviteExpirationMinutes * 60
@@ -29,6 +31,8 @@ export function createSystemCalls({
         gameTypeToNumber[gameType],
         submissionWindowMinutes * 60,
         inviteExpirationTimestamp,
+        specifiedOpponent,
+        env.PUBLIC_PUZZLE_MASTER_ADDRESS as EvmAddress,
       ],
       { value: parseEther(wagerEth.toString()) }
     );
@@ -44,9 +48,13 @@ export function createSystemCalls({
     await waitForTransaction(tx);
   };
 
-  const submitSolution = async (gameId: Entity, solutionSignature: string) => {
+  const submitSolution = async (
+    gameId: Entity,
+    solutionSignature: `0x${string}`
+  ) => {
     const tx = await worldContract.write.games__submitSolution([
       gameId as `0x${string}`,
+      solutionSignature,
     ]);
     await waitForTransaction(tx);
   };

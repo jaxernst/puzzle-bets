@@ -17,7 +17,7 @@ import {
 import { encodeEntity } from "@latticexyz/store-sync/recs";
 import type { SetupNetworkResult } from "./mud/setupNetwork";
 import { timeRemaining, intToEntity } from "./util";
-import { browser } from "$app/environment";
+import { zeroAddress } from "viem";
 
 export const userGames = derived([mud, user], ([$mud, $user]) => {
   if (!$mud?.ready || !$user) return [];
@@ -263,6 +263,8 @@ export const gameInviteUrls = (() => {
   };
 })();
 
+// Util //
+
 const gameIdToGame = (
   gameId: Entity,
   mudComponents: SetupNetworkResult["components"]
@@ -275,9 +277,13 @@ const gameIdToGame = (
   const p1 = getComponentValueStrict(mudComponents.Player1, gameId)
     .value as EvmAddress;
 
-  const p2 = getComponentValue(mudComponents.Player2, gameId)?.value as
+  let p2 = getComponentValue(mudComponents.Player2, gameId)?.value as
     | EvmAddress
     | undefined;
+
+  if (p2 === zeroAddress) {
+    p2 = undefined;
+  }
 
   const status = getComponentValueStrict(mudComponents.GameStatus, gameId)
     .value as GameStatus;

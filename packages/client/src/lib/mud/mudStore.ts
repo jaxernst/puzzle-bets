@@ -15,6 +15,7 @@ import {
 import { createSystemCalls } from "./createSystemCalls";
 import { userWallet } from "$lib/mud/connectWallet";
 import { PUBLIC_CHAIN_ID } from "$env/static/public";
+import type { Account } from "viem";
 
 export const mud = (() => {
   const mud = writable<SetupNetworkResult>();
@@ -24,8 +25,8 @@ export const mud = (() => {
 
   const stateSynced = writable(false);
 
-  const setup = async (walletClient: Wallet) => {
-    const network = await setupNetwork(walletClient);
+  const setup = async (account: Account) => {
+    const network = await setupNetwork(account);
     mud.set(network);
 
     /**
@@ -46,7 +47,7 @@ export const mud = (() => {
     if (Number(PUBLIC_CHAIN_ID) === 31337) {
       mountDevTools({
         config: mudConfig,
-        walletClient: walletClient,
+        walletClient: network.walletClient,
         publicClient: network.publicClient,
         latestBlock$: network.latestBlock$,
         storedBlockLogs$: network.storedBlockLogs$,
@@ -96,11 +97,11 @@ export const mud = (() => {
         };
       }
     ),
-    setup: async (wallet: Wallet) => {
+    setup: async (account: Account) => {
       if (setupLoading || get(stateSynced)) return;
       setupLoading = true;
       try {
-        await setup(wallet);
+        await setup(account);
       } finally {
         setupLoading = false;
       }
@@ -109,5 +110,5 @@ export const mud = (() => {
 })();
 
 export const user = derived(userWallet, ($userWallet) => {
-  return $userWallet?.account.address;
+  return $userWallet?.address;
 });

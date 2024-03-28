@@ -1,10 +1,11 @@
-<script context="module">
+<script context="module" lang="ts">
   import { userWallet } from "$lib/mud/connectWallet";
   import { mud } from "$lib/mud/mudStore";
   import { shortenAddress } from "$lib/util";
   import { get, writable } from "svelte/store";
   import { fade } from "svelte/transition";
   import Modal from "./Modal.svelte";
+  import type { Account } from "viem";
 
   const showModal = writable(false);
 
@@ -16,7 +17,7 @@
   export async function promptConnectWallet() {
     showModal.set(true);
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise<Account>(async (resolve, reject) => {
       userWallet.subscribe((wallet) => {
         if (wallet) setTimeout(() => resolve(wallet), 1000);
       });
@@ -44,7 +45,7 @@
   >
     {#if $userWallet}
       <p transition:fade class={`font-semibold`}>
-        Welcome {shortenAddress($userWallet?.account.address ?? "")}
+        Welcome {shortenAddress($userWallet?.address ?? "")}
       </p>
     {:else}
       <div class="font-semibold text-lg">Sign in to Puzzle Bets</div>

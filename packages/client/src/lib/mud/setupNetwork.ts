@@ -11,18 +11,14 @@ import {
   type Account,
   type Chain,
   createWalletClient,
+  getContract,
 } from "viem";
 
 import { createFaucetService } from "@latticexyz/services/faucet";
 import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs";
 import { getNetworkConfig } from "./getNetworkConfig";
 import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
-import {
-  createBurnerAccount,
-  getBurnerPrivateKey,
-  transportObserver,
-  type ContractWrite,
-} from "@latticexyz/common";
+import { transportObserver, type ContractWrite } from "@latticexyz/common";
 import { createWorld } from "@latticexyz/recs";
 import { browser } from "$app/environment";
 import { Subject, share } from "rxjs";
@@ -44,13 +40,12 @@ import mudConfig from "contracts/mud.config";
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>;
 export type Wallet = WalletClient<Transport, Chain, Account>;
 
-export const networkConfig = {
-  ...getNetworkConfig(),
-  pollingInterval: 1000,
-} as const satisfies ClientConfig;
-
-export async function setupNetwork(userWallet: Wallet) {
-  if (!userWallet.account.address) throw "No wallet address";
+export async function setupNetwork(user: Account | `0x`) {
+  const networkConfig = {
+    ...getNetworkConfig(),
+    transport: transportObserver(fallback([webSocket(), http()])),
+    pollingInterval: 1000,
+  } as const satisfies ClientConfig;
 
   const publicClient = createPublicClient(networkConfig);
 
@@ -60,9 +55,12 @@ export async function setupNetwork(userWallet: Wallet) {
    */
   const write$ = new Subject<ContractWrite>();
 
-  const burnerAccount = createBurnerAccount(getBurnerPrivateKey());
-
-  const client = userWallet.extend(transactionQueue()).extend(writeObserver());
+  const walletClient = createWalletClient({
+    ...networkConfig,
+    account: user,
+  })
+    .extend(transactionQueue())
+    .extend(writeObserver({ onWrite: (write) => write$.next(write) }));
 
   /*
    * Create an object for communicating with the deployed World.
@@ -70,8 +68,10 @@ export async function setupNetwork(userWallet: Wallet) {
   const worldContract = getContract({
     address: networkConfig.worldAddress as Hex,
     abi: IWorldAbi,
-    publicClient,
-    walletClient: userWallet,
+    client: {
+      public: publicClient,
+      wallet: walletClient,
+    },
   });
 
   /*
@@ -91,7 +91,7 @@ export async function setupNetwork(userWallet: Wallet) {
     });
 
   if (networkConfig.faucetServiceUrl) {
-    const address = userWallet.account.address;
+    const address = walletClient.account.address;
     console.info("[Dev Faucet]: Player address -> ", address);
 
     const faucet = createFaucetService(networkConfig.faucetServiceUrl);
@@ -109,8 +109,6 @@ export async function setupNetwork(userWallet: Wallet) {
     };
 
     requestDrip();
-    // Request a drip every 20 seconds
-    setInterval(requestDrip, 20000);
   }
 
   return {
@@ -118,9 +116,10 @@ export async function setupNetwork(userWallet: Wallet) {
     components,
     playerEntity: encodeEntity(
       { address: "address" },
-      { address: userWallet.account.address }
+      { address: walletClient.account.address }
     ),
     publicClient,
+    walletClient,
     latestBlock$,
     storedBlockLogs$,
     waitForTransaction,

@@ -1,4 +1,5 @@
 import { supabaseGameStore } from "$lib/server/gameStateStorage";
+import { puzzleMasterSigner } from "$lib/server/puzzleMaster";
 import { Game } from "../../../../lib/server/wordle/game";
 
 // Will need to add authentication to this endpoint to ensure players can't
@@ -20,7 +21,7 @@ export const POST = async ({ request }): Promise<Response> => {
     return new Response(
       JSON.stringify({
         won: true,
-        signature: "Temporary backend signed message",
+        signature: puzzleMasterSigner.signMessage({ message: "message" }),
       })
     );
   } else {

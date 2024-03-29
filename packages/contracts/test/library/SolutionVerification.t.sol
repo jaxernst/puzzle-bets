@@ -38,10 +38,9 @@ contract SolutionVerificationLibTest is Test {
       playerAddr,
       solutionIndex,
       master,
-      abi.encodePacked(v, r, s)
+      abi.encodePacked(r, s, v)
     );
 
-    console.log(verified);
     assert(verified);
   }
 

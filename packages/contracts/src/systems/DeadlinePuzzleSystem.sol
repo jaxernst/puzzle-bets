@@ -77,7 +77,7 @@ contract DeadlinePuzzleSystem is System {
     uint32 submissionWindow = SubmissionWindow.get(gameId);
     uint startTime = GameStartTime.get(gameId);
 
-    bool solved = SolutionVerificationLib.verify({
+    bool solved = SolutionVerificationLib.verifyPuzzleMasterSignature({
       gameId: gameId,
       player: _msgSender(),
       solutionIndex: 1,

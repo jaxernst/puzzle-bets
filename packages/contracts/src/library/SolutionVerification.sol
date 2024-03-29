@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
 
+import "forge-std/console.sol";
+
 library SolutionVerificationLib {
   function verify(
     bytes32 gameId,
@@ -8,7 +10,7 @@ library SolutionVerificationLib {
     uint32 solutionIndex,
     address puzzleMaster,
     bytes memory puzzleMasterSignature
-  ) public pure returns (bool) {
+  ) public returns (bool) {
     bytes32 preHash = getMessageHash(gameId, player, solutionIndex);
     bytes32 ethSignedMessage = getEthSignedMessageHash(preHash);
     address recoveredAddress = _recoverSigner(ethSignedMessage, puzzleMasterSignature);
@@ -23,33 +25,24 @@ library SolutionVerificationLib {
     return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", messageHash));
   }
 
-  function _recoverSigner(bytes32 _ethSignedMessageHash, bytes memory _signature) internal pure returns (address) {
+  function _recoverSigner(bytes32 _ethSignedMessageHash, bytes memory _signature) internal view returns (address) {
     (bytes32 r, bytes32 s, uint8 v) = _splitSignature(_signature);
-
+    console.log(v);
+    console.logBytes(bytes.concat(r));
+    console.logBytes(bytes.concat(s));
     return ecrecover(_ethSignedMessageHash, v, r, s);
   }
 
-  function _splitSignature(bytes memory sig) internal pure returns (bytes32 r, bytes32 s, uint8 v) {
-    require(sig.length == 65, "invalid signature length");
+  function _splitSignature(bytes memory signature) internal pure returns (bytes32 r, bytes32 s, uint8 v) {
+    require(signature.length == 65, "invalid signature length");
 
+    // ecrecover takes the signature parameters, and the only way to get them
+    // currently is to use assembly.
+    /// @solidity memory-safe-assembly
     assembly {
-      /*
-            First 32 bytes stores the length of the signature
-
-            add(sig, 32) = pointer of sig + 32
-            effectively, skips first 32 bytes of signature
-
-            mload(p) loads next 32 bytes starting at the memory address p into memory
-            */
-
-      // first 32 bytes, after the length prefix
-      r := mload(add(sig, 32))
-      // second 32 bytes
-      s := mload(add(sig, 64))
-      // final byte (first byte of the next 32 bytes)
-      v := byte(0, mload(add(sig, 96)))
+      r := mload(add(signature, 0x20))
+      s := mload(add(signature, 0x40))
+      v := byte(0, mload(add(signature, 0x60)))
     }
-
-    // implicitly return (r, s, v)
   }
 }

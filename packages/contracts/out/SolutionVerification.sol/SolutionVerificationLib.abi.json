@@ -46,44 +46,5 @@
       }
     ],
     "stateMutability": "pure"
-  },
-  {
-    "type": "function",
-    "name": "verify",
-    "inputs": [
-      {
-        "name": "gameId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "player",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "solutionIndex",
-        "type": "uint32",
-        "internalType": "uint32"
-      },
-      {
-        "name": "puzzleMaster",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "puzzleMasterSignature",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "pure"
   }
 ]

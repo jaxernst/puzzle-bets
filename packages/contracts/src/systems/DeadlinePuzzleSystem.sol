@@ -45,7 +45,11 @@ contract DeadlinePuzzleSystem is System {
     InviteExpiration.set(gameId, inviteExpirationTimestamp);
 
     Player1.set(gameId, creator);
-    Player2.set(gameId, opponent); // Opponent can be set to 0 address (allows anyone to join)
+
+    // Opponent can be set to 0 address (allows anyone to join)
+    if (opponent != address(0)) {
+      Player2.set(gameId, opponent);
+    }
 
     Balance.set(gameId, creator, betAmount);
     BuyIn.set(gameId, betAmount);
@@ -55,7 +59,7 @@ contract DeadlinePuzzleSystem is System {
   function joinGame(bytes32 gameId) public payable {
     Status status = GameStatus.get(gameId);
     address specifiedPlayer2 = Player2.get(gameId);
-    if (specifiedPlayer2 == address(0)) {
+    if (specifiedPlayer2 != address(0)) {
       require(specifiedPlayer2 == _msgSender(), "You are not the specified player2");
     } else {
       Player2.set(gameId, _msgSender());

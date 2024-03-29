@@ -14,7 +14,6 @@
   import { slide } from "svelte/transition";
   import { formatEther } from "viem";
   import { puzzleStores } from "./puzzleGameStates";
-  import { notifications } from "$lib/notifications/notificationStore";
 
   export let gameId: Entity;
   export let onClaimed = () => {};
@@ -54,8 +53,12 @@
 
   $: userBalance = $user === game.p1 ? game.p1Balance : game.p2Balance;
   $: opponentBalance = $user === game.p1 ? game.p2Balance : game.p1Balance;
-  $: claimed = gameOutcome !== "lost" && userBalance === 0n;
-  $: opponentClaimed = gameOutcome !== "won" && opponentBalance === 0n;
+  $: claimed = Boolean(
+    game.buyInAmount && gameOutcome !== "lost" && userBalance === 0n
+  );
+  $: opponentClaimed = Boolean(
+    game.buyInAmount && gameOutcome !== "won" && opponentBalance === 0n
+  );
 
   let claimLoading = false;
   let claimError: string | null = null;
@@ -225,6 +228,8 @@
             <DotLoader klass="fill-neutral-100" />
           {:else if claimed}
             {formatAsDollar(potSizeUsd / 2)} claimed!
+          {:else if !game.buyInAmount}
+            Finalize Game
           {:else}
             Withdraw wager
           {/if}

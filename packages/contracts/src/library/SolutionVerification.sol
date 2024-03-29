@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 
 library SolutionVerificationLib {
   using ECDSA for bytes32;
-  using MessageHashUtils for bytes32;
+  using MessageHashUtils for bytes;
 
   function verifyPuzzleMasterSignature(
     bytes32 gameId,
@@ -16,8 +16,7 @@ library SolutionVerificationLib {
     address puzzleMaster,
     bytes memory puzzleMasterSignature
   ) public pure returns (bool) {
-    bytes32 parameterHash = getMessageHash(gameId, player, solutionIndex);
-    address recoveredAddress = _recoverSigner(parameterHash, puzzleMasterSignature);
+    address recoveredAddress = _recoverSigner(abi.encodePacked(gameId, player, solutionIndex), puzzleMasterSignature);
     return recoveredAddress == puzzleMaster;
   }
 
@@ -25,7 +24,7 @@ library SolutionVerificationLib {
     return keccak256(abi.encodePacked(gameId, player, solutionIndex));
   }
 
-  function _recoverSigner(bytes32 data, bytes memory signature) internal pure returns (address) {
+  function _recoverSigner(bytes memory data, bytes memory signature) internal pure returns (address) {
     return data.toEthSignedMessageHash().recover(signature);
   }
 }

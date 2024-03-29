@@ -4,25 +4,29 @@ pragma solidity >=0.8.21;
 import "forge-std/Test.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import "../../src/library/SolutionVerification.sol";
+import "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 
 contract SolutionVerificationLibTest is Test {
+  using MessageHashUtils for bytes;
+
   function prepareTestSignature(
     bytes32 gameId,
     address playerAddr,
     uint32 solutionIndex
   ) public pure returns (bytes32) {
-    bytes32 parameterHash = keccak256(abi.encodePacked(gameId, playerAddr, solutionIndex));
-    return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", parameterHash));
+    bytes memory data = abi.encodePacked(gameId, playerAddr, solutionIndex);
+    return data.toEthSignedMessageHash();
   }
 
   function test_verifies_message_signed_by_puzzle_master() public {
-    (address master, uint256 key) = makeAddrAndKey("puzzleMaster");
+    (address master, uint256 key) = makeAddrAndKey("master");
 
-    bytes32 gameId = bytes32("0x1234");
-    address playerAddr = address(0x5678);
+    bytes32 gameId = bytes32(uint256(1));
+    address playerAddr = address(0x94B3219d193e9e214d019699fFEa55c1D6098f3E);
     uint32 solutionIndex = uint32(1);
 
     bytes32 messageHash = prepareTestSignature(gameId, playerAddr, solutionIndex);
+
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(key, messageHash);
 
     // Sanity check: Ensure raw ecrecover works with params
@@ -43,6 +47,4 @@ contract SolutionVerificationLibTest is Test {
 
     assert(verified);
   }
-
-  function test_rejects_message_not_signed_by_puzzle_master() public {}
 }

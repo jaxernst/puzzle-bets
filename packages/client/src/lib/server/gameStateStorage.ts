@@ -80,6 +80,7 @@ export const supabaseGameStore: GameStore = {
   },
   createDuelGame: async (newGameState, gameType, gameId, p1, p2) => {
     const res = await supabase.rpc("create_duel_game", {
+      _chain_id: chainId,
       _game_id: Number(gameId),
       _game_type: gameType,
       _game_state: newGameState,
@@ -93,6 +94,7 @@ export const supabaseGameStore: GameStore = {
   },
   resetDuelGame: async (gameId, newGameState, chainResetCount) => {
     const res = await supabase.rpc("reset_duel_game", {
+      _chain_id: chainId,
       _game_id: Number(gameId),
       _chain_reset_count: chainResetCount,
       _init_game_state: newGameState,

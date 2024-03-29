@@ -21,6 +21,7 @@ extra_output_files = [
   "evm.bytecode"
 ]
 fs_permissions = [{ access = "read", path = "./"}]
+libs = ["node_modules"]
 
 [profile.lattice-testnet]
 eth_rpc_url = "https://miner.testnet-chain.linfra.xyz"

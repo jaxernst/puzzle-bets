@@ -3,7 +3,7 @@
   import { ethPrice } from "$lib/ethPrice";
   import { getGame, liveGameStatus, userSolvedGame } from "$lib/gameStores";
   import { user, mud } from "$lib/mud/mudStore";
-  import { type StartedGame } from "$lib/types";
+  import { GameStatus, type StartedGame } from "$lib/types";
   import {
     entityToInt,
     formatAsDollar,
@@ -190,7 +190,7 @@
         >
           {#if claimLoading}
             <DotLoader />
-          {:else if claimed}
+          {:else if claimed || game.status === GameStatus.Complete}
             {formatAsDollar(potSizeUsd)} claimed!
           {:else}
             You won! Click to claim your winnings

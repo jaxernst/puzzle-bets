@@ -170,11 +170,11 @@
         {/if}
       </button>
       <button
-        class=" text-pb-yellow text-sm font-semibold"
+        class="text-neutral-400 text-sm font-semibold"
         on:click={cancelAndArchive}
       >
         {#if cancellingGame}
-          <DotLoader klass="fill-pb-yellow " />
+          <DotLoader klass="fill-pb-yellow" />
         {:else}
           Cancel
         {/if}
@@ -209,7 +209,7 @@
     {#if gameId && ($liveStatus?.status === GameStatus.Complete || $liveStatus?.status === GameStatus.Inactive)}
       <button
         on:click={hideOrShowGame}
-        class="font-semibold text-sm text-pb-yellow"
+        class="font-semibold text-sm text-neutral-400"
       >
         {#if gameHidden}
           Unarchive

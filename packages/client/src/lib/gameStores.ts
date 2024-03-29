@@ -277,13 +277,9 @@ const gameIdToGame = (
   const p1 = getComponentValueStrict(mudComponents.Player1, gameId)
     .value as EvmAddress;
 
-  let p2 = getComponentValue(mudComponents.Player2, gameId)?.value as
+  const p2 = getComponentValue(mudComponents.Player2, gameId)?.value as
     | EvmAddress
     | undefined;
-
-  if (p2 === zeroAddress) {
-    p2 = undefined;
-  }
 
   const status = getComponentValueStrict(mudComponents.GameStatus, gameId)
     .value as GameStatus;

@@ -33,7 +33,7 @@ contract SolutionVerificationLibTest is Test {
       keccak256(abi.encodePacked(gameId, playerAddr, solutionIndex))
     );
 
-    bool verified = SolutionVerificationLib.verify(
+    bool verified = SolutionVerificationLib.verifyPuzzleMasterSignature(
       gameId,
       playerAddr,
       solutionIndex,

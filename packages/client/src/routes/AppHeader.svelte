@@ -16,7 +16,7 @@
 
   let userBalance: string;
   const checkBalance = async (user: EvmAddress, publicClient: PublicClient) => {
-    console.log("checking balance");
+    console.log("checking balance for", user);
     const balance = await $mud.network.publicClient.getBalance({
       address: user,
     });

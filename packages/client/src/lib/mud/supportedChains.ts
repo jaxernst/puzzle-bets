@@ -1,7 +1,8 @@
 import { type MUDChain, mudFoundry } from "@latticexyz/common/chains";
+import { baseSepolia } from "viem/chains";
 
 // Override default lattice chain with 'miner.testnet' (from follower.testnet)
-const latticeTestnet = {
+export const latticeTestnet = {
   name: "Lattice Testnet",
   id: 4242,
   nativeCurrency: { decimals: 18, name: "Ether", symbol: "ETH" },
@@ -28,4 +29,8 @@ const latticeTestnet = {
  * See https://mud.dev/tutorials/minimal/deploy#run-the-user-interface
  * for instructions on how to add networks.
  */
-export const supportedChains: MUDChain[] = [mudFoundry, latticeTestnet];
+export const supportedChains: MUDChain[] = [
+  mudFoundry,
+  latticeTestnet,
+  baseSepolia,
+];

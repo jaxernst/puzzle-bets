@@ -5,7 +5,7 @@
   import { get, writable } from "svelte/store";
   import { fade } from "svelte/transition";
   import Modal from "./Modal.svelte";
-  import type { Account } from "viem";
+  import type { Account, WalletClient } from "viem";
 
   const showModal = writable(false);
 
@@ -17,7 +17,7 @@
   export async function promptConnectWallet() {
     showModal.set(true);
 
-    return new Promise<Account>(async (resolve, reject) => {
+    return new Promise<WalletClient>(async (resolve, reject) => {
       userWallet.subscribe((wallet) => {
         if (wallet) setTimeout(() => resolve(wallet), 1000);
       });
@@ -31,7 +31,7 @@
   }
 
   const connectWallet = async () => {
-    const wallet = userWallet.tryConnect();
+    const wallet = await userWallet.tryConnect();
 
     if (wallet) {
       showModal.set(false);

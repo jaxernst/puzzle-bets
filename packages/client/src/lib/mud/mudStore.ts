@@ -15,7 +15,7 @@ import {
 import { createSystemCalls } from "./createSystemCalls";
 import { userWallet } from "$lib/mud/connectWallet";
 import { PUBLIC_CHAIN_ID } from "$env/static/public";
-import type { Account } from "viem";
+import type { Account, WalletClient } from "viem";
 
 export const mud = (() => {
   const mud = writable<SetupNetworkResult>();
@@ -25,8 +25,8 @@ export const mud = (() => {
 
   const stateSynced = writable(false);
 
-  const setup = async (account: Account) => {
-    const network = await setupNetwork(account);
+  const setup = async (wallet: Wallet) => {
+    const network = await setupNetwork(wallet);
     mud.set(network);
 
     /**
@@ -97,7 +97,7 @@ export const mud = (() => {
         };
       }
     ),
-    setup: async (account: Account) => {
+    setup: async (account: Wallet) => {
       if (setupLoading || get(stateSynced)) return;
       setupLoading = true;
       try {
@@ -110,5 +110,5 @@ export const mud = (() => {
 })();
 
 export const user = derived(userWallet, ($userWallet) => {
-  return $userWallet?.address;
+  return $userWallet?.account.address;
 });

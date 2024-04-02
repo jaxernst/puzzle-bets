@@ -26,8 +26,10 @@ import worlds from "contracts/worlds.json";
 
 import { supportedChains } from "./supportedChains";
 import { PUBLIC_CHAIN_ID } from "$env/static/public";
+import { fallback, http, webSocket } from "viem";
+import { transportObserver } from "@latticexyz/common";
 
-export function getNetworkConfig() {
+export const networkConfig = (() => {
   const params = new URLSearchParams(""); // window.location.search);
 
   /*
@@ -80,5 +82,6 @@ export function getNetworkConfig() {
     faucetServiceUrl: params.get("faucet") ?? chain.faucetUrl,
     worldAddress,
     initialBlockNumber,
+    transport: transportObserver(fallback([http()])),
   };
-}
+})();

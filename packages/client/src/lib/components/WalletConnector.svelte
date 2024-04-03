@@ -5,11 +5,9 @@
   import { get, writable } from "svelte/store";
   import { fade } from "svelte/transition";
   import Modal from "./Modal.svelte";
-  import type { Account, WalletClient } from "viem";
   import type { Wallet } from "$lib/mud/setupNetwork";
   import Google from "$lib/icons/Google.svelte";
   import Apple from "$lib/icons/Apple.svelte";
-  import ContinueArrow from "$lib/icons/ContinueArrow.svelte";
 
   const showModal = writable(false);
 

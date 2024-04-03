@@ -17,7 +17,6 @@ import {
 import { encodeEntity } from "@latticexyz/store-sync/recs";
 import type { SetupNetworkResult } from "./mud/setupNetwork";
 import { timeRemaining, intToEntity } from "./util";
-import { zeroAddress } from "viem";
 
 export const userGames = derived([mud, user], ([$mud, $user]) => {
   if (!$mud?.ready || !$user) return [];

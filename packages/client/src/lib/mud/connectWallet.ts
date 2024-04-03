@@ -1,46 +1,38 @@
 import { createBurnerAccount, getBurnerPrivateKey } from "@latticexyz/common";
 import { writable } from "svelte/store";
-import { createThirdwebClient, defineChain, getRpcClient } from "thirdweb";
-import { PUBLIC_CHAIN_ID, PUBLIC_THIRDWEB_CLIENT_ID } from "$env/static/public";
+import { createThirdwebClient, defineChain } from "thirdweb";
 import { createWallet } from "thirdweb/wallets";
+import { PUBLIC_THIRDWEB_CLIENT_ID } from "$env/static/public";
 import { viemAdapter } from "thirdweb/adapters/viem";
-import {
-  createWalletClient,
-  custom,
-  type Account,
-  type Chain,
-  type Transport,
-  type WalletClient,
-} from "viem";
-import { latticeTestnet } from "./supportedChains";
-import { baseSepolia } from "viem/chains";
 import { networkConfig } from "./networkConfig";
 import type { Wallet } from "./setupNetwork";
+import { createWalletClient, zeroAddress } from "viem";
 
-export const tw = createThirdwebClient({
+const tw = createThirdwebClient({
   clientId: PUBLIC_THIRDWEB_CLIENT_ID,
 });
 
-export const twWallet = createWallet("embedded");
+const twWallet = createWallet("io.metamask");
 
-export const chain = networkConfig.chain;
+const chain = defineChain(networkConfig.chain);
 
 export const userWallet = (() => {
   const wallet = writable<Wallet | undefined>();
 
   const connect = async () => {
-    const _account = await twWallet.connect({
+    const account = await twWallet.connect({
       client: tw,
-      strategy: "google",
+      chain,
     });
 
     const walletClient = viemAdapter.walletClient.toViem({
       client: tw,
-      account: _account,
-      chain: defineChain(chain),
-    });
+      account,
+      chain,
+    }) as Wallet;
 
     wallet.set(walletClient);
+
     return walletClient;
   };
 

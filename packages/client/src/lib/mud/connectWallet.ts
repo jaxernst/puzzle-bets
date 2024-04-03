@@ -19,10 +19,10 @@ export const chain = networkConfig.chain;
 export const userWallet = (() => {
   const wallet = writable<Wallet | undefined>();
 
-  const connect = async () => {
+  const connect = async (authMethod: "google" | "apple" | "email") => {
     const _account = await twWallet.connect({
       client: tw,
-      strategy: "google",
+      strategy: authMethod,
     });
 
     const walletClient = viemAdapter.walletClient.toViem({
@@ -48,9 +48,9 @@ export const userWallet = (() => {
 
   return {
     subscribe: wallet.subscribe,
-    tryConnect: () => {
+    tryConnect: (authMethod: "google" | "apple" | "email") => {
       if (chain.id === 31337) return connectBurner();
-      return connect();
+      return connect(authMethod);
     },
   };
 })();

@@ -7,6 +7,9 @@
   import Modal from "./Modal.svelte";
   import type { Account, WalletClient } from "viem";
   import type { Wallet } from "$lib/mud/setupNetwork";
+  import Google from "$lib/icons/Google.svelte";
+  import Apple from "$lib/icons/Apple.svelte";
+  import ContinueArrow from "$lib/icons/ContinueArrow.svelte";
 
   const showModal = writable(false);
 
@@ -31,8 +34,8 @@
     });
   }
 
-  const connectWallet = async () => {
-    const wallet = await userWallet.tryConnect();
+  const connectWallet = async (authMethod: "google" | "apple" | "email") => {
+    const wallet = await userWallet.tryConnect(authMethod);
 
     if (wallet) {
       showModal.set(false);
@@ -40,47 +43,65 @@
   };
 </script>
 
-<Modal show={$showModal} on:close={() => ($showModal = false)}>
+<Modal show={$showModal} on:close={() => ($showModal = false)} title="">
   <div
     class="relative z-10 min-w-[200px] min-h-[200px] bg-neutral-800 text-neutral-100 flex flex-col gap-4 justify-evenly items-center rounded-lg p-6"
   >
+    <div class="font-bold pr-6">Puzzle Bets Wallet Sign In</div>
+
+    <button
+      class="absolute right-2 top-0 text-zinc-400 text-lg"
+      on:click={() => showModal.set(false)}
+    >
+      x
+    </button>
+
+    <div></div>
+
     {#if $userWallet}
       <p transition:fade class={`font-semibold`}>
         Welcome {shortenAddress($userWallet?.account.address ?? "")}
       </p>
     {:else}
-      <div class="font-semibold text-lg">Sign in to Puzzle Bets</div>
-      <div class="mx-3 border-l px-1 border-neutral-600 max-w-[350px]">
-        <div class="p-1 text-xs text-neutral-400">Testnet Sign In</div>
-        <ul class="p-3 flex flex-col gap-2 text-sm text-neutral-300">
-          <li class="ml-3 list-disc">
-            Connecting will create an in-browser wallet and fund it with testnet
-            eth
-          </li>
-          <li class="ml-3 list-disc">
-            Your games and account are specific to the browser you are currently
-            on.
-          </li>
-          <li class="ml-3 list-disc">
-            It is recommend to add Puzzle Bets to your mobile home screen for
-            the best experience
-          </li>
-        </ul>
+      <div class="flex flex-grow items-center justify-evenly w-full">
+        <button
+          on:click={() => connectWallet("google")}
+          class="p-3 flex gap-2 text-sm items-center border border-neutral-500 hover:bg-lime-500 transition-colors rounded-lg text-neutral-400"
+        >
+          <div class="w-7 h-7">
+            <Google />
+          </div>
+        </button>
+
+        <button
+          on:click={() => connectWallet("apple")}
+          class="p-3 flex gap-2 txt-sm items-center border border-neutral-500 hover:bg-lime-500 transition-colors rounded-lg text-neutral-400"
+        >
+          <div class="w-7 h-7">
+            <Apple />
+          </div>
+        </button>
       </div>
 
-      <button
-        on:click={connectWallet}
-        class="border border-lime-500 hover:bg-lime-500 transition-colors rounded-xl px-3 py-2 text-white font-bold"
+      <div
+        class="flex justify-center gap-1 items-center text-neutral-400 w-full"
       >
-        Connect
+        <div class="border-t-[.5px] border-neutral-400 w-1/3"></div>
+        <div class="text-xs">or</div>
+        <div class="border-t-[.5px] border-neutral-400 w-1/3"></div>
+      </div>
+
+      <input
+        type="text"
+        class="bg-transparent px-4 py-2 w-full rounded-lg border border-neutral-500"
+        placeholder="Enter email address"
+      />
+
+      <button
+        class="bg-lime-500 text-white font-semibold rounded-lg border border-lime-500 w-full text-center py-2"
+      >
+        Continue
       </button>
     {/if}
-
-    <button
-      class="absolute right-2 top-1 text-zinc-400 font-bold"
-      on:click={() => showModal.set(false)}
-    >
-      x
-    </button>
   </div>
 </Modal>

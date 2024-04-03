@@ -4,16 +4,7 @@ import { createThirdwebClient, defineChain, getRpcClient } from "thirdweb";
 import { PUBLIC_CHAIN_ID, PUBLIC_THIRDWEB_CLIENT_ID } from "$env/static/public";
 import { createWallet } from "thirdweb/wallets";
 import { viemAdapter } from "thirdweb/adapters/viem";
-import {
-  createWalletClient,
-  custom,
-  type Account,
-  type Chain,
-  type Transport,
-  type WalletClient,
-} from "viem";
-import { latticeTestnet } from "./supportedChains";
-import { baseSepolia } from "viem/chains";
+import { createWalletClient, type Chain } from "viem";
 import { networkConfig } from "./networkConfig";
 import type { Wallet } from "./setupNetwork";
 
@@ -37,7 +28,7 @@ export const userWallet = (() => {
     const walletClient = viemAdapter.walletClient.toViem({
       client: tw,
       account: _account,
-      chain: defineChain(chain),
+      chain: defineChain(chain as any),
     });
 
     wallet.set(walletClient);

@@ -29,8 +29,8 @@ export const latticeTestnet = {
  * See https://mud.dev/tutorials/minimal/deploy#run-the-user-interface
  * for instructions on how to add networks.
  */
-export const supportedChains: MUDChain[] = [
+export const supportedChains = [
   mudFoundry,
   latticeTestnet,
   baseSepolia,
-];
+] as const;

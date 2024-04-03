@@ -7,7 +7,6 @@ import {
   type Account,
   type Chain,
   getContract,
-  createWalletClient,
 } from "viem";
 
 import { createFaucetService } from "@latticexyz/services/faucet";

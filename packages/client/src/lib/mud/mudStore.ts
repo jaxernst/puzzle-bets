@@ -16,6 +16,7 @@ import { createSystemCalls } from "./createSystemCalls";
 import { userWallet } from "$lib/mud/connectWallet";
 import { PUBLIC_CHAIN_ID } from "$env/static/public";
 import type { Account, WalletClient } from "viem";
+import type { EvmAddress } from "$lib/types";
 
 export const mud = (() => {
   const mud = writable<SetupNetworkResult>();
@@ -110,5 +111,5 @@ export const mud = (() => {
 })();
 
 export const user = derived(userWallet, ($userWallet) => {
-  return $userWallet?.account.address;
+  return $userWallet?.account.address as EvmAddress | undefined;
 });

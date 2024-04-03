@@ -6,6 +6,7 @@
   import { fade } from "svelte/transition";
   import Modal from "./Modal.svelte";
   import type { Account, WalletClient } from "viem";
+  import type { Wallet } from "$lib/mud/setupNetwork";
 
   const showModal = writable(false);
 
@@ -17,7 +18,7 @@
   export async function promptConnectWallet() {
     showModal.set(true);
 
-    return new Promise<WalletClient>(async (resolve, reject) => {
+    return new Promise<Wallet>(async (resolve, reject) => {
       userWallet.subscribe((wallet) => {
         if (wallet) setTimeout(() => resolve(wallet), 1000);
       });
@@ -45,7 +46,7 @@
   >
     {#if $userWallet}
       <p transition:fade class={`font-semibold`}>
-        Welcome {shortenAddress($userWallet?.address ?? "")}
+        Welcome {shortenAddress($userWallet?.account.address ?? "")}
       </p>
     {:else}
       <div class="font-semibold text-lg">Sign in to Puzzle Bets</div>

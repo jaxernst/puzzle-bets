@@ -31,7 +31,7 @@ export const userWallet = (() => {
       chain: defineChain(chain as any),
     });
 
-    wallet.set(walletClient);
+    wallet.set(walletClient as Wallet);
     return walletClient;
   };
 

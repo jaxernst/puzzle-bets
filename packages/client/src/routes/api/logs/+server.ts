@@ -1,6 +1,6 @@
 import { PUBLIC_CHAIN_ID } from "$env/static/public";
-import { indexerClient, supabase } from "$lib/server/supabaseClient.js";
-import { decodeDynamicField } from "@latticexyz/protocol-parser";
+import { indexerClient } from "$lib/server/supabaseClient.js";
+import { decodeDynamicField } from "@latticexyz/protocol-parser/src";
 
 const fallbackHex = (str?: string) => {
   return (str ?? "0x").replace("\\x", "0x") as `0x${string}`;

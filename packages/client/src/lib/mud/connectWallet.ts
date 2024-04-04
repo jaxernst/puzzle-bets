@@ -7,12 +7,19 @@ import { viemAdapter } from "thirdweb/adapters/viem";
 import { createWalletClient, type Chain } from "viem";
 import { networkConfig } from "./networkConfig";
 import type { Wallet } from "./setupNetwork";
+import { browser } from "$app/environment";
 
 export const tw = createThirdwebClient({
   clientId: PUBLIC_THIRDWEB_CLIENT_ID,
 });
 
 export const twWallet = createWallet("embedded");
+
+if (browser) {
+  twWallet.autoConnect({
+    client: tw,
+  });
+}
 
 export const chain = networkConfig.chain;
 

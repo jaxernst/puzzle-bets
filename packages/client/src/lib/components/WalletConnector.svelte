@@ -26,7 +26,7 @@
 
       showModal.subscribe((show) => {
         if (!show && !get(userWallet)) {
-          reject();
+          reject("No wallet connected");
         }
       });
     });
@@ -57,11 +57,11 @@
     <div></div>
 
     {#if $userWallet}
-      <p transition:fade class={`font-semibold`}>
+      <p class="flex-grow" transition:fade >
         Welcome {shortenAddress($userWallet?.account.address ?? "")}
       </p>
     {:else}
-      <div class="flex flex-grow items-center justify-evenly w-full">
+      <div class="flex items-center justify-evenly w-full">
         <button
           on:click={() => connectWallet("google")}
           class="p-3 flex gap-2 text-sm items-center border border-neutral-500 hover:bg-lime-500 transition-colors rounded-lg text-neutral-400"

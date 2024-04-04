@@ -19,23 +19,23 @@ import type { SetupNetworkResult } from "./mud/setupNetwork";
 import { timeRemaining, intToEntity } from "./util";
 
 export const userGames = derived([mud, user], ([$mud, $user]) => {
-  if (!$mud?.ready || !$user) return [];
+  if (!$mud?.ready || !$user.address) return [];
 
   const p1Games = runQuery([
     Has($mud.components.GameStatus),
-    HasValue($mud.components.Player1, { value: $user }),
+    HasValue($mud.components.Player1, { value: $user.address }),
   ]);
 
   const p2Games = runQuery([
     Has($mud.components.GameStatus),
-    HasValue($mud.components.Player2, { value: $user }),
+    HasValue($mud.components.Player2, { value: $user.address }),
   ]);
 
   return Array.from([...p1Games, ...p2Games]).map((gameId) => {
     const game = gameIdToGame(gameId, $mud.components);
     return {
       ...game,
-      opponent: $user === game.p1 ? game.p2 : game.p1,
+      opponent: $user.address === game.p1 ? game.p2 : game.p1,
     };
   });
 });
@@ -178,9 +178,9 @@ export const userArchivedGames = (() => {
   const store = writable<Entity[]>([]);
 
   user.subscribe(async ($user) => {
-    if (!$user) return;
+    if (!$user.address) return;
 
-    const res = await fetch(`/api/game-settings/${$user}/archived`);
+    const res = await fetch(`/api/game-settings/${$user.address}/archived`);
     if (res.ok) {
       const data = (await res.json()) as number[];
       store.set(data.map((g) => intToEntity(g, true)!));
@@ -189,16 +189,19 @@ export const userArchivedGames = (() => {
 
   const setArchivedState = async (gameId: Entity, archiveState: boolean) => {
     const $user = get(user);
-    if (!$user) return;
+    if (!$user.address) return;
 
-    const res = await fetch(`/api/game-settings/${$user}/update-archived`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        gameId: parseInt(gameId, 16),
-        archived: archiveState,
-      }),
-    });
+    const res = await fetch(
+      `/api/game-settings/${$user.address}/update-archived`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          gameId: parseInt(gameId, 16),
+          archived: archiveState,
+        }),
+      }
+    );
 
     if (res.ok) {
       store.update((games) => {

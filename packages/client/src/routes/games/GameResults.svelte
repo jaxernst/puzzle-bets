@@ -33,7 +33,7 @@
     const addr = p === "1" ? game.p1 : game.p2;
     const submitted = p === "1" ? p1Submitted : p2Submitted;
     if (submitted) return "✅";
-    if ($user === addr && userPuzzleState?.lost) return "❌";
+    if ($user.address === addr && userPuzzleState?.lost) return "❌";
     return ($liveStatus?.submissionTimeLeft ?? 0) > 0 ? "(pending)" : "❌";
   };
 
@@ -46,13 +46,14 @@
     if (($liveStatus?.submissionTimeLeft ?? 0) > 0) return null;
 
     if (!p1Submitted && !p2Submitted) return "tie";
-    if (p1Submitted) return $user === game.p1 ? "won" : "lost";
-    if (p2Submitted) return $user === game.p2 ? "won" : "lost";
+    if (p1Submitted) return $user.address === game.p1 ? "won" : "lost";
+    if (p2Submitted) return $user.address === game.p2 ? "won" : "lost";
     return null;
   })();
 
-  $: userBalance = $user === game.p1 ? game.p1Balance : game.p2Balance;
-  $: opponentBalance = $user === game.p1 ? game.p2Balance : game.p1Balance;
+  $: userBalance = $user.address === game.p1 ? game.p1Balance : game.p2Balance;
+  $: opponentBalance =
+    $user.address === game.p1 ? game.p2Balance : game.p1Balance;
   $: claimed = Boolean(
     game.buyInAmount && gameOutcome !== "lost" && userBalance === 0n
   );
@@ -77,7 +78,7 @@
   };
 
   $: [userVotedRematch, opponentVotedRematch] =
-    $user === game.p1
+    $user.address === game.p1
       ? [game.p1Rematch, game.p2Rematch]
       : [game.p2Rematch, game.p1Rematch];
 
@@ -151,7 +152,7 @@
         {/if}
 
         <div class="">
-          Player 1 {$user === game.p1 ? "(you)" : ""}
+          Player 1 {$user.address === game.p1 ? "(you)" : ""}
         </div>
         <div class="justify-self-center">{p1Results}</div>
         <div class="justify-self-center">
@@ -162,7 +163,7 @@
         {/if}
 
         <div class="">
-          Player 2 {$user === game.p2 ? "(you)" : ""}
+          Player 2 {$user.address === game.p2 ? "(you)" : ""}
         </div>
         <div class="justify-self-center">{p2Results}</div>
         <div class="justify-self-center">

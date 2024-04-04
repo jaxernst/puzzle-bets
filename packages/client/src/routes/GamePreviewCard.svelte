@@ -22,7 +22,7 @@
 
   $: ({ id, type, status } = game);
 
-  $: solved = $userSolvedGame(id, $user);
+  $: solved = $userSolvedGame(id, $user.address);
 
   $: active = $page.params.gameId === parseInt(id, 16).toString();
 

@@ -1,15 +1,17 @@
 <script>
   import { page } from "$app/stores";
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte";
+  import DotLoader from "$lib/components/DotLoader.svelte";
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte";
   import Puzzly from "$lib/icons/puzzly.svelte";
+  import { walletStore } from "$lib/mud/connectWallet";
   import { mud, user } from "$lib/mud/mudStore";
   import { cubicOut } from "svelte/easing";
   import { fade, fly } from "svelte/transition";
 
   const loginAndConnect = async () => {
     const wallet = await promptConnectWallet();
-    // const wallet = userWallet.tryConnect();
+    // const wallet = walletStore.tryConnect();
     await mud.setup(wallet);
   };
 
@@ -47,12 +49,16 @@
     <div class="text-neutral-400">Play puzzles, compete with friends</div>
   </div>
   <div class="text-sm sm:text-base flex flex-col gap-2 items-center">
-    {#if !$user}
+    {#if !$user.address}
       <button
         on:click={loginAndConnect}
         class="p-3 text-white bg-lime-500 font-semibold hover:bg-lime-400 active:bg-lime-600 hover:shadow transition-all duration-300 rounded-xl"
       >
-        Connect to Play
+        {#if $walletStore.connecting}
+          <DotLoader />
+        {:else}
+          Connect to Play
+        {/if}
       </button>
 
       <div class="text-neutral-400 text-xs">or</div>

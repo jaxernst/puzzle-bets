@@ -48,7 +48,7 @@
     <button
       class="text-sm rounded-full px-2 border border-lime-500 text-lime-500 font-semibold disabled:opacity-50 active:bg-neutral-300"
       on:click={() => (showNewGameModal = true)}
-      disabled={!$user || !SUPPORTED_GAME_TYPES.includes(gameType)}
+      disabled={!$user.address || !SUPPORTED_GAME_TYPES.includes(gameType)}
       >New
     </button>
   {:else}
@@ -87,7 +87,7 @@
         showJoinGameInput = true;
       }
     }}
-    disabled={!$user || !SUPPORTED_GAME_TYPES.includes(gameType)}
+    disabled={!$user.address || !SUPPORTED_GAME_TYPES.includes(gameType)}
   >
     Join
   </button>

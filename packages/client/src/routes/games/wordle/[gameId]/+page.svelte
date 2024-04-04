@@ -18,7 +18,7 @@
     (g) => parseInt(g.id, 16).toString() === $page.params.gameId
   );
 
-  $: if (!puzzleState && $user && onchainGame?.opponent) {
+  $: if (!puzzleState && $user.address && onchainGame?.opponent) {
     wordleGameStates.getOrCreate(gameId, false, onchainGame.opponent);
   }
 
@@ -39,7 +39,7 @@
   };
 
   $: gameOver = puzzleState?.solved || puzzleState?.lost;
-  $: submitted = onchainGame && $userSolvedGame(onchainGame.id, $user);
+  $: submitted = onchainGame && $userSolvedGame(onchainGame.id, $user.address);
   $: liveStatus = onchainGame && liveGameStatus(onchainGame.id);
   $: expired = liveStatus && !$liveStatus?.submissionTimeLeft;
 

@@ -38,7 +38,7 @@
 
   let submitting = false;
   let submitError: null | string = null;
-  $: submitted = gameId && $userSolvedGame(gameId, $user);
+  $: submitted = gameId && $userSolvedGame(gameId, $user.address);
   const verifyAndSubmitSolution = async () => {
     if (!gameId) return;
 
@@ -52,7 +52,7 @@
         },
         body: JSON.stringify({
           gameId: parseInt(gameId, 16),
-          user: $user,
+          user: $user.address,
         }),
       });
 

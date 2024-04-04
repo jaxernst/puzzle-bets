@@ -46,7 +46,7 @@ export const wordleGameStates = (() => {
     try {
       const res = await fetch("/api/wordle/get-or-create-game", {
         method: "POST",
-        body: JSON.stringify({ gameId, user: $user, opponent, isDemo }),
+        body: JSON.stringify({ gameId, user: $user.address, opponent, isDemo }),
       });
 
       if (!res.ok) return;
@@ -71,7 +71,7 @@ export const wordleGameStates = (() => {
         body: JSON.stringify({
           guess,
           gameId,
-          user: $user,
+          user: $user.address,
           isDemo,
         }),
       });
@@ -98,7 +98,11 @@ export const wordleGameStates = (() => {
 
     const $user = get(user);
     const game = isDemo ? undefined : get(getGame)(intToEntity(gameId, true));
-    const opponent = game ? ($user === game.p1 ? game.p2 : game.p1) : undefined;
+    const opponent = game
+      ? $user.address === game.p1
+        ? game.p2
+        : game.p1
+      : undefined;
 
     const currentState = get(store).get(gameId);
 
@@ -121,7 +125,7 @@ export const wordleGameStates = (() => {
         method: "POST",
         body: JSON.stringify({
           gameId,
-          user: $user,
+          user: $user.address,
           otherPlayer: opponent,
           chainRematchCount: game?.rematchCount,
           isDemo,

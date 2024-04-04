@@ -24,8 +24,8 @@ export const notifications = (() => {
 
   // Auto fetch notification status once an account is available
   user.subscribe(async ($user) => {
-    if (!$user) return;
-    const enabled = await fetchNotificationState($user);
+    if (!$user.address) return;
+    const enabled = await fetchNotificationState($user.address);
     enabledBackend.set(enabled);
 
     // Push subscriptions need to be resubscribed to to keep them active, do this once
@@ -39,13 +39,13 @@ export const notifications = (() => {
     [user, enabledBackend, enabledClient],
     ([$user, $enabledBackend, $enabledClient]) => {
       const toggle = async () => {
-        if (!$user) return;
+        if (!$user.address) return;
 
         const deviceId = await deviceHash();
 
         if ($enabledBackend && $enabledClient) {
           const res = await fetch(
-            `/api/notifications/${$user}/${deviceId}/unsubscribe`,
+            `/api/notifications/${$user.address}/${deviceId}/unsubscribe`,
             {
               method: "POST",
             }
@@ -61,7 +61,7 @@ export const notifications = (() => {
 
           if (!$enabledBackend) {
             const res = await fetch(
-              `/api/notifications/${$user}/${deviceId}/subscribe`,
+              `/api/notifications/${$user.address}/${deviceId}/subscribe`,
               {
                 method: "POST",
                 body: JSON.stringify(subscription),

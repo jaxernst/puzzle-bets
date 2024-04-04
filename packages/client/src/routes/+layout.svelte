@@ -25,7 +25,7 @@
 
 <div class="w-full h-full fixed">
   <main class="h-full flex flex-col max-w-[36rem] mx-auto text-white">
-    {#if $user || !homeRoutes.includes($page.url.pathname)}
+    {#if $user.address || !homeRoutes.includes($page.url.pathname)}
       <section in:slide class="px-3 pt-2">
         <AppHeader />
       </section>
@@ -46,7 +46,7 @@
         <slot />
       </section>
     </div>
-    {#if $user}
+    {#if $user.address}
       <section>
         <GameSelector />
       </section>

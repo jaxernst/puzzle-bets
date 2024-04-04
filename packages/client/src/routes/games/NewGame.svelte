@@ -65,7 +65,7 @@
   let createdGameId: number | null = null;
   $: if (gameCreated && browser) {
     const entities = runQuery([
-      HasValue($mud.components.Player1, { value: $user }),
+      HasValue($mud.components.Player1, { value: $user.address }),
     ]);
 
     const sorted = Array.from(entities).sort(

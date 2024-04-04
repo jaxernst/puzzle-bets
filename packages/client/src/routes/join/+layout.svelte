@@ -15,7 +15,7 @@
   let show = true;
 
   onMount(() => {
-    if (!$user) {
+    if (!$user.address) {
       loginAndConnect();
     }
   });
@@ -25,7 +25,7 @@
     : intToEntity($page.params.joinGameId, true);
 
   $: game = gameId && $getGame(gameId);
-  $: userIsEligible = $user && $user !== game?.p1;
+  $: userIsEligible = $user.address && $user.address !== game?.p1;
 
   let inviteExpired = false;
   const checkInviteExpired = (inviteExpirationTime: bigint) => {
@@ -43,7 +43,7 @@
   }
 </script>
 
-{#if $user}
+{#if $user.address}
   <Modal
     {show}
     on:close={() => {

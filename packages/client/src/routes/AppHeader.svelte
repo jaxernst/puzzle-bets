@@ -1,7 +1,7 @@
 <script lang="ts">
   import { mud, user } from "$lib/mud/mudStore";
   import WalletIcon from "$lib/icons/Wallet.svelte";
-  import { userWallet } from "$lib/mud/connectWallet";
+  import { walletStore } from "$lib/mud/connectWallet";
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte";
   import Puzzly from "$lib/icons/puzzly.svelte";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
@@ -13,23 +13,7 @@
   import { getPWADisplayMode, isIosSafari } from "$lib/util";
   import { browser } from "$app/environment";
   import type { EvmAddress } from "$lib/types";
-
-  let userBalance: string;
-  const checkBalance = async (user: EvmAddress, publicClient: PublicClient) => {
-    console.log("checking balance for", user);
-    const balance = await $mud.network.publicClient.getBalance({
-      address: user,
-    });
-
-    userBalance = Number(formatEther(balance)).toFixed(4);
-  };
-
-  let intervalSet = false;
-  $: if (!intervalSet && $user && $mud?.network?.publicClient) {
-    intervalSet = true;
-    checkBalance($user, $mud.network.publicClient);
-    setInterval(() => checkBalance($user!, $mud.network.publicClient), 5000);
-  }
+  import DotLoader from "$lib/components/DotLoader.svelte";
 
   const loginAndConnect = async () => {
     const wallet = await promptConnectWallet();
@@ -61,9 +45,9 @@
       <Puzzly />
     </a>
     <div style="line-height: 1em">
-      {#if $user}
+      {#if $user.address}
         <div class="text-base sm:text-lg">
-          <CopyableAddress address={$user}></CopyableAddress>
+          <CopyableAddress address={$user.address}></CopyableAddress>
         </div>
       {:else}
         <a class="px-1" href="/welcome"> Puzzle Bets</a>
@@ -71,10 +55,10 @@
     </div>
   </div>
   <div class="flex gap-2 sm:gap-3 justify-end items-center">
-    {#if userBalance}
+    {#if $user.address}
       <div class="flex gap-1 items-center">
         <div class="text-off-black font-mono text-sm sm:text-base">
-          {userBalance}
+          {$user.balance}
         </div>
         <div class="fill-off-black w-4 h-4">
           <EthSymbol />
@@ -85,25 +69,29 @@
       class="flex h-7 items-center justify-center"
       on:click={() => loginAndConnect()}
     >
-      {#if !$user}
-        <button
-          class="bg-lime-500 rounded-full font-semibold text-[.8rem] px-2 py-1 whitespace-nowrap"
-          on:click={loginAndConnect}
-        >
-          Connect to play live
-        </button>
+      {#if !$user.address}
+        {#if $walletStore.connecting}
+          <DotLoader klass="fill-neutral-600" />
+        {:else}
+          <button
+            class="bg-lime-500 rounded-full font-semibold text-[.8rem] px-2 py-1 whitespace-nowrap"
+            on:click={loginAndConnect}
+          >
+            Connect to play live
+          </button>
+        {/if}
       {:else}
         <div class="h-6 w-6 stroke-off-black">
           <WalletIcon />
         </div>
-        {#if $userWallet && $mud.ready}
+        {#if $walletStore && $mud.ready}
           <div
             class="self-start w-[.4rem] h-[.4rem] rounded-full bg-green-500"
           ></div>
         {/if}
       {/if}
     </button>
-    {#if $user}
+    {#if $user.address}
       <button
         class="h-7 flex items-center justify-center"
         on:click={maybeToggleNotifications}

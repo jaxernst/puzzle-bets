@@ -31,7 +31,7 @@
       return `Waiting for opponent to accept invite...`;
     },
     2: () => {
-      if ($userSolvedGame(gameId, $user)) {
+      if ($userSolvedGame(gameId, $user.address)) {
         if (dueIn !== undefined && dueIn > 0) {
           return `Solution Received! Check back in ${formatTime(
             dueIn

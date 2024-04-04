@@ -13,9 +13,9 @@ import {
   type Wallet,
 } from "./setupNetwork";
 import { createSystemCalls } from "./createSystemCalls";
-import { userWallet } from "$lib/mud/connectWallet";
+import { walletStore } from "$lib/mud/connectWallet";
 import { PUBLIC_CHAIN_ID } from "$env/static/public";
-import type { Account, WalletClient } from "viem";
+import { formatEther, type Account, type WalletClient } from "viem";
 import type { EvmAddress } from "$lib/types";
 
 export const mud = (() => {
@@ -110,6 +110,45 @@ export const mud = (() => {
   };
 })();
 
-export const user = derived(userWallet, ($userWallet) => {
-  return $userWallet?.account.address as EvmAddress | undefined;
-});
+export const user = (() => {
+  const { subscribe, set, update } = writable<{
+    address: string | undefined;
+    balance: string;
+  }>({
+    address: undefined,
+    balance: "0.00",
+  });
+
+  let balanceInterval: NodeJS.Timeout | null = null;
+
+  walletStore.subscribe(async ({ account }) => {
+    if (account) {
+      update((x) => ({ ...x, address: account.address }));
+      updateBalance(account.address);
+      if (!balanceInterval) {
+        balanceInterval = setInterval(
+          () => updateBalance(account.address),
+          5000
+        );
+      }
+    } else {
+      balanceInterval && clearInterval(balanceInterval);
+      set({ address: undefined, balance: "0.00" }); // Reset store if no user
+    }
+  });
+
+  // Function to update balance
+  async function updateBalance(address: string) {
+    const $mud = get(mud);
+    if (!$mud?.network?.publicClient) return;
+
+    const balance = await $mud.network.publicClient.getBalance({ address });
+    const formattedBalance = Number(formatEther(balance)).toFixed(4);
+    update((x) => ({ ...x, balance: formattedBalance }));
+  }
+
+  // Publicly expose only the subscribe method to prevent external updates
+  return {
+    subscribe,
+  };
+})();

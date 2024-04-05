@@ -20,6 +20,7 @@ import type { EvmAddress } from "$lib/types";
 
 export const mud = (() => {
   const mud = writable<SetupNetworkResult>();
+
   const systemCalls = derived(mud, ($mud) => {
     return $mud && createSystemCalls($mud);
   });

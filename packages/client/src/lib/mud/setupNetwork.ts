@@ -100,6 +100,24 @@ export async function setupNetwork(wallet: Wallet) {
     requestDrip();
   }
 
+  const MAX_RETRIES = 3;
+
+  const retryWaitForTransaction = async (
+    tx: `0x${string}`,
+    retries = 0
+  ): Promise<void> => {
+    try {
+      return await waitForTransaction(tx);
+    } catch (e) {
+      if (retries < MAX_RETRIES) {
+        console.log("Retrying wait for transaction");
+        await new Promise((r) => setTimeout(r, 1500));
+        return await retryWaitForTransaction(tx, retries + 1);
+      }
+      throw e;
+    }
+  };
+
   return {
     world,
     components,
@@ -111,8 +129,8 @@ export async function setupNetwork(wallet: Wallet) {
     walletClient,
     latestBlock$,
     storedBlockLogs$,
-    waitForTransaction,
     worldContract,
     write$: write$.asObservable().pipe(share()),
+    waitForTransaction: retryWaitForTransaction,
   };
 }

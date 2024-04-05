@@ -55,9 +55,9 @@
 
 <Modal show={$showModal} on:close={() => ($showModal = false)} title="">
   <div
-    class="relative z-10 flex min-h-[200px] min-w-[200px] flex-col items-center justify-evenly gap-4 rounded-lg bg-neutral-800 p-6 text-neutral-100"
+    class="relative z-10 flex min-h-[200px] min-w-[200px] flex-col items-center gap-4 rounded-lg bg-neutral-800 p-6 text-neutral-100"
   >
-    <div class="pr-6 font-bold">
+    <div class="self-start font-bold">
       {#if $walletStore.account}
         Welcome {shortenAddress($walletStore?.account.address ?? "")}
       {:else}
@@ -75,13 +75,13 @@
     <div class="flex flex-grow flex-col justify-center gap-4">
       {#if !$walletStore.account && (networkConfig.chainId === 4242 || networkConfig.chainId === 31337)}
         <div
-          class="mb-2 max-w-[300px] border-l border-neutral-400 px-2 text-sm text-neutral-400"
+          class="max-w-[300px] border-l border-neutral-400 px-3 text-sm text-neutral-400"
         >
           This is a testnet preview of Puzzle bets. Connect to create a burner
           wallet and get it auto-funded with testnet eth!
         </div>
         <button
-          class="self-center rounded-lg bg-lime-500 px-3 py-2 font-bold"
+          class="mb-2 mt-3 self-center rounded-lg bg-lime-500 px-3 py-2 font-bold"
           on:click={() => {
             walletStore.tryConnect("auto")
             showModal.set(false)

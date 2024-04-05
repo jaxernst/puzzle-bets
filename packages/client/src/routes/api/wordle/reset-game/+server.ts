@@ -1,33 +1,33 @@
-import { wordleGameCacheKey } from "$lib/server/gameCacheKeys";
-import { supabaseGameStore } from "$lib/server/gameStateStorage.js";
-import { Game } from "../../../../lib/server/wordle/game";
+import { wordleGameCacheKey } from "$lib/server/gameCacheKeys"
+import { supabaseGameStore } from "$lib/server/gameStateStorage.js"
+import { Game } from "../../../../lib/server/wordle/game"
 
 /** @type {import('./$types').RequestHandler} */
 export const POST = async ({ request, cookies }) => {
   const { gameId, user, otherPlayer, chainRematchCount, isDemo } =
     (await request.json()) as {
-      gameId: string;
-      isDemo?: boolean;
-      user?: string;
-      otherPlayer?: string;
-      chainRematchCount?: number;
-    };
+      gameId: string
+      isDemo?: boolean
+      user?: string
+      otherPlayer?: string
+      chainRematchCount?: number
+    }
 
-  if (!gameId) return new Response("Missing game ID", { status: 400 });
+  if (!gameId) return new Response("Missing game ID", { status: 400 })
 
   const gameExists = await supabaseGameStore.hasGame(
     "wordle",
     gameId,
     user,
     isDemo,
-  );
+  )
 
-  if (!gameExists) return new Response("No game to reset", { status: 400 });
+  if (!gameExists) return new Response("No game to reset", { status: 400 })
 
   // Clear cookie cache for game
-  const cachedGame = cookies.get(wordleGameCacheKey(gameId));
+  const cachedGame = cookies.get(wordleGameCacheKey(gameId))
   if (cachedGame) {
-    cookies.delete(wordleGameCacheKey(gameId), { path: "/" });
+    cookies.delete(wordleGameCacheKey(gameId), { path: "/" })
   }
 
   // gameId's that are onchain (have an associated bet) can only be reset when
@@ -37,7 +37,7 @@ export const POST = async ({ request, cookies }) => {
   // TODO: get 'otherPlayer' with a contract read
   // TODO: get 'chainRematchCount' with a contract read
 
-  const game = new Game();
+  const game = new Game()
   if (isDemo) {
     await supabaseGameStore.setGame(
       game.toString(),
@@ -45,18 +45,18 @@ export const POST = async ({ request, cookies }) => {
       gameId,
       user,
       isDemo,
-    );
+    )
   } else {
     if (!chainRematchCount) {
-      return new Response("Missing chainRematchCount", { status: 400 });
+      return new Response("Missing chainRematchCount", { status: 400 })
     }
     const success = await supabaseGameStore.resetDuelGame(
       gameId,
       game.toString(),
       chainRematchCount,
-    );
+    )
     if (!success) {
-      return new Response("Game not resetable", { status: 403 });
+      return new Response("Game not resetable", { status: 403 })
     }
   }
 
@@ -71,5 +71,5 @@ export const POST = async ({ request, cookies }) => {
       badGuess: false,
       resetCount: chainRematchCount,
     }),
-  );
-};
+  )
+}

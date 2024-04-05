@@ -7,19 +7,19 @@ import {
   type Account,
   type Chain,
   getContract,
-} from "viem";
+} from "viem"
 
-import { createFaucetService } from "@latticexyz/services/faucet";
-import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs";
-import { networkConfig } from "./networkConfig";
-import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json";
-import { type ContractWrite } from "@latticexyz/common";
-import { createWorld } from "@latticexyz/recs";
-import { Subject, share } from "rxjs";
-import { track } from "@vercel/analytics";
-import { transactionQueue, writeObserver } from "@latticexyz/common/actions";
+import { createFaucetService } from "@latticexyz/services/faucet"
+import { encodeEntity, syncToRecs } from "@latticexyz/store-sync/recs"
+import { networkConfig } from "./networkConfig"
+import IWorldAbi from "contracts/out/IWorld.sol/IWorld.abi.json"
+import { type ContractWrite } from "@latticexyz/common"
+import { createWorld } from "@latticexyz/recs"
+import { Subject, share } from "rxjs"
+import { track } from "@vercel/analytics"
+import { transactionQueue, writeObserver } from "@latticexyz/common/actions"
 
-export const world = createWorld();
+export const world = createWorld()
 
 /*
  * Import our MUD config, which includes strong types for
@@ -29,27 +29,27 @@ export const world = createWorld();
  * See https://mud.dev/templates/typescript/contracts#mudconfigts
  * for the source of this information.
  */
-import mudConfig from "contracts/mud.config";
-import { browser } from "$app/environment";
+import mudConfig from "contracts/mud.config"
+import { browser } from "$app/environment"
 
-export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>;
-export type Wallet = WalletClient<Transport, Chain, Account>;
+export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>
+export type Wallet = WalletClient<Transport, Chain, Account>
 
 export async function setupNetwork(wallet: Wallet) {
   const publicClient = createPublicClient({
     ...networkConfig,
     pollingInterval: 1000,
-  });
+  })
 
   /*
    * Create an observable for contract writes that we can
    * pass into MUD dev tools for transaction observability.
    */
-  const write$ = new Subject<ContractWrite>();
+  const write$ = new Subject<ContractWrite>()
 
   const walletClient = wallet
     .extend(transactionQueue())
-    .extend(writeObserver({ onWrite: (write) => write$.next(write) }));
+    .extend(writeObserver({ onWrite: (write) => write$.next(write) }))
 
   /*
    * Create an object for communicating with the deployed World.
@@ -61,7 +61,7 @@ export async function setupNetwork(wallet: Wallet) {
       public: publicClient,
       wallet: walletClient,
     },
-  });
+  })
 
   /*
    * Sync on-chain state into RECS and keeps our client in sync.
@@ -81,46 +81,46 @@ export async function setupNetwork(wallet: Wallet) {
         browser && networkConfig.chainId === 4242
           ? window.location.origin
           : undefined,
-    });
+    })
 
   if (networkConfig.faucetServiceUrl) {
-    const address = walletClient.account.address;
-    console.info("[Dev Faucet]: Player address -> ", address);
+    const address = walletClient.account.address
+    console.info("[Dev Faucet]: Player address -> ", address)
 
-    const faucet = createFaucetService(networkConfig.faucetServiceUrl);
+    const faucet = createFaucetService(networkConfig.faucetServiceUrl)
 
     const requestDrip = async () => {
-      const balance = await publicClient.getBalance({ address });
-      console.info(`[Dev Faucet]: Player balance -> ${balance}`);
-      const lowBalance = balance < parseEther(".1");
+      const balance = await publicClient.getBalance({ address })
+      console.info(`[Dev Faucet]: Player balance -> ${balance}`)
+      const lowBalance = balance < parseEther(".1")
       if (lowBalance) {
-        console.info("[Dev Faucet]: Balance is low, dripping funds to player");
+        console.info("[Dev Faucet]: Balance is low, dripping funds to player")
 
-        track("drip_funds", { address });
-        await faucet.dripDev({ address });
+        track("drip_funds", { address })
+        await faucet.dripDev({ address })
       }
-    };
+    }
 
-    requestDrip();
+    requestDrip()
   }
 
-  const MAX_RETRIES = 3;
+  const MAX_RETRIES = 3
 
   const retryWaitForTransaction = async (
     tx: `0x${string}`,
     retries = 0,
   ): Promise<void> => {
     try {
-      return await waitForTransaction(tx);
+      return await waitForTransaction(tx)
     } catch (e) {
       if (retries < MAX_RETRIES) {
-        console.log("Retrying wait for transaction");
-        await new Promise((r) => setTimeout(r, 1500));
-        return await retryWaitForTransaction(tx, retries + 1);
+        console.log("Retrying wait for transaction")
+        await new Promise((r) => setTimeout(r, 1500))
+        return await retryWaitForTransaction(tx, retries + 1)
       }
-      throw e;
+      throw e
     }
-  };
+  }
 
   return {
     world,
@@ -136,5 +136,5 @@ export async function setupNetwork(wallet: Wallet) {
     worldContract,
     write$: write$.asObservable().pipe(share()),
     waitForTransaction: retryWaitForTransaction,
-  };
+  }
 }

@@ -1,24 +1,24 @@
-import { getGame } from "$lib/gameStores";
-import { user } from "$lib/mud/mudStore";
-import type { EvmAddress, GameType } from "$lib/types";
-import { intToEntity } from "$lib/util";
+import { getGame } from "$lib/gameStores"
+import { user } from "$lib/mud/mudStore"
+import type { EvmAddress, GameType } from "$lib/types"
+import { intToEntity } from "$lib/util"
 
-import { derived, get, writable, type Readable } from "svelte/store";
+import { derived, get, writable, type Readable } from "svelte/store"
 
 export interface PuzzleState {
-  solved: boolean;
-  lost: boolean;
+  solved: boolean
+  lost: boolean
 }
 
 export interface WordleGameState extends PuzzleState {
-  guesses: string[];
-  answers: string[];
-  answer: string | null;
-  badGuess: boolean;
-  resetCount?: number;
+  guesses: string[]
+  answers: string[]
+  answer: string | null
+  badGuess: boolean
+  resetCount?: number
 }
 
-type GameId = string;
+type GameId = string
 
 const emptyWordleState: WordleGameState = {
   answers: [],
@@ -27,44 +27,44 @@ const emptyWordleState: WordleGameState = {
   badGuess: false,
   solved: false,
   lost: false,
-};
+}
 
 export const wordleGameStates = (() => {
-  const store = writable<Map<GameId, WordleGameState>>(new Map());
+  const store = writable<Map<GameId, WordleGameState>>(new Map())
 
   // Opponent is temporary, and will eventually be retrieved in the backend
-  let getOrCreateLoading = false;
+  let getOrCreateLoading = false
   const getOrCreate = async (
     gameId: GameId,
     isDemo: boolean,
     opponent?: EvmAddress,
   ) => {
-    if (getOrCreateLoading) return;
-    const $user = get(user);
-    getOrCreateLoading = true;
+    if (getOrCreateLoading) return
+    const $user = get(user)
+    getOrCreateLoading = true
 
     try {
       const res = await fetch("/api/wordle/get-or-create-game", {
         method: "POST",
         body: JSON.stringify({ gameId, user: $user.address, opponent, isDemo }),
-      });
+      })
 
-      if (!res.ok) return;
+      if (!res.ok) return
 
-      const gameState = (await res.json()) as WordleGameState;
-      store.update((s) => s.set(gameId, gameState!));
+      const gameState = (await res.json()) as WordleGameState
+      store.update((s) => s.set(gameId, gameState!))
     } finally {
-      getOrCreateLoading = false;
+      getOrCreateLoading = false
     }
-  };
+  }
 
-  let guessEntering = false;
+  let guessEntering = false
   const enterGuess = async (gameId: GameId, guess: string, isDemo: boolean) => {
-    if (guessEntering) return;
+    if (guessEntering) return
 
-    const $user = get(user);
+    const $user = get(user)
 
-    guessEntering = true;
+    guessEntering = true
     try {
       const res = await fetch("/api/wordle/submit-guess", {
         method: "POST",
@@ -74,44 +74,44 @@ export const wordleGameStates = (() => {
           user: $user.address,
           isDemo,
         }),
-      });
+      })
 
-      if (!res.ok) return;
+      if (!res.ok) return
 
       const gameState = (await res.json()) as Omit<
         WordleGameState,
         "resetCount"
-      >;
+      >
 
       store.update((s) => {
-        let resetCount = s.get(gameId)?.resetCount;
-        return s.set(gameId, { ...gameState!, resetCount });
-      });
+        let resetCount = s.get(gameId)?.resetCount
+        return s.set(gameId, { ...gameState!, resetCount })
+      })
     } finally {
-      guessEntering = false;
+      guessEntering = false
     }
-  };
+  }
 
-  let resetLoading = false;
+  let resetLoading = false
   const reset = async (gameId: GameId, isDemo: boolean) => {
-    if (resetLoading) return;
+    if (resetLoading) return
 
-    const $user = get(user);
-    const game = isDemo ? undefined : get(getGame)(intToEntity(gameId, true));
+    const $user = get(user)
+    const game = isDemo ? undefined : get(getGame)(intToEntity(gameId, true))
     const opponent = game
       ? $user.address === game.p1
         ? game.p2
         : game.p1
-      : undefined;
+      : undefined
 
-    const currentState = get(store).get(gameId);
+    const currentState = get(store).get(gameId)
 
     // Prevent resetting offchain puzzle state more than onchain rematch count
     if (game && (currentState?.resetCount ?? Infinity) >= game.rematchCount) {
-      return;
+      return
     }
 
-    resetLoading = true;
+    resetLoading = true
     try {
       // Clear the current game state while maintaining reset count
       store.update((s) =>
@@ -119,7 +119,7 @@ export const wordleGameStates = (() => {
           ...emptyWordleState,
           resetCount: (currentState?.resetCount ?? 0) + 1,
         }),
-      );
+      )
 
       const res = await fetch("/api/wordle/reset-game", {
         method: "POST",
@@ -130,29 +130,29 @@ export const wordleGameStates = (() => {
           chainRematchCount: game?.rematchCount,
           isDemo,
         }),
-      });
+      })
 
       // A reset can fail if the other player reset the game first, in this case,
       // we just fetch the game state again
       if (!res.ok) {
-        getOrCreate(gameId, isDemo, opponent);
-        return;
+        getOrCreate(gameId, isDemo, opponent)
+        return
       }
 
-      const gameState = (await res.json()) as WordleGameState;
-      store.update((s) => s.set(gameId, gameState));
+      const gameState = (await res.json()) as WordleGameState
+      store.update((s) => s.set(gameId, gameState))
     } finally {
-      resetLoading = false;
+      resetLoading = false
     }
-  };
+  }
 
   return {
     ...store,
     getOrCreate,
     enterGuess,
     reset,
-  };
-})();
+  }
+})()
 
 export const puzzleStores = derived(
   [wordleGameStates],
@@ -162,6 +162,6 @@ export const puzzleStores = derived(
       connections: new Map(),
       crossword: new Map(),
       sudoku: new Map(),
-    };
+    }
   },
-) as Readable<Record<GameType, Map<GameId, PuzzleState>>>;
+) as Readable<Record<GameType, Map<GameId, PuzzleState>>>

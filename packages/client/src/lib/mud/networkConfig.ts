@@ -8,7 +8,7 @@
  * from packages/contracts/worlds.json. When the contracts package
  * deploys a new `World`, it updates this file.
  */
-import worlds from "contracts/worlds.json";
+import worlds from "contracts/worlds.json"
 
 /*
  * The supported chains.
@@ -24,13 +24,13 @@ import worlds from "contracts/worlds.json";
  * for instructions on how to add networks.
  */
 
-import { supportedChains } from "./supportedChains";
-import { PUBLIC_CHAIN_ID } from "$env/static/public";
-import { fallback, http, webSocket } from "viem";
-import { transportObserver } from "@latticexyz/common";
+import { supportedChains } from "./supportedChains"
+import { PUBLIC_CHAIN_ID } from "$env/static/public"
+import { fallback, http, webSocket } from "viem"
+import { transportObserver } from "@latticexyz/common"
 
 export const networkConfig = (() => {
-  const params = new URLSearchParams(""); // window.location.search);
+  const params = new URLSearchParams("") // window.location.search);
 
   /*
    * The chain ID source:
@@ -41,15 +41,15 @@ export const networkConfig = (() => {
    */
   const chainId = Number(
     params.get("chainId") || params.get("chainid") || PUBLIC_CHAIN_ID || 31337,
-  );
+  )
 
   /*
    * Find the chain (unless it isn't in the list of supported chains).
    */
-  const chainIndex = supportedChains.findIndex((c) => c.id === chainId);
-  const chain = supportedChains[chainIndex];
+  const chainIndex = supportedChains.findIndex((c) => c.id === chainId)
+  const chain = supportedChains[chainIndex]
   if (!chain) {
-    throw new Error(`Chain ${chainId} not found`);
+    throw new Error(`Chain ${chainId} not found`)
   }
 
   /*
@@ -57,12 +57,12 @@ export const networkConfig = (() => {
    * different address than the one in worlds.json,
    * provide it as worldAddress in the query string.
    */
-  const world = worlds[chain.id.toString()];
-  const worldAddress = params.get("worldAddress") || world?.address;
+  const world = worlds[chain.id.toString()]
+  const worldAddress = params.get("worldAddress") || world?.address
   if (!worldAddress) {
     throw new Error(
       `No world address found for chain ${chainId}. Did you run \`mud deploy\`?`,
-    );
+    )
   }
 
   /*
@@ -74,7 +74,7 @@ export const networkConfig = (() => {
    */
   const initialBlockNumber = params.has("initialBlockNumber")
     ? Number(params.get("initialBlockNumber"))
-    : world?.blockNumber ?? 0n;
+    : world?.blockNumber ?? 0n
 
   return {
     chainId,
@@ -83,5 +83,5 @@ export const networkConfig = (() => {
     worldAddress,
     initialBlockNumber,
     transport: transportObserver(fallback([http()])),
-  };
-})();
+  }
+})()

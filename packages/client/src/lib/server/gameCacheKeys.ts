@@ -1,1 +1,1 @@
-export const wordleGameCacheKey = (gameId: string) => `wordleCache_${gameId}`;
+export const wordleGameCacheKey = (gameId: string) => `wordleCache_${gameId}`

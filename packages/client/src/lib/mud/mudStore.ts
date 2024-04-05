@@ -16,9 +16,10 @@ import { createSystemCalls } from "./createSystemCalls"
 import { walletStore } from "$lib/mud/connectWallet"
 import { PUBLIC_CHAIN_ID } from "$env/static/public"
 import { formatEther, type Account } from "viem"
+import { browser } from "$app/environment"
 
 export const mud = (() => {
-  const mud = writable<SetupNetworkResult>()
+  const mud = writable<SetupNetworkResult | undefined>()
 
   const systemCalls = derived(mud, ($mud) => {
     return $mud && createSystemCalls($mud)
@@ -35,13 +36,16 @@ export const mud = (() => {
      */
     Object.entries(network.components).forEach(([componentName, component]) => {
       return (component as Component).update$.subscribe((update) => {
-        mud.update((mud) => ({
-          ...mud,
-          components: {
-            ...mud.components,
-            [componentName]: update.component as any,
-          } as any,
-        }))
+        mud.update(
+          (mud) =>
+            ({
+              ...mud,
+              components: {
+                ...mud?.components,
+                [componentName]: update.component as any,
+              },
+            }) as SetupNetworkResult,
+        )
       })
     })
 
@@ -82,6 +86,16 @@ export const mud = (() => {
     )
   })
 
+  /**
+   * Listen for wallet disconnects and force page to reload. There is no a convenient way
+   * to reset the RECs state sync, so full reloading for now
+   */
+  walletStore.subscribe(({ account }) => {
+    if (browser && get(stateSynced) && !account) {
+      window.location.reload()
+    }
+  })
+
   let setupLoading = false
 
   return {
@@ -94,7 +108,7 @@ export const mud = (() => {
           systemCalls: $systemCalls,
           stateSynced: $stateSynced,
           ready:
-            $stateSynced && $network.components && $systemCalls && $network,
+            $stateSynced && $network?.components && $systemCalls && $network,
         }
       },
     ),
@@ -145,6 +159,7 @@ export const user = (() => {
       }
     } else {
       balanceInterval && clearInterval(balanceInterval)
+      unsub = null
       set({ address: undefined, balance: "0.00" }) // Reset store if no user
     }
   })
@@ -152,6 +167,7 @@ export const user = (() => {
   // Function to update balance
   let prevBalance: string
   async function updateBalance(address: string) {
+    console.log("update", address)
     const $mud = get(mud)
     if (!$mud?.network?.publicClient) return
 

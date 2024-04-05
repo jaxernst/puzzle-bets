@@ -30,7 +30,7 @@ export const world = createWorld();
  * for the source of this information.
  */
 import mudConfig from "contracts/mud.config";
-import { sendTransaction } from "thirdweb";
+import { browser } from "$app/environment";
 
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>;
 export type Wallet = WalletClient<Transport, Chain, Account>;
@@ -76,7 +76,11 @@ export async function setupNetwork(wallet: Wallet) {
       address: networkConfig.worldAddress as Hex,
       publicClient,
       startBlock: BigInt(networkConfig.initialBlockNumber),
-      // indexerUrl: browser ? window.location.origin : undefined,
+      // Only running an indexer on 4242 currently
+      indexerUrl:
+        browser && networkConfig.chainId === 4242
+          ? window.location.origin
+          : undefined,
     });
 
   if (networkConfig.faucetServiceUrl) {

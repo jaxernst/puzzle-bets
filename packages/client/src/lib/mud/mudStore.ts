@@ -15,8 +15,7 @@ import {
 import { createSystemCalls } from "./createSystemCalls";
 import { walletStore } from "$lib/mud/connectWallet";
 import { PUBLIC_CHAIN_ID } from "$env/static/public";
-import { formatEther, type Account, type WalletClient } from "viem";
-import type { EvmAddress } from "$lib/types";
+import { formatEther } from "viem";
 
 export const mud = (() => {
   const mud = writable<SetupNetworkResult>();
@@ -124,8 +123,17 @@ export const user = (() => {
 
   walletStore.subscribe(async ({ account }) => {
     if (account) {
+      // Once account is ready, listen for mud (w/ publicClient) to be ready
+      // to make the first balance query
+      const unsub = mud.subscribe(($mud) => {
+        if ($mud.network) {
+          updateBalance(account.address);
+          unsub();
+        }
+      });
+
       update((x) => ({ ...x, address: account.address }));
-      updateBalance(account.address);
+
       if (!balanceInterval) {
         balanceInterval = setInterval(
           () => updateBalance(account.address),
@@ -139,12 +147,17 @@ export const user = (() => {
   });
 
   // Function to update balance
+  let prevBalance: string;
   async function updateBalance(address: string) {
     const $mud = get(mud);
     if (!$mud?.network?.publicClient) return;
 
     const balance = await $mud.network.publicClient.getBalance({ address });
     const formattedBalance = Number(formatEther(balance)).toFixed(4);
+
+    if (formattedBalance === prevBalance) return;
+    prevBalance = formattedBalance;
+
     update((x) => ({ ...x, balance: formattedBalance }));
   }
 

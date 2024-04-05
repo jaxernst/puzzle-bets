@@ -6,9 +6,7 @@ import { createWallet, type Account as TwAccount } from "thirdweb/wallets";
 import { viemAdapter } from "thirdweb/adapters/viem";
 import { createWalletClient, type Chain } from "viem";
 import { networkConfig } from "./networkConfig";
-import { setupNetwork, type Wallet } from "./setupNetwork";
-import { browser } from "$app/environment";
-import { mud } from "./mudStore";
+import { type Wallet } from "./setupNetwork";
 
 export const tw = createThirdwebClient({
   clientId: PUBLIC_THIRDWEB_CLIENT_ID,
@@ -67,7 +65,7 @@ export const walletStore = (() => {
     tryConnect: async (
       method: "auto" | "google" | "apple" | "email"
     ): Promise<Wallet> => {
-      if (chain.id === 31337) return connectBurner();
+      if (chain.id === 31337 || chain.id === 4242) return connectBurner();
 
       connecting.set(true);
       try {

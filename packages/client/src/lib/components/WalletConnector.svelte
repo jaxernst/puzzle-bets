@@ -11,10 +11,13 @@
   import { onMount } from "svelte";
   import { browser } from "$app/environment";
   import DotLoader from "./DotLoader.svelte";
+  import { PUBLIC_CHAIN_ID } from "$env/static/public";
+  import { networkConfig } from "$lib/mud/networkConfig";
 
   const showModal = writable(false);
 
-  if (browser) {
+  // Temp: don't autoconnect on lattice testnet with burner wallet
+  if (browser && networkConfig.chainId !== 4242) {
     walletStore.tryConnect("auto").then((w) => {
       mud.setup(w);
     });
@@ -30,7 +33,7 @@
 
     return new Promise<Wallet>(async (resolve, reject) => {
       walletStore.subscribe((wallet) => {
-        if (wallet.account) setTimeout(() => resolve(wallet), 1000);
+        if (wallet.account) setTimeout(() => resolve(wallet as Wallet), 1000);
       });
 
       showModal.subscribe((show) => {
@@ -70,7 +73,23 @@
     </button>
 
     <div class="flex-grow flex flex-col gap-4 justify-center">
-      {#if $walletStore.connecting}
+      {#if !$walletStore.account && (networkConfig.chainId === 4242 || networkConfig.chainId === 31337)}
+        <div
+          class="mb-2 text-sm text-neutral-400 max-w-[300px] border-l border-neutral-400 px-2"
+        >
+          This is a testnet preview of Puzzle bets. Connect to create a burner
+          wallet and get it auto-funded with testnet eth!
+        </div>
+        <button
+          class="self-center bg-lime-500 px-3 py-2 rounded-lg font-bold"
+          on:click={() => {
+            walletStore.tryConnect("auto");
+            showModal.set(false);
+          }}
+        >
+          Connect Burner
+        </button>
+      {:else if $walletStore.connecting}
         <DotLoader />
       {:else if $walletStore.account}
         <button

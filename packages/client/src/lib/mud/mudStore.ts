@@ -87,11 +87,16 @@ export const mud = (() => {
   })
 
   /**
-   * Listen for wallet disconnects and force page to reload. There is no a convenient way
-   * to reset the RECs state sync, so full reloading for now
+   * Stop the RECs sync any reset store when the wallet disconnects.
+   * Temp: Reload the page as stopSync() doesn't seem to cleanup everything properly
    */
   walletStore.subscribe(({ account }) => {
     if (browser && get(stateSynced) && !account) {
+      // get(mud)?.stopSync()
+      mud.set(undefined)
+      stateSynced.set(false)
+
+      // Reload the page
       window.location.reload()
     }
   })
@@ -167,7 +172,6 @@ export const user = (() => {
   // Function to update balance
   let prevBalance: string
   async function updateBalance(address: string) {
-    console.log("update", address)
     const $mud = get(mud)
     if (!$mud?.network?.publicClient) return
 

@@ -69,19 +69,24 @@ export async function setupNetwork(wallet: Wallet) {
    * to the viem publicClient to make RPC calls to fetch MUD
    * events from the chain.
    */
-  const { components, latestBlock$, storedBlockLogs$, waitForTransaction } =
-    await syncToRecs({
-      world,
-      config: mudConfig,
-      address: networkConfig.worldAddress as Hex,
-      publicClient,
-      startBlock: BigInt(networkConfig.initialBlockNumber),
-      // Only running an indexer on 4242 currently
-      indexerUrl:
-        browser && networkConfig.chainId === 4242
-          ? window.location.origin
-          : undefined,
-    })
+  const {
+    components,
+    latestBlock$,
+    storedBlockLogs$,
+    waitForTransaction,
+    stopSync,
+  } = await syncToRecs({
+    world,
+    config: mudConfig,
+    address: networkConfig.worldAddress as Hex,
+    publicClient,
+    startBlock: BigInt(networkConfig.initialBlockNumber),
+    // Only running an indexer on 4242 currently
+    indexerUrl:
+      browser && networkConfig.chainId === 4242
+        ? window.location.origin
+        : undefined,
+  })
 
   if (networkConfig.faucetServiceUrl) {
     const address = walletClient.account.address
@@ -136,5 +141,6 @@ export async function setupNetwork(wallet: Wallet) {
     worldContract,
     write$: write$.asObservable().pipe(share()),
     waitForTransaction: retryWaitForTransaction,
+    stopSync,
   }
 }

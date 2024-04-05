@@ -15,7 +15,7 @@ import {
 import { createSystemCalls } from "./createSystemCalls"
 import { walletStore } from "$lib/mud/connectWallet"
 import { PUBLIC_CHAIN_ID } from "$env/static/public"
-import { formatEther } from "viem"
+import { formatEther, type Account } from "viem"
 
 export const mud = (() => {
   const mud = writable<SetupNetworkResult>()
@@ -119,25 +119,28 @@ export const user = (() => {
     balance: "0.00",
   })
 
-  let balanceInterval: NodeJS.Timeout | null = null
+  let unsub: null | (() => any) = null
+  const makeInitialBalanceRequest = async (account: Account) => {
+    if (unsub) return
+    unsub = mud.subscribe(($mud) => {
+      if ($mud.network) {
+        unsub?.()
+        updateBalance(account.address)
+      }
+    })
+  }
 
+  let balanceInterval: NodeJS.Timeout | null = null
   walletStore.subscribe(async ({ account }) => {
     if (account) {
-      // Once account is ready, listen for mud (w/ publicClient) to be ready
-      // to make the first balance query
-      const unsub = mud.subscribe(($mud) => {
-        if ($mud.network) {
-          updateBalance(account.address)
-          unsub()
-        }
-      })
-
       update((x) => ({ ...x, address: account.address }))
+
+      makeInitialBalanceRequest(account)
 
       if (!balanceInterval) {
         balanceInterval = setInterval(
           () => updateBalance(account.address),
-          5000,
+          4000,
         )
       }
     } else {

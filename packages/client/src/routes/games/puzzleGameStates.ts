@@ -37,7 +37,7 @@ export const wordleGameStates = (() => {
   const getOrCreate = async (
     gameId: GameId,
     isDemo: boolean,
-    opponent?: EvmAddress
+    opponent?: EvmAddress,
   ) => {
     if (getOrCreateLoading) return;
     const $user = get(user);
@@ -118,7 +118,7 @@ export const wordleGameStates = (() => {
         s.set(gameId, {
           ...emptyWordleState,
           resetCount: (currentState?.resetCount ?? 0) + 1,
-        })
+        }),
       );
 
       const res = await fetch("/api/wordle/reset-game", {
@@ -163,5 +163,5 @@ export const puzzleStores = derived(
       crossword: new Map(),
       sudoku: new Map(),
     };
-  }
+  },
 ) as Readable<Record<GameType, Map<GameId, PuzzleState>>>;

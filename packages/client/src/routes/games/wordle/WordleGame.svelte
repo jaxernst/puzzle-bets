@@ -1,69 +1,69 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher } from "svelte"
 
   export let data: {
-    answers: string[];
-    answer: null | string;
-    guesses: string[];
-    badGuess: boolean | undefined;
+    answers: string[]
+    answer: null | string
+    guesses: string[]
+    badGuess: boolean | undefined
   } = {
     answers: [],
     answer: null,
     guesses: [],
     badGuess: false,
-  };
+  }
 
-  export let paused = false;
+  export let paused = false
 
-  $: badGuess = data.badGuess;
+  $: badGuess = data.badGuess
 
-  $: won = data.answers[data.answers.length - 1] === "xxxxx";
-  $: gameOver = won || data.answers.length >= 6;
-  $: i = won ? -1 : data.answers.length; // Row index of current guess
-  $: currentGuess = data.guesses[i] || "";
-  $: submittable = currentGuess.length === 5;
+  $: won = data.answers[data.answers.length - 1] === "xxxxx"
+  $: gameOver = won || data.answers.length >= 6
+  $: i = won ? -1 : data.answers.length // Row index of current guess
+  $: currentGuess = data.guesses[i] || ""
+  $: submittable = currentGuess.length === 5
 
   /**
    * A map of classnames for all letters that have been guessed,
    * used for styling the keyboard
    */
-  let classnames: Record<string, "exact" | "close" | "missing">;
+  let classnames: Record<string, "exact" | "close" | "missing">
 
   /**
    * A map of descriptions for all letters that have been guessed,
    * used for adding text for assistive technology (e.g. screen readers)
    */
-  let description: Record<string, string>;
+  let description: Record<string, string>
 
   $: {
-    classnames = {};
-    description = {};
+    classnames = {}
+    description = {}
 
     data.answers.forEach((answer, i) => {
-      const guess = data.guesses[i];
+      const guess = data.guesses[i]
 
       for (let i = 0; i < 5; i += 1) {
-        const letter = guess[i];
+        const letter = guess[i]
 
         if (answer[i] === "x") {
-          classnames[letter] = "exact";
-          description[letter] = "correct";
+          classnames[letter] = "exact"
+          description[letter] = "correct"
         } else if (!classnames[letter]) {
-          classnames[letter] = answer[i] === "c" ? "close" : "missing";
-          description[letter] = answer[i] === "c" ? "present" : "absent";
+          classnames[letter] = answer[i] === "c" ? "close" : "missing"
+          description[letter] = answer[i] === "c" ? "present" : "absent"
         }
       }
-    });
+    })
   }
 
   // Add or remove a letter from the current guess
   function updateCurrentGuess(event: MouseEvent) {
-    const key = (event.target as HTMLButtonElement).getAttribute("data-key");
+    const key = (event.target as HTMLButtonElement).getAttribute("data-key")
 
     if (key === "backspace") {
-      currentGuess = currentGuess.slice(0, -1);
+      currentGuess = currentGuess.slice(0, -1)
     } else if (currentGuess.length < 5) {
-      currentGuess += key;
+      currentGuess += key
     }
   }
 
@@ -72,25 +72,25 @@
    * desktop users can use the keyboard to play the game
    */
   function keydown(event: KeyboardEvent) {
-    const activeElement = document.activeElement;
-    if (activeElement?.tagName === "INPUT") return;
-    if (event.metaKey) return;
+    const activeElement = document.activeElement
+    if (activeElement?.tagName === "INPUT") return
+    if (event.metaKey) return
 
-    if (event.key === "Enter" && !submittable) return;
+    if (event.key === "Enter" && !submittable) return
 
     document
       .querySelector(`[data-key="${event.key}" i]`)
-      ?.dispatchEvent(new MouseEvent("click", { cancelable: true }));
+      ?.dispatchEvent(new MouseEvent("click", { cancelable: true }))
   }
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher()
 
   $: if (won) {
-    dispatch("gameOver", { won: true });
+    dispatch("gameOver", { won: true })
   }
 
   $: if (data.answers.length >= 6 && !won) {
-    dispatch("gameOver", { won: false });
+    dispatch("gameOver", { won: false })
   }
 </script>
 
@@ -107,12 +107,12 @@
   method="POST"
   class="w-full"
   on:submit={(e) => {
-    e.preventDefault();
-    badGuess = false;
-    dispatch("submitGuess", { guess: currentGuess });
+    e.preventDefault()
+    badGuess = false
+    dispatch("submitGuess", { guess: currentGuess })
   }}
 >
-  <div class="text-neutral-600 flex gap-3 text-xs italic">
+  <div class="flex gap-3 text-xs italic text-neutral-600">
     <div class="flex items-center gap-1 whitespace-nowrap">
       Correct
       <div class="letter exact px-2"></div>

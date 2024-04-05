@@ -41,7 +41,7 @@ export function formatTime(timeInSeconds: number) {
   } else if (timeInSeconds < DAY_IN_SECONDS) {
     const hours = Math.floor(timeInSeconds / HOUR_IN_SECONDS);
     const minutes = Math.floor(
-      (timeInSeconds % HOUR_IN_SECONDS) / MINUTE_IN_SECONDS
+      (timeInSeconds % HOUR_IN_SECONDS) / MINUTE_IN_SECONDS,
     );
     return `${hours} hour${hours === 1 ? "" : "s"}, ${minutes} minute${
       minutes === 1 ? "" : "s"
@@ -49,7 +49,7 @@ export function formatTime(timeInSeconds: number) {
   } else if (timeInSeconds < WEEK_IN_SECONDS) {
     const days = Math.floor(timeInSeconds / DAY_IN_SECONDS);
     const hours = Math.floor(
-      (timeInSeconds % DAY_IN_SECONDS) / HOUR_IN_SECONDS
+      (timeInSeconds % DAY_IN_SECONDS) / HOUR_IN_SECONDS,
     );
     return `${days} day${days === 1 ? "" : "s"}, ${hours} hour${
       hours === 1 ? "" : "s"
@@ -142,7 +142,7 @@ export const parseTimeString = (timeString: string) => {
 
 export const shortenAddress = (address: string, chars = 4) => {
   return `${address.substring(0, chars + 2)}...${address.substring(
-    address.length - chars
+    address.length - chars,
   )}`;
 };
 
@@ -155,7 +155,7 @@ export const capitalized = (str: string) => {
 
 export const intToEntity = <T extends boolean = false>(
   id: string | number | undefined | "demo",
-  strict?: T
+  strict?: T,
 ): T extends true ? Entity : Entity | undefined => {
   if (!id || id === "demo") {
     if (strict) throw new Error("No game ID provided");

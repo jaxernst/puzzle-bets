@@ -108,7 +108,7 @@ export async function setupNetwork(wallet: Wallet) {
 
   const retryWaitForTransaction = async (
     tx: `0x${string}`,
-    retries = 0
+    retries = 0,
   ): Promise<void> => {
     try {
       return await waitForTransaction(tx);
@@ -127,7 +127,7 @@ export async function setupNetwork(wallet: Wallet) {
     components,
     playerEntity: encodeEntity(
       { address: "address" },
-      { address: walletClient.account.address as `0x${string}` }
+      { address: walletClient.account.address as `0x${string}` },
     ),
     publicClient,
     walletClient,

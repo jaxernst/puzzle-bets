@@ -78,7 +78,7 @@ export const mud = (() => {
     if (!_mud?.components?.SyncProgress) return;
     stateSynced.set(
       getComponentValue(_mud.components.SyncProgress, "0x" as Entity)?.step ===
-        "live"
+        "live",
     );
   });
 
@@ -96,7 +96,7 @@ export const mud = (() => {
           ready:
             $stateSynced && $network.components && $systemCalls && $network,
         };
-      }
+      },
     ),
     setup: async (account: Wallet) => {
       if (setupLoading || get(stateSynced)) return;
@@ -137,7 +137,7 @@ export const user = (() => {
       if (!balanceInterval) {
         balanceInterval = setInterval(
           () => updateBalance(account.address),
-          5000
+          5000,
         );
       }
     } else {

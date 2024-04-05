@@ -1,47 +1,47 @@
 <script lang="ts">
-  import { mud, user } from "$lib/mud/mudStore";
-  import WalletIcon from "$lib/icons/Wallet.svelte";
-  import { walletStore } from "$lib/mud/connectWallet";
-  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte";
-  import Puzzly from "$lib/icons/puzzly.svelte";
-  import EthSymbol from "$lib/icons/EthSymbol.svelte";
-  import CopyableAddress from "$lib/components/CopyableAddress.svelte";
-  import NotificationBell from "$lib/icons/NotificationBell.svelte";
-  import { formatEther, type PublicClient } from "viem";
-  import { onMount } from "svelte";
-  import { notifications } from "$lib/notifications/notificationStore";
-  import { getPWADisplayMode, isIosSafari } from "$lib/util";
-  import { browser } from "$app/environment";
-  import type { EvmAddress } from "$lib/types";
-  import DotLoader from "$lib/components/DotLoader.svelte";
+  import { mud, user } from "$lib/mud/mudStore"
+  import WalletIcon from "$lib/icons/Wallet.svelte"
+  import { walletStore } from "$lib/mud/connectWallet"
+  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
+  import Puzzly from "$lib/icons/puzzly.svelte"
+  import EthSymbol from "$lib/icons/EthSymbol.svelte"
+  import CopyableAddress from "$lib/components/CopyableAddress.svelte"
+  import NotificationBell from "$lib/icons/NotificationBell.svelte"
+  import { formatEther, type PublicClient } from "viem"
+  import { onMount } from "svelte"
+  import { notifications } from "$lib/notifications/notificationStore"
+  import { getPWADisplayMode, isIosSafari } from "$lib/util"
+  import { browser } from "$app/environment"
+  import type { EvmAddress } from "$lib/types"
+  import DotLoader from "$lib/components/DotLoader.svelte"
 
   const loginAndConnect = async () => {
-    const wallet = await promptConnectWallet();
-    mud.setup(wallet);
-  };
+    const wallet = await promptConnectWallet()
+    mud.setup(wallet)
+  }
 
   $: maybeToggleNotifications = () => {
-    if (!browser) return;
-    if ($notifications.enabled) return $notifications.toggle();
+    if (!browser) return
+    if ($notifications.enabled) return $notifications.toggle()
 
     // Before enabling notifications, make sure device supports it. If we're on
     // ios safari, we need to be in standalone mode
     if (isIosSafari() && getPWADisplayMode() === "browser") {
       alert(
-        "Please install the app to enable notifications. You can do this by clicking the 'Add to Home Screen' button in your browser."
-      );
-      return;
+        "Please install the app to enable notifications. You can do this by clicking the 'Add to Home Screen' button in your browser.",
+      )
+      return
     }
 
-    $notifications.toggle();
-  };
+    $notifications.toggle()
+  }
 </script>
 
-<div class="w-full flex justify-between items-center">
+<div class="flex w-full items-center justify-between">
   <div
-    class="flex items-center text-off-black font-bold text-lg sm:text-xl tracking-wide"
+    class="flex items-center text-lg font-bold tracking-wide text-off-black sm:text-xl"
   >
-    <a href="/welcome" class="h-10 w-10 sm:h-11 sm:w-11 fill-off-black">
+    <a href="/welcome" class="h-10 w-10 fill-off-black sm:h-11 sm:w-11">
       <Puzzly />
     </a>
     <div style="line-height: 1em">
@@ -54,13 +54,13 @@
       {/if}
     </div>
   </div>
-  <div class="flex gap-2 sm:gap-3 justify-end items-center">
+  <div class="flex items-center justify-end gap-2 sm:gap-3">
     {#if $user.address}
-      <div class="flex gap-1 items-center">
-        <div class="text-off-black font-mono text-sm sm:text-base">
+      <div class="flex items-center gap-1">
+        <div class="font-mono text-sm text-off-black sm:text-base">
           {$user.balance}
         </div>
-        <div class="fill-off-black w-4 h-4">
+        <div class="h-4 w-4 fill-off-black">
           <EthSymbol />
         </div>
       </div>
@@ -74,7 +74,7 @@
           <DotLoader klass="fill-neutral-600" />
         {:else}
           <button
-            class="bg-lime-500 rounded-full font-semibold text-[.8rem] px-2 py-1 whitespace-nowrap"
+            class="whitespace-nowrap rounded-full bg-lime-500 px-2 py-1 text-[.8rem] font-semibold"
             on:click={loginAndConnect}
           >
             Connect to play live
@@ -86,18 +86,18 @@
         </div>
         {#if $walletStore && $mud.ready}
           <div
-            class="self-start w-[.4rem] h-[.4rem] rounded-full bg-green-500"
+            class="h-[.4rem] w-[.4rem] self-start rounded-full bg-green-500"
           ></div>
         {/if}
       {/if}
     </button>
     {#if $user.address}
       <button
-        class="h-7 flex items-center justify-center"
+        class="flex h-7 items-center justify-center"
         on:click={maybeToggleNotifications}
       >
         <div
-          class={`w-5 h-5 fill-off-black/90 transition-colors
+          class={`h-5 w-5 fill-off-black/90 transition-colors
               ${$notifications.enabled ? "" : "opacity-50"} 
               ${$notifications.loading ? "animate-pulse" : ""}
             `}
@@ -106,7 +106,7 @@
         </div>
         {#if $notifications.enabled}
           <div
-            class="self-start w-[.4rem] h-[.4rem] rounded-full bg-green-500"
+            class="h-[.4rem] w-[.4rem] self-start rounded-full bg-green-500"
           ></div>
         {/if}
       </button>

@@ -9,13 +9,13 @@ if (!PUBLIC_VAPID_KEY || !PRIVATE_VAPID_KEY) {
 webpush.setVapidDetails(
   "mailto:jaxernst@gmail.com",
   PUBLIC_VAPID_KEY,
-  PRIVATE_VAPID_KEY
+  PRIVATE_VAPID_KEY,
 );
 
 export const sendPushNotification = async (
   title: string,
   body: string,
-  subscription: PushSubscription
+  subscription: PushSubscription,
 ) => {
   try {
     await webpush.sendNotification(
@@ -23,7 +23,7 @@ export const sendPushNotification = async (
       JSON.stringify({
         title,
         body,
-      })
+      }),
     );
   } catch (e) {
     console.error("Error sending push notification", e);

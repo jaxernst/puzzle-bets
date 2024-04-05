@@ -3,7 +3,7 @@ import type { EvmAddress } from "$lib/types";
 
 export async function fetchNotificationState(address: string) {
   const res = await fetch(
-    `/api/notifications/${address}/${await deviceHash()}/status`
+    `/api/notifications/${address}/${await deviceHash()}/status`,
   );
   const { subscribed }: { subscribed: boolean } = await res.json();
   return subscribed;
@@ -50,7 +50,7 @@ export async function subscribeToPushNotifications() {
 
   if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
     console.error(
-      "Browser doesn't support service workers or push notifications."
+      "Browser doesn't support service workers or push notifications.",
     );
     return;
   }
@@ -74,7 +74,7 @@ export const updatePushSubscription = async () => {
   if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
     // If serviceWorker or PushManager are not supported, throw an error or exit the function.
     console.error(
-      "Browser doesn't support service workers or push notifications."
+      "Browser doesn't support service workers or push notifications.",
     );
     return;
   }

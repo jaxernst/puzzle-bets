@@ -1,62 +1,62 @@
 <script lang="ts">
-  import DotLoader from "$lib/components/DotLoader.svelte";
-  import { getGame, liveGameStatus } from "$lib/gameStores";
-  import { mud } from "$lib/mud/mudStore";
-  import { ethPrice } from "$lib/ethPrice";
+  import DotLoader from "$lib/components/DotLoader.svelte"
+  import { getGame, liveGameStatus } from "$lib/gameStores"
+  import { mud } from "$lib/mud/mudStore"
+  import { ethPrice } from "$lib/ethPrice"
   import {
     capitalized,
     formatAsDollar,
     formatTime,
     shortenAddress,
     systemTimestamp,
-  } from "$lib/util";
-  import { type Entity } from "@latticexyz/recs";
-  import { createEventDispatcher, onMount } from "svelte";
-  import { slide } from "svelte/transition";
-  import { cubicInOut } from "svelte/easing";
-  import { formatEther } from "viem";
+  } from "$lib/util"
+  import { type Entity } from "@latticexyz/recs"
+  import { createEventDispatcher, onMount } from "svelte"
+  import { slide } from "svelte/transition"
+  import { cubicInOut } from "svelte/easing"
+  import { formatEther } from "viem"
 
-  export let gameId: Entity;
+  export let gameId: Entity
 
-  $: game = $getGame(gameId);
-  $: gameType = game?.type;
+  $: game = $getGame(gameId)
+  $: gameType = game?.type
 
-  const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher()
 
-  let joinGameLoading = false;
+  let joinGameLoading = false
   const joinGame = async () => {
-    if (!game) return;
-    joinGameLoading = true;
+    if (!game) return
+    joinGameLoading = true
     try {
       await $mud.systemCalls.joinGame(
         gameId,
-        Number(formatEther(game?.buyInAmount))
-      );
-      dispatch("joined");
+        Number(formatEther(game?.buyInAmount)),
+      )
+      dispatch("joined")
 
       fetch(`/api/notifications/${game.p1}/notify-game-joined`, {
         method: "POST",
-      });
+      })
     } finally {
-      joinGameLoading = false;
+      joinGameLoading = false
     }
-  };
+  }
 
-  $: liveStatus = liveGameStatus(gameId);
+  $: liveStatus = liveGameStatus(gameId)
 </script>
 
 {#if game && gameType}
-  <div class="flex flex-col max-w-[450px]">
+  <div class="flex max-w-[450px] flex-col">
     <div class="font-semibold">
       Join <span class="text-lime-500">{capitalized(gameType)}</span> Game #{parseInt(
         gameId,
-        16
+        16,
       )}
     </div>
 
     {#if $liveStatus?.inviteTimeLeft !== undefined}
       <div
-        class="italic text-neutral-400 whitespace-nowrap min-w-[270px]"
+        class="min-w-[270px] whitespace-nowrap italic text-neutral-400"
         in:slide={{ axis: "x", easing: cubicInOut }}
       >
         Invite expires in {formatTime($liveStatus.inviteTimeLeft)}...
@@ -64,7 +64,7 @@
     {/if}
 
     {#if gameType === "wordle"}
-      <ul class="list-disc text-sm pt-4 pb-2 px-4 flex flex-col gap-2">
+      <ul class="flex list-disc flex-col gap-2 px-4 pb-2 pt-4 text-sm">
         <li>
           Be the sole player to solve and submit the Wordle before the deadline
         </li>
@@ -73,7 +73,7 @@
       </ul>
     {/if}
 
-    <div class="text-sm text-neutral-100 px-1 py-4">
+    <div class="px-1 py-4 text-sm text-neutral-100">
       <div class="flex gap-4">
         <div class="flex flex-col gap-1 text-neutral-400">
           <div class="">Game Creator</div>
@@ -85,7 +85,7 @@
           <div class="">
             {#if $ethPrice}
               {formatAsDollar(
-                Number(formatEther(game.buyInAmount)) * $ethPrice
+                Number(formatEther(game.buyInAmount)) * $ethPrice,
               )}
             {:else}
               {formatEther(game.buyInAmount)} eth
@@ -98,11 +98,11 @@
       </div>
     </div>
 
-    <div class="px-4 flex justify-center mt-2">
+    <div class="mt-2 flex justify-center px-4">
       {#key joinGameLoading}
         <button
           in:slide={{ axis: "x" }}
-          class="bg-lime-500 text-white rounded-lg p-2 whitespace-nowrap hover:bg-lime-400 hover:shadow transition-all"
+          class="whitespace-nowrap rounded-lg bg-lime-500 p-2 text-white transition-all hover:bg-lime-400 hover:shadow"
           on:click={joinGame}
         >
           {#if joinGameLoading}

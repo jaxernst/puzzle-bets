@@ -16,7 +16,7 @@ export const notifications = (() => {
     [enabledBackend, enabledClient],
     ([$enabledBackend, $enabledClient]) => {
       return $enabledBackend && $enabledClient;
-    }
+    },
   );
 
   const loading = writable(false);
@@ -48,7 +48,7 @@ export const notifications = (() => {
             `/api/notifications/${$user.address}/${deviceId}/unsubscribe`,
             {
               method: "POST",
-            }
+            },
           );
 
           res.ok && enabledBackend.set(false);
@@ -68,7 +68,7 @@ export const notifications = (() => {
                 headers: {
                   "content-type": "application/json",
                 },
-              }
+              },
             );
 
             res.ok && enabledBackend.set(true);
@@ -84,7 +84,7 @@ export const notifications = (() => {
           loading.set(false);
         }
       };
-    }
+    },
   ) as Readable<() => Promise<void>>;
 
   return derived(
@@ -95,6 +95,6 @@ export const notifications = (() => {
         loading,
         toggle,
       };
-    }
+    },
   );
 })();

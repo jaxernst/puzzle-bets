@@ -1,21 +1,21 @@
 <script>
-  import { page } from "$app/stores";
-  import AnimatedArrow from "$lib/components/AnimatedArrow.svelte";
-  import DotLoader from "$lib/components/DotLoader.svelte";
-  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte";
-  import Puzzly from "$lib/icons/puzzly.svelte";
-  import { walletStore } from "$lib/mud/connectWallet";
-  import { mud, user } from "$lib/mud/mudStore";
-  import { cubicOut } from "svelte/easing";
-  import { fade, fly } from "svelte/transition";
+  import { page } from "$app/stores"
+  import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
+  import DotLoader from "$lib/components/DotLoader.svelte"
+  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
+  import Puzzly from "$lib/icons/puzzly.svelte"
+  import { walletStore } from "$lib/mud/connectWallet"
+  import { mud, user } from "$lib/mud/mudStore"
+  import { cubicOut } from "svelte/easing"
+  import { fade, fly } from "svelte/transition"
 
   const loginAndConnect = async () => {
-    const wallet = await promptConnectWallet();
+    const wallet = await promptConnectWallet()
     // const wallet = walletStore.tryConnect();
-    await mud.setup(wallet);
-  };
+    await mud.setup(wallet)
+  }
 
-  $: path = $page.url.pathname;
+  $: path = $page.url.pathname
 </script>
 
 <svelte:head>
@@ -28,31 +28,31 @@
 </svelte:head>
 
 <div
-  class="col-start-1 row-start-1 flex flex-col gap-24 items-center justify-evenly flex-grow"
+  class="col-start-1 row-start-1 flex flex-grow flex-col items-center justify-evenly gap-24"
   transition:fade={{ duration: 450, easing: cubicOut }}
 >
-  <div class="flex flex-col gap-1 items-center">
+  <div class="flex flex-col items-center gap-1">
     <div class="p-4">
       <div class="h-28 w-28 fill-off-black">
         <Puzzly />
       </div>
     </div>
-    <div class="relative text-off-black text-xl sm:text-2xl font-bold">
+    <div class="relative text-xl font-bold text-off-black sm:text-2xl">
       Welcome to Puzzle Bets.
       <div
         in:fade={{ duration: 500, delay: 600 }}
-        class="text-[.6rem] font-mono absolute -top-5 -right-10 rotate-12"
+        class="absolute -right-10 -top-5 rotate-12 font-mono text-[.6rem]"
       >
         (Testnet beta)
       </div>
     </div>
     <div class="text-neutral-400">Play puzzles, compete with friends</div>
   </div>
-  <div class="text-sm sm:text-base flex flex-col gap-2 items-center">
+  <div class="flex flex-col items-center gap-2 text-sm sm:text-base">
     {#if !$user.address}
       <button
         on:click={loginAndConnect}
-        class="p-3 text-white bg-lime-500 font-semibold hover:bg-lime-400 active:bg-lime-600 hover:shadow transition-all duration-300 rounded-xl"
+        class="rounded-xl bg-lime-500 p-3 font-semibold text-white transition-all duration-300 hover:bg-lime-400 hover:shadow active:bg-lime-600"
       >
         {#if $walletStore.connecting}
           <DotLoader />
@@ -61,10 +61,10 @@
         {/if}
       </button>
 
-      <div class="text-neutral-400 text-xs">or</div>
+      <div class="text-xs text-neutral-400">or</div>
     {/if}
 
-    <a href="/about" class="font-semibold text-neutral-500 flex items-center">
+    <a href="/about" class="flex items-center font-semibold text-neutral-500">
       Learn more
       <AnimatedArrow
         direction={path === "/welcome" ? "down" : "up"}

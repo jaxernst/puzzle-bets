@@ -20,10 +20,10 @@ export function createSystemCalls({
     wagerEth: number,
     submissionWindowMinutes: number,
     inviteExpirationMinutes: number,
-    specifiedOpponent: EvmAddress = zeroAddress
+    specifiedOpponent: EvmAddress = zeroAddress,
   ) => {
     const inviteExpirationTimestamp = BigInt(
-      systemTimestamp() + inviteExpirationMinutes * 60
+      systemTimestamp() + inviteExpirationMinutes * 60,
     );
 
     const tx = await worldContract.write.games__newGame(
@@ -34,7 +34,7 @@ export function createSystemCalls({
         specifiedOpponent,
         env.PUBLIC_PUZZLE_MASTER_ADDRESS as EvmAddress,
       ],
-      { value: parseEther(wagerEth.toString()) }
+      { value: parseEther(wagerEth.toString()) },
     );
 
     await waitForTransaction(tx);
@@ -43,14 +43,14 @@ export function createSystemCalls({
   const joinGame = async (gameId: Entity, wagerEth: number) => {
     const tx = await worldContract.write.games__joinGame(
       [gameId as `0x${string}`],
-      { value: parseEther(wagerEth.toString()) }
+      { value: parseEther(wagerEth.toString()) },
     );
     await waitForTransaction(tx);
   };
 
   const submitSolution = async (
     gameId: Entity,
-    solutionSignature: `0x${string}`
+    solutionSignature: `0x${string}`,
   ) => {
     const tx = await worldContract.write.games__submitSolution([
       gameId as `0x${string}`,

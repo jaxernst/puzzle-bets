@@ -20,7 +20,7 @@ export const POST = async ({ params }) => {
       await sendPushNotification(
         "Puzzle Match Restarted!",
         "Both players have voted to rematch, solve the puzzle before time runs out.",
-        subscription as any
+        subscription as any,
       );
     } catch (e: any) {
       return new Response("Push failed", { status: e.status ?? 500 });

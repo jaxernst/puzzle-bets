@@ -24,9 +24,9 @@ export const POST = async ({ request }): Promise<Response> => {
         won: true,
         signature: await signPlayerSolvedMessage(
           Number(gameId),
-          user as EvmAddress
+          user as EvmAddress,
         ),
-      })
+      }),
     );
   } else {
     return new Response(JSON.stringify({ won: false }));

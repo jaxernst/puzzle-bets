@@ -14,7 +14,7 @@ export const POST = async ({ request, params }) => {
   const res = await supabaseGameSettingsStore.setArchiveState(
     gameId,
     user,
-    archived
+    archived,
   );
 
   return new Response(JSON.stringify(res));

@@ -1,5 +1,5 @@
 <script>
-  export let klass = "fill-lime-600";
+  export let klass = "fill-lime-600"
 </script>
 
 <svg

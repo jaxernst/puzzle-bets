@@ -13,32 +13,32 @@ interface GameStore {
     gameType: GameType,
     gameId: string,
     user?: string,
-    isDemo?: boolean
+    isDemo?: boolean,
   ) => Promise<boolean>;
   getGame: (
     gameType: GameType,
     gameId: string,
     user?: string,
-    isDemo?: boolean
+    isDemo?: boolean,
   ) => Promise<string>;
   setGame: (
     gameState: string,
     gameType: GameType,
     gameId: string,
     user?: string,
-    isDemo?: boolean
+    isDemo?: boolean,
   ) => Promise<boolean>;
   createDuelGame: (
     gameState: string,
     gameType: GameType,
     gameId: string,
     p1: string,
-    p2: string
+    p2: string,
   ) => Promise<boolean>;
   resetDuelGame: (
     gameId: string,
     newGameState: string,
-    chainRematchCount: number
+    chainRematchCount: number,
   ) => Promise<boolean>;
 }
 
@@ -119,7 +119,7 @@ interface GameSettingsStore {
   setArchiveState: (
     gameId: number,
     user: string,
-    archived: boolean
+    archived: boolean,
   ) => Promise<boolean>;
   getArchivedGames: (user: string) => Promise<string[]>;
 }

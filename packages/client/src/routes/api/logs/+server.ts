@@ -31,7 +31,7 @@ export const GET = async ({ request }) => {
           encodedLengths: fallbackHex(row.encoded_lengths),
           dynamicData: fallbackHex(row.dynamic_data),
         },
-      } as const)
+      }) as const,
   );
 
   return new Response(
@@ -39,6 +39,6 @@ export const GET = async ({ request }) => {
       blockNumber: data[0].block_number.toString(),
       logs: logRecords,
     }),
-    { status: 200 }
+    { status: 200 },
   );
 };

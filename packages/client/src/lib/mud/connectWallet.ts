@@ -57,13 +57,13 @@ export const walletStore = (() => {
     ([$wallet, $connecting]) => ({
       ...$wallet,
       connecting: $connecting,
-    })
+    }),
   );
 
   return {
     subscribe,
     tryConnect: async (
-      method: "auto" | "google" | "apple" | "email"
+      method: "auto" | "google" | "apple" | "email",
     ): Promise<Wallet> => {
       if (chain.id === 31337 || chain.id === 4242) return connectBurner();
 

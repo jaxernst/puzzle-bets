@@ -63,8 +63,8 @@ export const userSolvedGame = derived(mud, ($mud) => {
       $mud.components.Solved,
       encodeEntity(
         { gameId: "bytes32", player: "address" },
-        { gameId: gameId as `0x${string}`, player: user }
-      )
+        { gameId: gameId as `0x${string}`, player: user },
+      ),
     );
 
     return solved?.value ?? false;
@@ -89,7 +89,7 @@ export function liveGameStatus(gameId: Entity) {
   const updateStatusTimers = (onGameFinalized: () => void) => {
     const { inviteExpiration, startTime, submissionWindow } = gameIdToGame(
       gameId,
-      get(mud).components
+      get(mud).components,
     );
 
     store.update((g) => {
@@ -200,7 +200,7 @@ export const userArchivedGames = (() => {
           gameId: parseInt(gameId, 16),
           archived: archiveState,
         }),
-      }
+      },
     );
 
     if (res.ok) {
@@ -227,7 +227,7 @@ export const gameInviteUrls = (() => {
     gameType: GameType,
     gameId: number,
     gameWagerUsd?: number,
-    inviteName?: string | null
+    inviteName?: string | null,
   ) => {
     const urlParams = new URLSearchParams({
       gameType: gameType,
@@ -250,7 +250,7 @@ export const gameInviteUrls = (() => {
       gameType: GameType,
       gameId: number,
       gameWagerUsd?: number,
-      inviteName?: string | null
+      inviteName?: string | null,
     ) => {
       const url = makeInviteUrl(gameType, gameId, gameWagerUsd, inviteName);
       urls.update((urls) => {
@@ -269,7 +269,7 @@ export const gameInviteUrls = (() => {
 
 const gameIdToGame = (
   gameId: Entity,
-  mudComponents: SetupNetworkResult["components"]
+  mudComponents: SetupNetworkResult["components"],
 ) => {
   const gameType =
     gameNumberToType[
@@ -289,31 +289,29 @@ const gameIdToGame = (
   const buyInAmount =
     getComponentValue(mudComponents.BuyIn, gameId)?.value ?? 0n;
 
-  const startTime = getComponentValue(
-    mudComponents.GameStartTime,
-    gameId
-  )?.value;
+  const startTime = getComponentValue(mudComponents.GameStartTime, gameId)
+    ?.value;
 
   const submissionWindow = getComponentValueStrict(
     mudComponents.SubmissionWindow,
-    gameId
+    gameId,
   ).value;
 
   const inviteExpiration = getComponentValueStrict(
     mudComponents.InviteExpiration,
-    gameId
+    gameId,
   ).value;
 
   const p1GameKey = encodeEntity(
     { gameId: "bytes32", player: "address" },
-    { gameId: gameId as `0x${string}`, player: p1 as `0x${string}` }
+    { gameId: gameId as `0x${string}`, player: p1 as `0x${string}` },
   );
 
   const p2GameKey =
     p2 &&
     encodeEntity(
       { gameId: "bytes32", player: "address" },
-      { gameId: gameId as `0x${string}`, player: p2 as `0x${string}` }
+      { gameId: gameId as `0x${string}`, player: p2 as `0x${string}` },
     );
 
   const p1Balance =
@@ -323,10 +321,8 @@ const gameIdToGame = (
     (p2GameKey && getComponentValue(mudComponents.Balance, p2GameKey)?.value) ??
     0n;
 
-  const p1Rematch = getComponentValue(
-    mudComponents.VoteRematch,
-    p1GameKey
-  )?.value;
+  const p1Rematch = getComponentValue(mudComponents.VoteRematch, p1GameKey)
+    ?.value;
 
   const p2Rematch =
     p2GameKey && getComponentValue(mudComponents.VoteRematch, p2GameKey)?.value;

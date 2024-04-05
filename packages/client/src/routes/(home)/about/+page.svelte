@@ -1,13 +1,13 @@
 <script>
-  import AnimatedArrow from "$lib/components/AnimatedArrow.svelte";
-  import { fade, slide } from "svelte/transition";
-  import { page } from "$app/stores";
-  import { cubicOut } from "svelte/easing";
-  import Warpcast from "$lib/icons/Warpcast.svelte";
-  import Github from "$lib/icons/Github.svelte";
+  import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
+  import { fade, slide } from "svelte/transition"
+  import { page } from "$app/stores"
+  import { cubicOut } from "svelte/easing"
+  import Warpcast from "$lib/icons/Warpcast.svelte"
+  import Github from "$lib/icons/Github.svelte"
 
-  $: path = $page.url.pathname;
-  const slideDuration = 450;
+  $: path = $page.url.pathname
+  const slideDuration = 450
 </script>
 
 <svelte:head>
@@ -17,12 +17,12 @@
 
 <div class="relative col-start-1 row-start-1">
   <div
-    class="absolute bottom-0 left-0 w-full h-full col-start-1"
+    class="absolute bottom-0 left-0 col-start-1 h-full w-full"
     transition:slide={{ duration: slideDuration, easing: cubicOut }}
   >
     <a
       href="/welcome"
-      class="w-full text-center font-semibold text-neutral-500 flex justify-center items-center"
+      class="flex w-full items-center justify-center text-center font-semibold text-neutral-500"
       in:fade={{ delay: slideDuration / 8 }}
     >
       Return home
@@ -32,19 +32,19 @@
       />
     </a>
 
-    <h1 class="text-neutral-800 font-semibold my-4 text-2xl">The Game</h1>
+    <h1 class="my-4 text-2xl font-semibold text-neutral-800">The Game</h1>
 
-    <p class="py-1 text-neutral-600 font-medium">
+    <p class="py-1 font-medium text-neutral-600">
       Puzzle bets is a player vs player onchain competitive puzzle game. Players
       can challenge each other to puzzles, and place wagers on the results.
     </p>
 
-    <p class="mt-3 py-1 text-neutral-600 font-medium">
+    <p class="mt-3 py-1 font-medium text-neutral-600">
       Currently, only Wordle is supported, but more puzzles are coming soon!
     </p>
 
-    <h2 class="mt-4 text-xl text-lime-500 font-bold">How to Play</h2>
-    <p class="py-1 text-neutral-600 font-medium">
+    <h2 class="mt-4 text-xl font-bold text-lime-500">How to Play</h2>
+    <p class="py-1 font-medium text-neutral-600">
       Players challenge each other by creating games and sharing invite links.
       To initiate a game, a player deposits their wager into a smart contract,
       the game gets created, and an invite link is generated. After sharing this
@@ -53,9 +53,9 @@
       ticking.
     </p>
 
-    <h2 class="mt-4 text-xl text-lime-500 font-bold">Winning the pot</h2>
+    <h2 class="mt-4 text-xl font-bold text-lime-500">Winning the pot</h2>
 
-    <p class="py-1 text-neutral-600 font-medium">
+    <p class="py-1 font-medium text-neutral-600">
       Different puzzles will have different criteria to determine a victor.
       Currently, only <span class="font-bold">Wordle</span> is supported. In order
       to win the Wordle pot, you must be the sole player to solve the Wordle in the
@@ -63,28 +63,28 @@
       emerges.
     </p>
 
-    <h1 class="text-neutral-800 font-semibold mb-4 mt-6 text-2xl">
+    <h1 class="mb-4 mt-6 text-2xl font-semibold text-neutral-800">
       The Project
     </h1>
 
-    <p class="py-1 text-neutral-600 font-medium">
+    <p class="py-1 font-medium text-neutral-600">
       Puzzle bets is being developed in the open! All code, including the smart
       contracts, backend, and frontend are open source and available on Github
     </p>
 
-    <p class="py-1 text-neutral-600 font-medium">
+    <p class="py-1 font-medium text-neutral-600">
       This is an early, unofficial testnet release of Puzzle Bets. Any feedback
       or bugs reports are welcome on github, Farcaster, or Twitter.
     </p>
 
-    <h2 class="mt-4 text-xl text-lime-500 font-bold">Follow For Updates</h2>
+    <h2 class="mt-4 text-xl font-bold text-lime-500">Follow For Updates</h2>
 
-    <div class="px-2 py-4 flex flex-col gap-4">
+    <div class="flex flex-col gap-4 px-2 py-4">
       <a
         href="https://warpcast.com/~/channel/puzzlebets"
-        class="flex gap-2 items-center text-purple-800 font-bold"
+        class="flex items-center gap-2 font-bold text-purple-800"
       >
-        <div class="w-6 h-6">
+        <div class="h-6 w-6">
           <Warpcast />
         </div>
         Puzzle Bets on Farcaster
@@ -92,16 +92,16 @@
 
       <a
         href="https://github.com/jaxernst/puzzle-bets"
-        class="flex gap-2 items-center text-neutral-800 font-bold"
+        class="flex items-center gap-2 font-bold text-neutral-800"
       >
-        <div class="w-6 h-6">
+        <div class="h-6 w-6">
           <Github />
         </div>
         Puzzle Bets source code
       </a>
 
       <p
-        class="p-4 text-neutral-600 font-medium w-full flex justify-center gap-2"
+        class="flex w-full justify-center gap-2 p-4 font-medium text-neutral-600"
       >
         By
         <a

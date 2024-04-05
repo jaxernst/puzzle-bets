@@ -1,13 +1,13 @@
 <script lang="ts">
-  export let direction: "up" | "down" | "left" | "right";
-  export let klass = "";
+  export let direction: "up" | "down" | "left" | "right"
+  export let klass = ""
 
   $: rotation = {
     up: "rotate-90",
     right: "rotate-180",
     down: "-rotate-90",
     left: "",
-  }[direction];
+  }[direction]
 </script>
 
 <svg

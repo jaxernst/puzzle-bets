@@ -22,5 +22,5 @@ export const prefersReducedMotion = readable(
         media_query_list.removeEventListener("change", set_reduced_motion);
       };
     }
-  }
+  },
 );

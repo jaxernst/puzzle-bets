@@ -19,7 +19,7 @@ export const POST = async ({ request, cookies }) => {
     "wordle",
     gameId,
     user,
-    isDemo
+    isDemo,
   );
 
   if (!gameExists) return new Response("No game to reset", { status: 400 });
@@ -44,7 +44,7 @@ export const POST = async ({ request, cookies }) => {
       "wordle",
       gameId,
       user,
-      isDemo
+      isDemo,
     );
   } else {
     if (!chainRematchCount) {
@@ -53,7 +53,7 @@ export const POST = async ({ request, cookies }) => {
     const success = await supabaseGameStore.resetDuelGame(
       gameId,
       game.toString(),
-      chainRematchCount
+      chainRematchCount,
     );
     if (!success) {
       return new Response("Game not resetable", { status: 403 });
@@ -70,6 +70,6 @@ export const POST = async ({ request, cookies }) => {
       answer: null,
       badGuess: false,
       resetCount: chainRematchCount,
-    })
+    }),
   );
 };

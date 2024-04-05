@@ -40,7 +40,7 @@ export const networkConfig = (() => {
    * 4. The default, 31337 (anvil)
    */
   const chainId = Number(
-    params.get("chainId") || params.get("chainid") || PUBLIC_CHAIN_ID || 31337
+    params.get("chainId") || params.get("chainid") || PUBLIC_CHAIN_ID || 31337,
   );
 
   /*
@@ -61,7 +61,7 @@ export const networkConfig = (() => {
   const worldAddress = params.get("worldAddress") || world?.address;
   if (!worldAddress) {
     throw new Error(
-      `No world address found for chain ${chainId}. Did you run \`mud deploy\`?`
+      `No world address found for chain ${chainId}. Did you run \`mud deploy\`?`,
     );
   }
 

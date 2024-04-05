@@ -111,5 +111,5 @@ self.addEventListener(
   "pushsubscriptionchange" as any,
   (event: PushSubscriptionChangeEvent) => {
     event.waitUntil(handlePushRenew());
-  }
+  },
 );

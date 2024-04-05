@@ -50,6 +50,6 @@ export const POST = async ({ request, cookies }): Promise<Response> => {
       solved,
       lost,
       resetCount,
-    })
+    }),
   );
 };

@@ -9,7 +9,7 @@ export const getOrCreateDemo = async (gameId: string, user?: string) => {
       "wordle",
       gameId,
       user,
-      true
+      true,
     );
     return new Game(gameState);
   } else {
@@ -19,7 +19,7 @@ export const getOrCreateDemo = async (gameId: string, user?: string) => {
       "wordle",
       gameId,
       user,
-      true
+      true,
     );
     return game;
   }
@@ -28,7 +28,7 @@ export const getOrCreateDemo = async (gameId: string, user?: string) => {
 export const getOrCreateLiveGame = async (
   gameId: string,
   user: string,
-  opponent: string
+  opponent: string,
 ) => {
   // One call to get get -> returns the game state if it exists
   let gameState = await supabaseGameStore.getGame("wordle", gameId, user);
@@ -38,7 +38,7 @@ export const getOrCreateLiveGame = async (
       "wordle",
       gameId,
       user,
-      opponent
+      opponent,
     );
 
     gameState = await supabaseGameStore.getGame("wordle", gameId, user);

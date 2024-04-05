@@ -8,7 +8,7 @@ const viteHeaderPlugin: Plugin = {
     server.middlewares.use((req, res, next) => {
       res.setHeader(
         "Cross-Origin-Opener-Policy",
-        "same-origin, same-origin-allow-popups"
+        "same-origin, same-origin-allow-popups",
       );
       next();
     });

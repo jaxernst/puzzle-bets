@@ -18,7 +18,7 @@ export const POST = async ({ request, cookies }): Promise<Response> => {
     "wordle",
     gameId,
     user,
-    isDemo
+    isDemo,
   );
 
   if (!hasGame) {
@@ -29,7 +29,7 @@ export const POST = async ({ request, cookies }): Promise<Response> => {
     "wordle",
     gameId,
     user,
-    isDemo
+    isDemo,
   );
 
   const game = new Game(gameState);
@@ -39,7 +39,7 @@ export const POST = async ({ request, cookies }): Promise<Response> => {
     "wordle",
     gameId,
     user,
-    isDemo
+    isDemo,
   );
 
   const solved = game.won();
@@ -59,6 +59,6 @@ export const POST = async ({ request, cookies }): Promise<Response> => {
       solved,
       lost,
       badGuess: !valid,
-    })
+    }),
   );
 };

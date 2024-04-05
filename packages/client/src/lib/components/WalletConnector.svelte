@@ -30,7 +30,7 @@
 
     return new Promise<Wallet>(async (resolve, reject) => {
       walletStore.subscribe((wallet) => {
-        if (wallet) setTimeout(() => resolve(wallet), 1000);
+        if (wallet.account) setTimeout(() => resolve(wallet), 1000);
       });
 
       showModal.subscribe((show) => {

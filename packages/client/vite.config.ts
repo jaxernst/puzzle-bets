@@ -1,8 +1,8 @@
 import { sveltekit } from "@sveltejs/kit/vite";
 import { defineConfig } from "vite";
+import type { Plugin } from "vite";
 
-/** @type {import('vite').Plugin} */
-const viteHeaderPlugin = {
+const viteHeaderPlugin: Plugin = {
   name: "add headers",
   configureServer: (server) => {
     server.middlewares.use((req, res, next) => {

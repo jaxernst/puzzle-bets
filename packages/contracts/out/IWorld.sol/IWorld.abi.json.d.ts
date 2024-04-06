@@ -152,12 +152,26 @@ declare const abi: [
   },
   {
     "type": "function",
-    "name": "games__cancelPendingGame",
+    "name": "games__applyBetSystem",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "games__claim",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "games__createGame",
     "inputs": [
       {
-        "name": "gameId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        "name": "puzzleType",
+        "type": "uint8",
+        "internalType": "enum Puzzle"
       }
     ],
     "outputs": [],
@@ -165,7 +179,14 @@ declare const abi: [
   },
   {
     "type": "function",
-    "name": "games__claim",
+    "name": "games__deposit",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "games__join",
     "inputs": [
       {
         "name": "gameId",
@@ -179,62 +200,23 @@ declare const abi: [
   {
     "type": "function",
     "name": "games__joinGame",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "games__makeTwoPlayer",
     "inputs": [
       {
         "name": "gameId",
         "type": "bytes32",
         "internalType": "bytes32"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "payable"
-  },
-  {
-    "type": "function",
-    "name": "games__newGame",
-    "inputs": [
-      {
-        "name": "gameType",
-        "type": "uint8",
-        "internalType": "enum Game"
-      },
-      {
-        "name": "submissionWindowSeconds",
-        "type": "uint32",
-        "internalType": "uint32"
-      },
-      {
-        "name": "inviteExpirationTimestamp",
-        "type": "uint256",
-        "internalType": "uint256"
       },
       {
         "name": "opponent",
         "type": "address",
         "internalType": "address"
-      },
-      {
-        "name": "puzzleMaster",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "payable"
-  },
-  {
-    "type": "function",
-    "name": "games__submitSolution",
-    "inputs": [
-      {
-        "name": "gameId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "puzzleMasterSignature",
-        "type": "bytes",
-        "internalType": "bytes"
       }
     ],
     "outputs": [],
@@ -242,14 +224,64 @@ declare const abi: [
   },
   {
     "type": "function",
+    "name": "games__restart",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "games__setGameVisibility",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "games__setMaxPlayers",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "games__setMinPlayers",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "games__setRematchable",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "games__setSubmissionDeadline",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "games__submitSolution",
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
     "name": "games__voteRematch",
-    "inputs": [
-      {
-        "name": "gameId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
+    "inputs": [],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "games__whitelistPlayers",
+    "inputs": [],
     "outputs": [],
     "stateMutability": "nonpayable"
   },

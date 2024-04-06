@@ -8,21 +8,37 @@ import { defineWorld } from "@latticexyz/world";
 export default defineWorld({
   namespace: "games",
   enums: {
-    Status: ["Inactive", "Pending", "Active", "Complete"],
-    Game: ["Wordle"],
+    Puzzle: ["Wordle"],
+    Status: ["Cancelled", "Pending", "Active", "Complete"],
+    VerificationMethod: ["Contract", "Eoa"],
+    WinScheme: ["FirstToSolve", "HighScore", "SoleSolver"],
+    Currency: ["Eth", "ERC20"],
   },
   tables: {
-    GameType: "Game",
+    // Game type
+    PuzzleType: "Puzzle",
     GameStatus: "Status",
-    BuyIn: "uint256",
-    SubmissionWindow: "uint32",
-    InviteExpiration: "uint256",
-    GameStartTime: "uint256",
-    PuzzleMasterEoa: "address",
-    Player1: "address",
-    Player2: "address",
-    RematchCount: "uint16",
+    WinSchemeType: "WinScheme",
 
+    // Players
+    GameCreator: "address",
+    TwoPlayerGame: "bool",
+    PlayersJoined: "uint16",
+    InviteExpiration: "uint256",
+    Players: {
+      schema: {
+        gameId: "bytes32",
+        player: "address",
+        value: "bool",
+      },
+      key: ["gameId", "player"],
+    },
+
+    // Game solution submission/verification
+    SolutionVerificationMethod: "VerificationMethod",
+    PuzzleMasterEoa: "address",
+    PuzzleMasterContract: "address",
+    SubmissionWindow: "uint32",
     Solved: {
       schema: {
         gameId: "bytes32",
@@ -31,15 +47,18 @@ export default defineWorld({
       },
       key: ["gameId", "player"],
     },
-    Balance: {
+    Score: {
       schema: {
         gameId: "bytes32",
         player: "address",
-        value: "uint256",
+        value: "uint32",
       },
       key: ["gameId", "player"],
     },
 
+    // Game timeline
+    RematchCount: "uint16",
+    GameStartTime: "uint256",
     VoteRematch: {
       schema: {
         gameId: "bytes32",
@@ -48,8 +67,20 @@ export default defineWorld({
       },
       key: ["gameId", "me"],
     },
-  },
 
+    // Game bet rules
+    BuyInAmount: "uint256",
+    BuyInType: "Currency",
+    BuyInCurrencyAddress: "address",
+    GameBalances: {
+      schema: {
+        gameId: "bytes32",
+        player: "address",
+        value: "uint256",
+      },
+      key: ["gameId", "player"],
+    },
+  },
   modules: [
     {
       name: "UniqueEntityModule",

@@ -13,7 +13,7 @@ import { IWorld } from "../codegen/world/IWorld.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 
 /**
- * The System facillitates games between two players. Games are played in a syncronous fashion, where
+ * This System facillitates games between two players. Games are played in a syncronous fashion, where
  * the game starts for both players once the 2nd player joins. Both players will have the same amount of time to submit
  * a verified solution.
  *
@@ -34,7 +34,7 @@ contract DeadlinePuzzleSystem is System {
     uint inviteExpirationTimestamp,
     address opponent,
     address puzzleMaster
-  ) public payable {
+  ) public payable returns (bytes32) {
     address creator = _msgSender();
     uint betAmount = _msgValue();
 
@@ -54,6 +54,8 @@ contract DeadlinePuzzleSystem is System {
     Balance.set(gameId, creator, betAmount);
     BuyIn.set(gameId, betAmount);
     PuzzleMasterEoa.set(gameId, puzzleMaster);
+
+    return gameId;
   }
 
   function joinGame(bytes32 gameId) public payable {
@@ -195,13 +197,3 @@ contract DeadlinePuzzleSystem is System {
     IWorld(_world()).transferBalanceToAddress(ResourceIdLib.encode(RESOURCE_NAMESPACE, "games"), to, amount);
   }
 }
-
-/* Exploring other system designs for games
-
-
-GameCreationSystem:
-  new()
-  join()
-
-
-*/

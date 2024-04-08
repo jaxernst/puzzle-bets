@@ -7,4 +7,6 @@ contract BetSystem is System {
   function createBetRules() public {}
 
   function deposit() public {}
+
+  function claim() public {}
 }

@@ -6,5 +6,5 @@ import { System } from "@latticexyz/world/src/System.sol";
 contract BetSystem is System {
   function createBetRules() public {}
 
-  function deposite() public {}
+  function deposit() public {}
 }

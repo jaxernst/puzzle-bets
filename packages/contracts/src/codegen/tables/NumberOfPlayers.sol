@@ -16,26 +16,25 @@ import { Schema } from "@latticexyz/store/src/Schema.sol";
 import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/EncodedLengths.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
-library Balance {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "games", name: "Balance", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x746267616d657300000000000000000042616c616e6365000000000000000000);
+library NumberOfPlayers {
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "games", name: "NumberOfPlayers", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x746267616d65730000000000000000004e756d6265724f66506c617965727300);
 
   FieldLayout constant _fieldLayout =
-    FieldLayout.wrap(0x0020010020000000000000000000000000000000000000000000000000000000);
+    FieldLayout.wrap(0x0002010002000000000000000000000000000000000000000000000000000000);
 
-  // Hex-encoded key schema of (bytes32, address)
-  Schema constant _keySchema = Schema.wrap(0x003402005f610000000000000000000000000000000000000000000000000000);
-  // Hex-encoded value schema of (uint256)
-  Schema constant _valueSchema = Schema.wrap(0x002001001f000000000000000000000000000000000000000000000000000000);
+  // Hex-encoded key schema of (bytes32)
+  Schema constant _keySchema = Schema.wrap(0x002001005f000000000000000000000000000000000000000000000000000000);
+  // Hex-encoded value schema of (uint16)
+  Schema constant _valueSchema = Schema.wrap(0x0002010001000000000000000000000000000000000000000000000000000000);
 
   /**
    * @notice Get the table's key field names.
    * @return keyNames An array of strings with the names of key fields.
    */
   function getKeyNames() internal pure returns (string[] memory keyNames) {
-    keyNames = new string[](2);
-    keyNames[0] = "gameId";
-    keyNames[1] = "player";
+    keyNames = new string[](1);
+    keyNames[0] = "id";
   }
 
   /**
@@ -64,58 +63,53 @@ library Balance {
   /**
    * @notice Get value.
    */
-  function getValue(bytes32 gameId, address player) internal view returns (uint256 value) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function getValue(bytes32 id) internal view returns (uint16 value) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint256(bytes32(_blob)));
+    return (uint16(bytes2(_blob)));
   }
 
   /**
    * @notice Get value.
    */
-  function _getValue(bytes32 gameId, address player) internal view returns (uint256 value) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function _getValue(bytes32 id) internal view returns (uint16 value) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint256(bytes32(_blob)));
+    return (uint16(bytes2(_blob)));
   }
 
   /**
    * @notice Get value.
    */
-  function get(bytes32 gameId, address player) internal view returns (uint256 value) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function get(bytes32 id) internal view returns (uint16 value) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     bytes32 _blob = StoreSwitch.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint256(bytes32(_blob)));
+    return (uint16(bytes2(_blob)));
   }
 
   /**
    * @notice Get value.
    */
-  function _get(bytes32 gameId, address player) internal view returns (uint256 value) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function _get(bytes32 id) internal view returns (uint16 value) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     bytes32 _blob = StoreCore.getStaticField(_tableId, _keyTuple, 0, _fieldLayout);
-    return (uint256(bytes32(_blob)));
+    return (uint16(bytes2(_blob)));
   }
 
   /**
    * @notice Set value.
    */
-  function setValue(bytes32 gameId, address player, uint256 value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function setValue(bytes32 id, uint16 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -123,10 +117,9 @@ library Balance {
   /**
    * @notice Set value.
    */
-  function _setValue(bytes32 gameId, address player, uint256 value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function _setValue(bytes32 id, uint16 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -134,10 +127,9 @@ library Balance {
   /**
    * @notice Set value.
    */
-  function set(bytes32 gameId, address player, uint256 value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function set(bytes32 id, uint16 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreSwitch.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -145,10 +137,9 @@ library Balance {
   /**
    * @notice Set value.
    */
-  function _set(bytes32 gameId, address player, uint256 value) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function _set(bytes32 id, uint16 value) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreCore.setStaticField(_tableId, _keyTuple, 0, abi.encodePacked((value)), _fieldLayout);
   }
@@ -156,10 +147,9 @@ library Balance {
   /**
    * @notice Delete all data for given keys.
    */
-  function deleteRecord(bytes32 gameId, address player) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function deleteRecord(bytes32 id) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreSwitch.deleteRecord(_tableId, _keyTuple);
   }
@@ -167,10 +157,9 @@ library Balance {
   /**
    * @notice Delete all data for given keys.
    */
-  function _deleteRecord(bytes32 gameId, address player) internal {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function _deleteRecord(bytes32 id) internal {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     StoreCore.deleteRecord(_tableId, _keyTuple, _fieldLayout);
   }
@@ -179,7 +168,7 @@ library Balance {
    * @notice Tightly pack static (fixed length) data using this table's schema.
    * @return The static data, encoded into a sequence of bytes.
    */
-  function encodeStatic(uint256 value) internal pure returns (bytes memory) {
+  function encodeStatic(uint16 value) internal pure returns (bytes memory) {
     return abi.encodePacked(value);
   }
 
@@ -189,7 +178,7 @@ library Balance {
    * @return The lengths of the dynamic fields (packed into a single bytes32 value).
    * @return The dynamic (variable length) data, encoded into a sequence of bytes.
    */
-  function encode(uint256 value) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
+  function encode(uint16 value) internal pure returns (bytes memory, EncodedLengths, bytes memory) {
     bytes memory _staticData = encodeStatic(value);
 
     EncodedLengths _encodedLengths;
@@ -201,10 +190,9 @@ library Balance {
   /**
    * @notice Encode keys as a bytes32 array using this table's field layout.
    */
-  function encodeKeyTuple(bytes32 gameId, address player) internal pure returns (bytes32[] memory) {
-    bytes32[] memory _keyTuple = new bytes32[](2);
-    _keyTuple[0] = gameId;
-    _keyTuple[1] = bytes32(uint256(uint160(player)));
+  function encodeKeyTuple(bytes32 id) internal pure returns (bytes32[] memory) {
+    bytes32[] memory _keyTuple = new bytes32[](1);
+    _keyTuple[0] = id;
 
     return _keyTuple;
   }

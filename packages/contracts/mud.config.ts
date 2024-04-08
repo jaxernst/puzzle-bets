@@ -8,20 +8,48 @@ import { defineWorld } from "@latticexyz/world";
 export default defineWorld({
   namespace: "games",
   enums: {
-    Status: ["Inactive", "Pending", "Active", "Complete"],
-    Game: ["Wordle"],
+    Puzzle: ["Wordle"],
+    Status: ["Cancelled", "Pending", "Active", "Complete"],
+    VerificationMethod: ["Contract", "Eoa"],
+    WinScheme: ["FirstToSolve", "HighScore", "SoleSolver"],
+    Currency: ["Eth", "ERC20"],
   },
   tables: {
-    GameType: "Game",
+    PuzzleType: "Puzzle",
     GameStatus: "Status",
-    BuyIn: "uint256",
+    WinSchemeType: "WinScheme",
+    NumberOfPlayers: "uint16",
+
+    SolutionVerificationMethod: "VerificationMethod",
+    PuzzleMasterEoa: "address",
+    PuzzleMasterContract: "address",
+
+    BuyInAmount: "uint256",
+    BuyInType: "Currency",
+    BuyInCurrencyAddress: "address",
+
     SubmissionWindow: "uint32",
     InviteExpiration: "uint256",
     GameStartTime: "uint256",
-    PuzzleMasterEoa: "address",
-    Player1: "address",
-    Player2: "address",
     RematchCount: "uint16",
+
+    Players: {
+      schema: {
+        gameId: "bytes32",
+        player: "address",
+        value: "bool",
+      },
+      key: ["gameId", "player"],
+    },
+
+    GameBalances: {
+      schema: {
+        gameId: "bytes32",
+        player: "address",
+        value: "uint256",
+      },
+      key: ["gameId", "player"],
+    },
 
     Solved: {
       schema: {
@@ -31,11 +59,12 @@ export default defineWorld({
       },
       key: ["gameId", "player"],
     },
-    Balance: {
+
+    Score: {
       schema: {
         gameId: "bytes32",
         player: "address",
-        value: "uint256",
+        value: "uint32",
       },
       key: ["gameId", "player"],
     },

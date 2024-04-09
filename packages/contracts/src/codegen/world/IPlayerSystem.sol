@@ -8,4 +8,14 @@ pragma solidity >=0.8.24;
  * @author MUD (https://mud.dev) by Lattice (https://lattice.xyz)
  * @dev This interface is automatically generated from the corresponding system contract. Do not edit manually.
  */
-interface IPlayerSystem {}
+interface IPlayerSystem {
+  function games__setMaxPlayers() external;
+
+  function games__setMinPlayers() external;
+
+  function games__setGameVisibility() external;
+
+  function games__whitelistPlayers() external;
+
+  function games__joinGame() external;
+}

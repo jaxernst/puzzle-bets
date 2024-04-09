@@ -56,6 +56,18 @@ export default defineWorld({
       key: ["gameId", "player"],
     },
 
+    // Game timeline
+    RematchCount: "uint16",
+    GameStartTime: "uint256",
+    VoteRematch: {
+      schema: {
+        gameId: "bytes32",
+        me: "address",
+        value: "bool",
+      },
+      key: ["gameId", "me"],
+    },
+
     // Game bet rules
     BuyInAmount: "uint256",
     BuyInType: "Currency",
@@ -69,19 +81,6 @@ export default defineWorld({
       key: ["gameId", "player"],
     },
   },
-
-  // Game timeline
-  GameStartTime: "uint256",
-  RematchCount: "uint16",
-  VoteRematch: {
-    schema: {
-      gameId: "bytes32",
-      me: "address",
-      value: "bool",
-    },
-    key: ["gameId", "me"],
-  },
-
   modules: [
     {
       name: "UniqueEntityModule",

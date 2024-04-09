@@ -15,24 +15,16 @@ export default defineWorld({
     Currency: ["Eth", "ERC20"],
   },
   tables: {
+    // Game type
     PuzzleType: "Puzzle",
     GameStatus: "Status",
     WinSchemeType: "WinScheme",
-    NumberOfPlayers: "uint16",
 
-    SolutionVerificationMethod: "VerificationMethod",
-    PuzzleMasterEoa: "address",
-    PuzzleMasterContract: "address",
-
-    BuyInAmount: "uint256",
-    BuyInType: "Currency",
-    BuyInCurrencyAddress: "address",
-
-    SubmissionWindow: "uint32",
+    // Players
+    GameCreator: "address",
+    TwoPlayerGame: "bool",
+    PlayersJoined: "uint16",
     InviteExpiration: "uint256",
-    GameStartTime: "uint256",
-    RematchCount: "uint16",
-
     Players: {
       schema: {
         gameId: "bytes32",
@@ -42,15 +34,11 @@ export default defineWorld({
       key: ["gameId", "player"],
     },
 
-    GameBalances: {
-      schema: {
-        gameId: "bytes32",
-        player: "address",
-        value: "uint256",
-      },
-      key: ["gameId", "player"],
-    },
-
+    // Game solution submission/verification
+    SolutionVerificationMethod: "VerificationMethod",
+    PuzzleMasterEoa: "address",
+    PuzzleMasterContract: "address",
+    SubmissionWindow: "uint32",
     Solved: {
       schema: {
         gameId: "bytes32",
@@ -59,7 +47,6 @@ export default defineWorld({
       },
       key: ["gameId", "player"],
     },
-
     Score: {
       schema: {
         gameId: "bytes32",
@@ -69,14 +56,30 @@ export default defineWorld({
       key: ["gameId", "player"],
     },
 
-    VoteRematch: {
+    // Game bet rules
+    BuyInAmount: "uint256",
+    BuyInType: "Currency",
+    BuyInCurrencyAddress: "address",
+    GameBalances: {
       schema: {
         gameId: "bytes32",
-        me: "address",
-        value: "bool",
+        player: "address",
+        value: "uint256",
       },
-      key: ["gameId", "me"],
+      key: ["gameId", "player"],
     },
+  },
+
+  // Game timeline
+  GameStartTime: "uint256",
+  RematchCount: "uint16",
+  VoteRematch: {
+    schema: {
+      gameId: "bytes32",
+      me: "address",
+      value: "bool",
+    },
+    key: ["gameId", "me"],
   },
 
   modules: [

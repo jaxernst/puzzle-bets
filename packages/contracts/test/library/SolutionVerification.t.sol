@@ -2,7 +2,6 @@
 pragma solidity >=0.8.21;
 
 import "forge-std/Test.sol";
-import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import "../../src/library/SolutionVerification.sol";
 import "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 

@@ -52,7 +52,7 @@ export function createSystemCalls({
     gameId: Entity,
     solutionSignature: `0x${string}`
   ) => {
-    const tx = await worldContract.write.games__submitSolution([
+    const tx = await worldContract.write.v0__submitSolution([
       gameId as `0x${string}`,
       solutionSignature,
     ]);
@@ -60,21 +60,19 @@ export function createSystemCalls({
   };
 
   const claim = async (gameId: Entity) => {
-    const tx = await worldContract.write.games__claim([
-      gameId as `0x${string}`,
-    ]);
+    const tx = await worldContract.write.v0__claim([gameId as `0x${string}`]);
     await waitForTransaction(tx);
   };
 
   const voteRematch = async (gameId: Entity) => {
-    const tx = await worldContract.write.games__voteRematch([
+    const tx = await worldContract.write.v0__voteRematch([
       gameId as `0x${string}`,
     ]);
     await waitForTransaction(tx);
   };
 
   const cancelPendingGame = async (gameId: Entity) => {
-    const tx = await worldContract.write.games__cancelPendingGame([
+    const tx = await worldContract.write.v0__cancelPendingGame([
       gameId as `0x${string}`,
     ]);
     await waitForTransaction(tx);

@@ -34,11 +34,12 @@ contract DeadlinePuzzleSystem is System {
     uint inviteExpirationTimestamp,
     address opponent,
     address puzzleMaster
-  ) public payable {
+  ) public payable returns (bytes32) {
     address creator = _msgSender();
     uint betAmount = _msgValue();
 
     bytes32 gameId = getUniqueEntity();
+
     PuzzleType.set(gameId, puzzleType);
     GameStatus.set(gameId, Status.Pending);
     SubmissionWindow.set(gameId, submissionWindowSeconds);
@@ -54,6 +55,8 @@ contract DeadlinePuzzleSystem is System {
     Balance.set(gameId, creator, betAmount);
     BuyIn.set(gameId, betAmount);
     PuzzleMasterEoa.set(gameId, puzzleMaster);
+
+    return gameId;
   }
 
   function joinGame(bytes32 gameId) public payable {

@@ -9,7 +9,7 @@
   import Confetti from "$lib/components/Confetti.svelte";
   import { user } from "$lib/mud/mudStore";
   import { slide } from "svelte/transition";
-  import { type GameType } from "$lib/types";
+  import { type PuzzleTypepe } from "$lib/types";
   import GameDropdownControls from "./GameDropdownControls.svelte";
 
   const gameNames = ["Wordle", "Connections", "Crossword", "Sudoku"];

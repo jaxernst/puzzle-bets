@@ -7,8 +7,8 @@ import { RESOURCE_NAMESPACE } from "@latticexyz/world/src/worldResourceTypes.sol
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { ResourceIdLib } from "@latticexyz/store/src/ResourceId.sol";
 import { SolutionVerificationLib } from "../library/SolutionVerification.sol";
-import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, GameType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch } from "../codegen/index.sol";
-import { Status, Game } from "../codegen/common.sol";
+import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch } from "../codegen/index.sol";
+import { Status, Puzzle } from "../codegen/common.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
 
@@ -29,7 +29,7 @@ contract DeadlinePuzzleSystem is System {
   }
 
   function newGame(
-    Game gameType,
+    Puzzle puzzleType,
     uint32 submissionWindowSeconds,
     uint inviteExpirationTimestamp,
     address opponent,
@@ -39,7 +39,7 @@ contract DeadlinePuzzleSystem is System {
     uint betAmount = _msgValue();
 
     bytes32 gameId = getUniqueEntity();
-    GameType.set(gameId, gameType);
+    PuzzleType.set(gameId, puzzleType);
     GameStatus.set(gameId, Status.Pending);
     SubmissionWindow.set(gameId, submissionWindowSeconds);
     InviteExpiration.set(gameId, inviteExpirationTimestamp);

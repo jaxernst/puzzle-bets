@@ -1,6 +1,6 @@
 <script lang="ts">
   import { userArchivedGames, userGames } from "$lib/gameStores";
-  import { type GameType, GameStatus } from "$lib/types";
+  import { type PuzzleType, GameStatus } from "$lib/types";
 
   import { slide } from "svelte/transition";
   import { cubicInOut, cubicOut, sineInOut } from "svelte/easing";

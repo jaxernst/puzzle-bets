@@ -2,7 +2,7 @@
   import { mud, user } from "$lib/mud/mudStore";
   import { type Entity } from "@latticexyz/recs";
   import NewGameModal from "./NewGame.svelte";
-  import { GameStatus, type Game, type GameType } from "$lib/types";
+  import { GameStatus, type Game, type PuzzleType } from "$lib/types";
   import { capitalized, entityToInt } from "$lib/util";
   import Modal from "$lib/components/Modal.svelte";
   import GameResults from "./GameResults.svelte";
@@ -21,7 +21,7 @@
   import { slide } from "svelte/transition";
   import { cubicOut } from "svelte/easing";
 
-  export let gameType: GameType;
+  export let gameType: PuzzleType;
   export let gameId: Entity | null = null;
 
   let liveStatus: Readable<LiveStatus | null> = readable(null);

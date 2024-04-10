@@ -1,6 +1,6 @@
 import { getGame } from "$lib/gameStores";
 import { user } from "$lib/mud/mudStore";
-import type { EvmAddress, GameType } from "$lib/types";
+import type { EvmAddress, PuzzleType } from "$lib/types";
 import { intToEntity } from "$lib/util";
 
 import { derived, get, writable, type Readable } from "svelte/store";
@@ -164,4 +164,4 @@ export const puzzleStores = derived(
       sudoku: new Map(),
     };
   }
-) as Readable<Record<GameType, Map<GameId, PuzzleState>>>;
+) as Readable<Record<PuzzleType, Map<GameId, PuzzleState>>>;

@@ -17,8 +17,8 @@ import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/Encoded
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 library PuzzleMasterEoa {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "games", name: "PuzzleMasterEoa", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x746267616d657300000000000000000050757a7a6c654d6173746572456f6100);
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "v1", name: "PuzzleMasterEoa", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x7462763100000000000000000000000050757a7a6c654d6173746572456f6100);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0014010014000000000000000000000000000000000000000000000000000000);

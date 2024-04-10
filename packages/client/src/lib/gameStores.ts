@@ -12,7 +12,7 @@ import {
   GameStatus,
   gameNumberToType,
   type EvmAddress,
-  type GameType,
+  type PuzzleType,
 } from "$lib/types";
 import { encodeEntity } from "@latticexyz/store-sync/recs";
 import type { SetupNetworkResult } from "./mud/setupNetwork";
@@ -43,7 +43,8 @@ export const userGames = derived([mud, user], ([$mud, $user]) => {
 export const getGame = derived(mud, ($mud) => {
   return (gameId: Entity, opts?: { expectStarted?: boolean }) => {
     if (!$mud?.ready) return undefined;
-    if (!getComponentValue($mud.components.GameType, gameId)) return undefined;
+    if (!getComponentValue($mud.components.PuzzleType, gameId))
+      return undefined;
 
     const game = gameIdToGame(gameId, $mud.components);
 
@@ -224,7 +225,7 @@ export const gameInviteUrls = (() => {
   const urls = writable<Record<number, string>>("");
 
   const makeInviteUrl = (
-    gameType: GameType,
+    gameType: PuzzleType,
     gameId: number,
     gameWagerUsd?: number,
     inviteName?: string | null
@@ -247,7 +248,7 @@ export const gameInviteUrls = (() => {
   return {
     subscribe: urls.subscribe,
     create: (
-      gameType: GameType,
+      gameType: PuzzleType,
       gameId: number,
       gameWagerUsd?: number,
       inviteName?: string | null
@@ -273,7 +274,7 @@ const gameIdToGame = (
 ) => {
   const gameType =
     gameNumberToType[
-      getComponentValueStrict(mudComponents.GameType, gameId).value
+      getComponentValueStrict(mudComponents.PuzzleType, gameId).value
     ];
 
   const p1 = getComponentValueStrict(mudComponents.Player1, gameId)

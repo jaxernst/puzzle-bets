@@ -20,8 +20,8 @@ import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { Status } from "./../common.sol";
 
 library GameStatus {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "games", name: "GameStatus", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x746267616d657300000000000000000047616d65537461747573000000000000);
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "v1", name: "GameStatus", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x7462763100000000000000000000000047616d65537461747573000000000000);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0001010001000000000000000000000000000000000000000000000000000000);

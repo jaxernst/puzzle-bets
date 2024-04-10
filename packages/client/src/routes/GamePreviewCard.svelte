@@ -8,7 +8,7 @@
     userSolvedGame,
   } from "$lib/gameStores";
   import { user } from "$lib/mud/mudStore";
-  import { GameStatus, type Game, type GameType } from "$lib/types";
+  import { GameStatus, type Game, type PuzzleType } from "$lib/types";
   import {
     capitalized,
     entityToInt,
@@ -26,7 +26,7 @@
 
   $: active = $page.params.gameId === parseInt(id, 16).toString();
 
-  $: gameRoute = (id: Entity, gameType: GameType) => {
+  $: gameRoute = (id: Entity, gameType: PuzzleType) => {
     return `/games/${gameType}/${parseInt(id, 16)}`;
   };
 

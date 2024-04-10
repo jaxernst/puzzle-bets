@@ -1,5 +1,5 @@
 import { PUBLIC_CHAIN_ID } from "$env/static/public";
-import type { GameType } from "$lib/types";
+import type { PuzzleType } from "$lib/types";
 import { supabase } from "./supabaseClient";
 
 const chainId = PUBLIC_CHAIN_ID;
@@ -10,27 +10,27 @@ export const gameStateTable = (demoGame?: boolean) => {
 
 interface GameStore {
   hasGame: (
-    gameType: GameType,
+    gameType: PuzzleType,
     gameId: string,
     user?: string,
     isDemo?: boolean
   ) => Promise<boolean>;
   getGame: (
-    gameType: GameType,
+    gameType: PuzzleType,
     gameId: string,
     user?: string,
     isDemo?: boolean
   ) => Promise<string>;
   setGame: (
     gameState: string,
-    gameType: GameType,
+    gameType: PuzzleType,
     gameId: string,
     user?: string,
     isDemo?: boolean
   ) => Promise<boolean>;
   createDuelGame: (
     gameState: string,
-    gameType: GameType,
+    gameType: PuzzleType,
     gameId: string,
     p1: string,
     p2: string

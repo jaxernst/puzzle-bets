@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { GameStatus, type GameType } from "$lib/types";
+  import { GameStatus, type PuzzleType } from "$lib/types";
   import GameHeader from "./GameHeader.svelte";
   import GameHud from "./GameHud.svelte";
   import { userGames } from "$lib/gameStores";
@@ -8,7 +8,7 @@
   import { onMount } from "svelte";
   import { goto } from "$app/navigation";
 
-  $: gameType = $page.route.id?.split("/")[2] as GameType;
+  $: gameType = $page.route.id?.split("/")[2] as PuzzleType;
   $: gameId = intToEntity($page.params.gameId);
   $: game = $userGames.find((g) => g.id === gameId);
 

@@ -6,7 +6,7 @@
   import { gameInviteUrls } from "$lib/gameStores";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
   import { mud, user } from "$lib/mud/mudStore";
-  import type { GameType } from "$lib/types";
+  import type { PuzzleType } from "$lib/types";
   import { capitalized } from "$lib/util";
   import { HasValue, runQuery } from "@latticexyz/recs";
   import { cubicOut } from "svelte/easing";
@@ -14,7 +14,7 @@
   import { notifications } from "$lib/notifications/notificationStore";
   import NotificationBell from "$lib/icons/NotificationBell.svelte";
 
-  export let gameType: GameType;
+  export let gameType: PuzzleType;
 
   // Game params
   let wagerUSD: number = 2.5;

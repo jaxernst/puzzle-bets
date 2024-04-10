@@ -17,8 +17,8 @@ import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/Encoded
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 library SubmissionWindow {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "games", name: "SubmissionWindow", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x746267616d65730000000000000000005375626d697373696f6e57696e646f77);
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "v1", name: "SubmissionWindow", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x746276310000000000000000000000005375626d697373696f6e57696e646f77);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0004010004000000000000000000000000000000000000000000000000000000);

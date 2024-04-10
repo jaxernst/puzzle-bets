@@ -17,8 +17,8 @@ import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/Encoded
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 library InviteExpiration {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "games", name: "InviteExpiration", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x746267616d6573000000000000000000496e7669746545787069726174696f6e);
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "v1", name: "InviteExpiration", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x74627631000000000000000000000000496e7669746545787069726174696f6e);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0020010020000000000000000000000000000000000000000000000000000000);

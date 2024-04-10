@@ -4,7 +4,7 @@ export type EvmAddress = `0x${string}`;
 
 export type Game = {
   id: Entity;
-  type: GameType;
+  type: PuzzleType;
   status: GameStatus;
   p1: EvmAddress;
   p2?: EvmAddress;
@@ -16,7 +16,7 @@ export type Game = {
 
 export type StartedGame = {
   id: Entity;
-  type: GameType;
+  type: PuzzleType;
   status: GameStatus.Active | GameStatus.Complete;
   p1: EvmAddress;
   p2: EvmAddress;
@@ -31,16 +31,16 @@ export type StartedGame = {
   rematchCount: number;
 };
 
-export type GameType = "wordle" | "connections" | "crossword" | "sudoku";
+export type PuzzleType = "wordle" | "connections" | "crossword" | "sudoku";
 
-export const gameTypeToNumber: Record<GameType, number> = {
+export const gameTypeToNumber: Record<PuzzleType, number> = {
   wordle: 0,
   connections: 1,
   crossword: 2,
   sudoku: 3,
 };
 
-export const gameNumberToType: Record<number, GameType> = {
+export const gameNumberToType: Record<number, PuzzleType> = {
   0: "wordle",
   1: "connections",
 };

@@ -1,18 +1,13 @@
 import { defineWorld } from "@latticexyz/world";
-/**
- * TODO
- * - Add 'puzzle master' verifications
- * - Add a fee take mechanism
- * - Add 'public' / 'private' matches
- */
+
 export default defineWorld({
-  namespace: "games",
+  namespace: "v1",
   enums: {
     Status: ["Inactive", "Pending", "Active", "Complete"],
-    Game: ["Wordle"],
+    Puzzle: ["Wordle"],
   },
   tables: {
-    GameType: "Game",
+    PuzzleType: "Puzzle",
     GameStatus: "Status",
     BuyIn: "uint256",
     SubmissionWindow: "uint32",

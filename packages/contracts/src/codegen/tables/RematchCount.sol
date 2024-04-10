@@ -17,8 +17,8 @@ import { EncodedLengths, EncodedLengthsLib } from "@latticexyz/store/src/Encoded
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 
 library RematchCount {
-  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "games", name: "RematchCount", typeId: RESOURCE_TABLE });`
-  ResourceId constant _tableId = ResourceId.wrap(0x746267616d657300000000000000000052656d61746368436f756e7400000000);
+  // Hex below is the result of `WorldResourceIdLib.encode({ namespace: "v1", name: "RematchCount", typeId: RESOURCE_TABLE });`
+  ResourceId constant _tableId = ResourceId.wrap(0x7462763100000000000000000000000052656d61746368436f756e7400000000);
 
   FieldLayout constant _fieldLayout =
     FieldLayout.wrap(0x0002010002000000000000000000000000000000000000000000000000000000);

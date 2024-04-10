@@ -4,7 +4,7 @@
   import { goto } from "$app/navigation";
   import { user } from "$lib/mud/mudStore";
   import { intToEntity } from "$lib/util";
-  import { type GameType } from "$lib/types";
+  import { type PuzzleType } from "$lib/types";
   import { SUPPORTED_GAME_TYPES } from "$lib/constants";
   import { clickOutside } from "$lib/actions/clickOutside";
   import Modal from "$lib/components/Modal.svelte";
@@ -17,7 +17,7 @@
   );
 
   $: dropdownSelection = gameRoute ?? null;
-  $: gameType = (dropdownSelection?.toLowerCase() ?? "wordle") as GameType;
+  $: gameType = (dropdownSelection?.toLowerCase() ?? "wordle") as PuzzleType;
 
   const homeRoutes = ["/", "/welcome", "/about"];
 

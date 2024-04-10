@@ -1,6 +1,6 @@
 import { type Entity } from "@latticexyz/recs";
 import type { SetupNetworkResult } from "./setupNetwork";
-import { gameTypeToNumber, type EvmAddress, type GameType } from "../types";
+import { gameTypeToNumber, type EvmAddress, type PuzzleType } from "../types";
 import { parseEther, zeroAddress } from "viem";
 import { systemTimestamp } from "$lib/util";
 import { env } from "$env/dynamic/public";
@@ -16,7 +16,7 @@ export function createSystemCalls({
   waitForTransaction,
 }: SetupNetworkResult) {
   const newGame = async (
-    gameType: GameType,
+    gameType: PuzzleType,
     wagerEth: number,
     submissionWindowMinutes: number,
     inviteExpirationMinutes: number,

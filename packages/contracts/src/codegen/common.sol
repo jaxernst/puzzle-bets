@@ -9,6 +9,6 @@ enum Status {
   Complete
 }
 
-enum Game {
+enum Puzzle {
   Wordle
 }

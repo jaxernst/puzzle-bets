@@ -17,7 +17,7 @@ interface IDeadlinePuzzleSystem {
     uint inviteExpirationTimestamp,
     address opponent,
     address puzzleMaster
-  ) external payable;
+  ) external payable returns (bytes32);
 
   function v1__joinGame(bytes32 gameId) external payable;
 

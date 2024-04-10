@@ -152,26 +152,12 @@ declare const abi: [
   },
   {
     "type": "function",
-    "name": "games__applyBetSystem",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "games__claim",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "games__createGame",
+    "name": "games__cancelPendingGame",
     "inputs": [
       {
-        "name": "puzzleType",
-        "type": "uint8",
-        "internalType": "enum Puzzle"
+        "name": "gameId",
+        "type": "bytes32",
+        "internalType": "bytes32"
       }
     ],
     "outputs": [],
@@ -179,14 +165,7 @@ declare const abi: [
   },
   {
     "type": "function",
-    "name": "games__deposit",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "games__join",
+    "name": "games__claim",
     "inputs": [
       {
         "name": "gameId",
@@ -200,13 +179,52 @@ declare const abi: [
   {
     "type": "function",
     "name": "games__joinGame",
-    "inputs": [],
+    "inputs": [
+      {
+        "name": "gameId",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
     "outputs": [],
-    "stateMutability": "nonpayable"
+    "stateMutability": "payable"
   },
   {
     "type": "function",
-    "name": "games__makeTwoPlayer",
+    "name": "games__newGame",
+    "inputs": [
+      {
+        "name": "gameType",
+        "type": "uint8",
+        "internalType": "enum Game"
+      },
+      {
+        "name": "submissionWindowSeconds",
+        "type": "uint32",
+        "internalType": "uint32"
+      },
+      {
+        "name": "inviteExpirationTimestamp",
+        "type": "uint256",
+        "internalType": "uint256"
+      },
+      {
+        "name": "opponent",
+        "type": "address",
+        "internalType": "address"
+      },
+      {
+        "name": "puzzleMaster",
+        "type": "address",
+        "internalType": "address"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "games__submitSolution",
     "inputs": [
       {
         "name": "gameId",
@@ -214,9 +232,9 @@ declare const abi: [
         "internalType": "bytes32"
       },
       {
-        "name": "opponent",
-        "type": "address",
-        "internalType": "address"
+        "name": "puzzleMasterSignature",
+        "type": "bytes",
+        "internalType": "bytes"
       }
     ],
     "outputs": [],
@@ -224,64 +242,14 @@ declare const abi: [
   },
   {
     "type": "function",
-    "name": "games__restart",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "games__setGameVisibility",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "games__setMaxPlayers",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "games__setMinPlayers",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "games__setRematchable",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "games__setSubmissionDeadline",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "games__submitSolution",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
     "name": "games__voteRematch",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "games__whitelistPlayers",
-    "inputs": [],
+    "inputs": [
+      {
+        "name": "gameId",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      }
+    ],
     "outputs": [],
     "stateMutability": "nonpayable"
   },

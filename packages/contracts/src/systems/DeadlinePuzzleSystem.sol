@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.24;
-/*
+
 import { System } from "@latticexyz/world/src/System.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
 import { RESOURCE_NAMESPACE } from "@latticexyz/world/src/worldResourceTypes.sol";
@@ -11,9 +11,9 @@ import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, GameType, Player1, Playe
 import { Status, Game } from "../codegen/common.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
-*/
+
 /**
- * This System facillitates games between two players. Games are played in a syncronous fashion, where
+ * The System facillitates games between two players. Games are played in a syncronous fashion, where
  * the game starts for both players once the 2nd player joins. Both players will have the same amount of time to submit
  * a verified solution.
  *
@@ -21,7 +21,7 @@ import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueent
  * address that can attest to the validity of a solution, and players must submit a signed message from the master
  * in order to verify their solution.
  */
-/*contract DeadlinePuzzleSystem is System {
+contract DeadlinePuzzleSystem is System {
   modifier playerOnly(bytes32 gameId) {
     address sender = _msgSender();
     require(sender == Player1.get(gameId) || sender == Player2.get(gameId), "Not game player");
@@ -34,7 +34,7 @@ import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueent
     uint inviteExpirationTimestamp,
     address opponent,
     address puzzleMaster
-  ) public payable returns (bytes32) {
+  ) public payable {
     address creator = _msgSender();
     uint betAmount = _msgValue();
 
@@ -54,8 +54,6 @@ import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueent
     Balance.set(gameId, creator, betAmount);
     BuyIn.set(gameId, betAmount);
     PuzzleMasterEoa.set(gameId, puzzleMaster);
-
-    return gameId;
   }
 
   function joinGame(bytes32 gameId) public payable {
@@ -116,13 +114,13 @@ import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueent
       RematchCount.set(gameId, RematchCount.get(gameId) + 1);
       _startGame(gameId);
     }
-  } 
+  }
 
-  **
+  /**
    * Cancel a game request and withdraw funds
    * @notice Can only be called by the creator of the game while the game is
    * still in a pending state (second player has not joined)
-   *
+   */
   function cancelPendingGame(bytes32 gameId) public {
     require(_msgSender() == Player1.get(gameId), "Only creator can cancel");
     require(GameStatus.get(gameId) == Status.Pending, "Game is not pending");
@@ -130,11 +128,11 @@ import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueent
     _returnPlayerDeposit(gameId);
   }
 
-  **
+  /**
    * Check outcome of the game and distribute funds to players.
    * @notice Players can claim funds after the deadline has passed, but may claim before
    * the deadline if both players have solved (tie game)
-   *
+   */
   function claim(bytes32 gameId) public playerOnly(gameId) {
     address p1 = Player1.get(gameId);
     address p2 = Player2.get(gameId);
@@ -197,4 +195,13 @@ import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueent
     IWorld(_world()).transferBalanceToAddress(ResourceIdLib.encode(RESOURCE_NAMESPACE, "games"), to, amount);
   }
 }
+
+/* Exploring other system designs for games
+
+
+GameCreationSystem:
+  new()
+  join()
+
+
 */

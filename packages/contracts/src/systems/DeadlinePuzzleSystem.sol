@@ -11,6 +11,7 @@ import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Pla
 import { Status, Puzzle } from "../codegen/common.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
+import { console } from "forge-std/console.sol";
 
 /**
  * The System facillitates games between two players. Games are played in a syncronous fashion, where
@@ -72,11 +73,23 @@ contract DeadlinePuzzleSystem is System {
 
     require(status == Status.Pending, "Game is not pending");
     require(InviteExpiration.get(gameId) > block.timestamp, "Invite expired");
-    require(_msgValue() >= betAmount, "You must deposit to join the game");
+    require(_msgValue() >= betAmount, "Insufficient buy in");
 
     Balance.set(gameId, _msgSender(), betAmount);
 
     _startGame(gameId);
+  }
+
+  /**
+   * Cancel a game request and withdraw funds
+   * @notice Can only be called by the creator of the game while the game is
+   * still in a pending state (second player has not joined)
+   */
+  function cancelPendingGame(bytes32 gameId) public {
+    require(_msgSender() == Player1.get(gameId), "Only creator can cancel");
+    require(GameStatus.get(gameId) == Status.Pending, "Game is not pending");
+    GameStatus.set(gameId, Status.Inactive);
+    _returnPlayerDeposit(gameId);
   }
 
   function submitSolution(bytes32 gameId, bytes memory puzzleMasterSignature) public playerOnly(gameId) {
@@ -117,18 +130,6 @@ contract DeadlinePuzzleSystem is System {
       RematchCount.set(gameId, RematchCount.get(gameId) + 1);
       _startGame(gameId);
     }
-  }
-
-  /**
-   * Cancel a game request and withdraw funds
-   * @notice Can only be called by the creator of the game while the game is
-   * still in a pending state (second player has not joined)
-   */
-  function cancelPendingGame(bytes32 gameId) public {
-    require(_msgSender() == Player1.get(gameId), "Only creator can cancel");
-    require(GameStatus.get(gameId) == Status.Pending, "Game is not pending");
-    GameStatus.set(gameId, Status.Inactive);
-    _returnPlayerDeposit(gameId);
   }
 
   /**
@@ -195,7 +196,7 @@ contract DeadlinePuzzleSystem is System {
   }
 
   function _transfer(address to, uint amount) private {
-    IWorld(_world()).transferBalanceToAddress(ResourceIdLib.encode(RESOURCE_NAMESPACE, "games"), to, amount);
+    IWorld(_world()).transferBalanceToAddress(ResourceIdLib.encode(RESOURCE_NAMESPACE, "v1"), to, amount);
   }
 }
 

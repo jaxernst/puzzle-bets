@@ -5,7 +5,7 @@ import "forge-std/Test.sol";
 import { IWorld } from "../src/codegen/world/IWorld.sol";
 import { Puzzle, Status } from "../src/codegen/common.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
-import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch } from "../src/codegen/index.sol";
+import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch, ProtocolFeeBasisPoints, ProtocolFeeRecipient } from "../src/codegen/index.sol";
 import "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 
 contract DeadlinePuzzleSystemTest is MudTest {
@@ -171,13 +171,190 @@ contract DeadlinePuzzleSystemTest is MudTest {
     IWorld(worldAddress).v1__submitSolution(gameId, sig);
   }
 
-  function test_claim_ReturnsEachPlayersDepositAfterTieGame() public {}
+  function test_claim_ReturnsEachPlayersDepositIfNeitherSolveAfterTheDeadline() public {
+    address p1 = address(0x123);
+    address p2 = address(0x456);
+    vm.deal(p1, 2 ether);
+    vm.deal(p2, 2 ether);
 
-  function test_claim_ReturnsFullPoolBalanceToWinnerWithNoProtocolFeeSet() public {}
+    vm.prank(p1);
+    bytes32 gameId = newDefaultGame(1 ether, address(0));
 
-  function test_claim_TransfersFeeToFeeRecipientWhenWinnerClaimsPool() public {}
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame{ value: 1 ether }(gameId);
 
-  function test_claim_RevertsWhen_NonWinnerAttemptsToClaim() public {}
+    assertEq(p1.balance, 1 ether);
+    assertEq(p1.balance, 1 ether);
+    skip(1000);
+
+    vm.prank(p1);
+    IWorld(worldAddress).v1__claim(gameId);
+
+    vm.prank(p2);
+    IWorld(worldAddress).v1__claim(gameId);
+
+    assertEq(p1.balance, 2 ether);
+    assertEq(p2.balance, 2 ether);
+  }
+
+  function test_claim_ReturnsEachPlayersDepositIfBothSolveBeforeTheDeadline() public {
+    (address master, uint256 masterKey) = makeAddrAndKey("master");
+    uint32 submissionWindow = 1000;
+    address p1 = address(0x123);
+    address p2 = address(0x456);
+    vm.deal(p1, 12 ether);
+    vm.deal(p2, 12 ether);
+
+    vm.prank(p1);
+    bytes32 gameId = IWorld(worldAddress).v1__newGame{ value: 5 ether }({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: submissionWindow,
+      inviteExpirationTimestamp: block.timestamp + 100,
+      opponent: p2,
+      puzzleMaster: master
+    });
+
+    // Deposit more than needed for p2 to show it will be returned
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame{ value: 6 ether }(gameId);
+
+    assertEq(p1.balance, 7 ether);
+    assertEq(p2.balance, 6 ether);
+
+    // Both players successfully solve
+    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, 1);
+    bytes memory sig2 = signPuzzleSolved(masterKey, gameId, p2, 1);
+
+    vm.prank(p1);
+    IWorld(worldAddress).v1__submitSolution(gameId, sig1);
+    vm.prank(p2);
+    IWorld(worldAddress).v1__submitSolution(gameId, sig2);
+
+    // Assert that we're still in the submission window
+    assertTrue(block.timestamp < GameStartTime.get(gameId) + submissionWindow);
+
+    vm.prank(p1);
+    IWorld(worldAddress).v1__claim(gameId);
+    assertEq(p1.balance, 12 ether);
+
+    vm.prank(p2);
+    IWorld(worldAddress).v1__claim(gameId);
+    assertEq(p2.balance, 12 ether);
+  }
+
+  function test_claim_ReturnsFullPoolBalanceToWinnerWithNoProtocolFeeSet() public {
+    address admin = IWorld(worldAddress).creator();
+    vm.prank(admin);
+    ProtocolFeeBasisPoints.set(0);
+
+    (address master, uint256 masterKey) = makeAddrAndKey("master");
+    address p1 = address(0x123);
+    address p2 = address(0x456);
+    vm.deal(p1, 1 ether);
+    vm.deal(p2, 1 ether);
+
+    vm.prank(p1);
+    bytes32 gameId = IWorld(worldAddress).v1__newGame{ value: 1 ether }({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: 1,
+      inviteExpirationTimestamp: block.timestamp + 100,
+      opponent: p2,
+      puzzleMaster: master
+    });
+
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame{ value: 1 ether }(gameId);
+
+    // Both players successfully solve
+    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, 1);
+
+    vm.startPrank(p1);
+    IWorld(worldAddress).v1__submitSolution(gameId, sig1);
+
+    skip(100);
+
+    IWorld(worldAddress).v1__claim(gameId);
+
+    assertEq(p1.balance, 2 ether);
+  }
+
+  function test_claim_TransfersFeeToFeeRecipientWhenWinnerClaimsPool() public {
+    address feeRecipient = address(0x999);
+    uint feePercent = 11;
+    address admin = IWorld(worldAddress).creator();
+    vm.startPrank(admin);
+    ProtocolFeeBasisPoints.set(uint16(feePercent * 100));
+    ProtocolFeeRecipient.set(feeRecipient);
+    vm.stopPrank();
+
+    (address master, uint256 masterKey) = makeAddrAndKey("master");
+    address p1 = address(0x123);
+    address p2 = address(0x456);
+    vm.deal(p1, 1 ether);
+    vm.deal(p2, 1 ether);
+
+    vm.prank(p1);
+    bytes32 gameId = IWorld(worldAddress).v1__newGame{ value: 1 ether }({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: 1,
+      inviteExpirationTimestamp: block.timestamp + 100,
+      opponent: p2,
+      puzzleMaster: master
+    });
+
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame{ value: 1 ether }(gameId);
+
+    // Both players successfully solve
+    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, 1);
+
+    vm.startPrank(p1);
+    IWorld(worldAddress).v1__submitSolution(gameId, sig1);
+
+    skip(100);
+
+    IWorld(worldAddress).v1__claim(gameId);
+
+    uint expectedFee = (2 ether * feePercent) / 100;
+    assertEq(feeRecipient.balance, expectedFee);
+    assertEq(p1.balance, 2 ether - expectedFee);
+  }
+
+  function test_claim_RevertsWhen_NonWinnerAttemptsToClaim() public {
+    (address master, uint256 masterKey) = makeAddrAndKey("master");
+    address p1 = address(0x123);
+    address p2 = address(0x456);
+    vm.deal(p1, 1 ether);
+    vm.deal(p2, 1 ether);
+
+    vm.prank(p1);
+    bytes32 gameId = IWorld(worldAddress).v1__newGame{ value: 1 ether }({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: 1,
+      inviteExpirationTimestamp: block.timestamp + 100,
+      opponent: p2,
+      puzzleMaster: master
+    });
+
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame{ value: 1 ether }(gameId);
+
+    // Both players successfully solve
+    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, 1);
+
+    vm.prank(p1);
+    IWorld(worldAddress).v1__submitSolution(gameId, sig1);
+
+    skip(100);
+
+    vm.prank(p2);
+    vm.expectRevert("Nothing to claim");
+    IWorld(worldAddress).v1__claim(gameId);
+
+    vm.prank(address(0x1));
+    vm.expectRevert("Not game player");
+    IWorld(worldAddress).v1__claim(gameId);
+  }
 
   function test_voteRematch_ResetsGameStateOnceBothPlayersVote() public {
     (address master, uint256 masterKey) = makeAddrAndKey("master");

@@ -105,9 +105,9 @@ contract DeadlinePuzzleSystem is System {
       puzzleMasterSignature: puzzleMasterSignature
     });
 
-    require(solved, "Puzzle master signature invalid");
-    require(status == Status.Active, "Game is not active");
     require(block.timestamp <= startTime + submissionWindow, "Submission window closed");
+    require(status == Status.Active, "Game is not active");
+    require(solved, "Puzzle master signature invalid");
 
     Solved.set(gameId, _msgSender(), true);
   }

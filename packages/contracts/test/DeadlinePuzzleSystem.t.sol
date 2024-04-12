@@ -1,12 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.21;
 
-import "forge-std/Test.sol";
 import { IWorld } from "../src/codegen/world/IWorld.sol";
 import { Puzzle, Status } from "../src/codegen/common.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
 import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch, ProtocolFeeBasisPoints, ProtocolFeeRecipient } from "../src/codegen/index.sol";
 import "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
+
+import "forge-std/Test.sol";
 
 contract DeadlinePuzzleSystemTest is MudTest {
   using MessageHashUtils for bytes;

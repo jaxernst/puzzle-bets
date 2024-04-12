@@ -75,7 +75,7 @@ contract DeadlinePuzzleSystem is System {
     require(InviteExpiration.get(gameId) > block.timestamp, "Invite expired");
     require(_msgValue() >= betAmount, "Insufficient buy in");
 
-    Balance.set(gameId, _msgSender(), betAmount);
+    Balance.set(gameId, _msgSender(), _msgValue());
 
     _startGame(gameId);
   }
@@ -155,7 +155,7 @@ contract DeadlinePuzzleSystem is System {
     uint32 submissionWindow = SubmissionWindow.get(gameId);
     uint startTime = GameStartTime.get(gameId);
 
-    // Can claim if deadline has passed or both players solved in a tie game
+    // Can only claim before the submission window closes if both players solved in a tie game
     bool canClaim = (block.timestamp > (startTime + submissionWindow)) || (iSolved && theySolved);
     require(canClaim, "Cannot claim");
 

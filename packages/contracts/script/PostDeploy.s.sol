@@ -6,6 +6,7 @@ import { console } from "forge-std/console.sol";
 import { StoreSwitch } from "@latticexyz/store/src/StoreSwitch.sol";
 
 import { IWorld } from "../src/codegen/world/IWorld.sol";
+import { ProtocolFeeBasisPoints, ProtocolFeeRecipient } from "../src/codegen/index.sol";
 
 contract PostDeploy is Script {
   function run(address worldAddress) external {
@@ -18,11 +19,10 @@ contract PostDeploy is Script {
     // Start broadcasting transactions from the deployer account
     vm.startBroadcast(deployerPrivateKey);
 
-    // ------------------ EXAMPLES ------------------
-
-    // Call increment on the world via the registered function selector
-    // uint32 newValue = IWorld(worldAddress).increment();
-    // console.log("Increment via IWorld:", newValue);
+    // ------ Grant access to the deployer to update protocol fee params ------
+    address creator = IWorld(worldAddress).creator();
+    IWorld(worldAddress).grantAccess(ProtocolFeeRecipient._tableId, creator);
+    IWorld(worldAddress).grantAccess(ProtocolFeeBasisPoints._tableId, creator);
 
     vm.stopBroadcast();
   }

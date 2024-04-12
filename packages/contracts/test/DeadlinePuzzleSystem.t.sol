@@ -14,29 +14,6 @@ contract DeadlinePuzzleSystemTest is MudTest {
   address DEFAULT_PUZZLE_MASTER = address(0x456);
   uint DEFAULT_INVITE_WINDOW_DURATION = 100;
 
-  function newDefaultGame(uint value, address opponent) private returns (bytes32) {
-    return
-      IWorld(worldAddress).v1__newGame{ value: value }({
-        puzzleType: Puzzle.Wordle,
-        submissionWindowSeconds: 1,
-        inviteExpirationTimestamp: block.timestamp + DEFAULT_INVITE_WINDOW_DURATION,
-        opponent: opponent,
-        puzzleMaster: address(0x456)
-      });
-  }
-
-  function signPuzzleSolved(
-    uint puzzleMasterPk,
-    bytes32 gameId,
-    address playerAddr,
-    uint32 solutionIndex
-  ) private pure returns (bytes memory) {
-    bytes memory data = abi.encodePacked(gameId, playerAddr, solutionIndex);
-    bytes32 messageHash = data.toEthSignedMessageHash();
-    (uint8 v, bytes32 r, bytes32 s) = vm.sign(puzzleMasterPk, messageHash);
-    return abi.encodePacked(r, s, v);
-  }
-
   function test_newGame_GameVariablesAreSetOnCreation() public {
     bytes32 gameId = newDefaultGame(1 ether, address(0x123));
     assertEq(Player1.get(gameId), address(this));
@@ -194,9 +171,13 @@ contract DeadlinePuzzleSystemTest is MudTest {
     IWorld(worldAddress).v1__submitSolution(gameId, sig);
   }
 
-  function test_claim_ReturnsBuyInAmountAfterTieGame() public {}
+  function test_claim_ReturnsEachPlayersDepositAfterTieGame() public {}
 
-  function test_claim_ReturnsFullBetAmountMinusWinnerFeeWhenPlayerWins() public {}
+  function test_claim_ReturnsFullPoolBalanceToWinnerWithNoProtocolFeeSet() public {}
+
+  function test_claim_TransfersFeeToFeeRecipientWhenWinnerClaimsPool() public {}
+
+  function test_claim_RevertsWhen_NonWinnerAttemptsToClaim() public {}
 
   function test_voteRematch_ResetsGameStateOnceBothPlayersVote() public {
     (address master, uint256 masterKey) = makeAddrAndKey("master");
@@ -260,6 +241,29 @@ contract DeadlinePuzzleSystemTest is MudTest {
     vm.prank(creator);
     vm.expectRevert("Game is not active");
     IWorld(worldAddress).v1__voteRematch(gameId);
+  }
+
+  function newDefaultGame(uint value, address opponent) private returns (bytes32) {
+    return
+      IWorld(worldAddress).v1__newGame{ value: value }({
+        puzzleType: Puzzle.Wordle,
+        submissionWindowSeconds: 1,
+        inviteExpirationTimestamp: block.timestamp + DEFAULT_INVITE_WINDOW_DURATION,
+        opponent: opponent,
+        puzzleMaster: address(0x456)
+      });
+  }
+
+  function signPuzzleSolved(
+    uint puzzleMasterPk,
+    bytes32 gameId,
+    address playerAddr,
+    uint32 solutionIndex
+  ) private pure returns (bytes memory) {
+    bytes memory data = abi.encodePacked(gameId, playerAddr, solutionIndex);
+    bytes32 messageHash = data.toEthSignedMessageHash();
+    (uint8 v, bytes32 r, bytes32 s) = vm.sign(puzzleMasterPk, messageHash);
+    return abi.encodePacked(r, s, v);
   }
 
   receive() external payable {}

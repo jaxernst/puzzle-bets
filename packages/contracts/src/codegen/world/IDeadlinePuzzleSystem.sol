@@ -25,7 +25,7 @@ interface IDeadlinePuzzleSystem {
 
   function v1__submitSolution(bytes32 gameId, bytes memory puzzleMasterSignature) external;
 
-  function v1__voteRematch(bytes32 gameId) external;
-
   function v1__claim(bytes32 gameId) external;
+
+  function v1__voteRematch(bytes32 gameId) external;
 }

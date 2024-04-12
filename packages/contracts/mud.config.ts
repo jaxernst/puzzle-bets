@@ -26,6 +26,7 @@ export default defineWorld({
       },
       key: ["gameId", "player"],
     },
+
     Balance: {
       schema: {
         gameId: "bytes32",
@@ -42,6 +43,20 @@ export default defineWorld({
         value: "bool",
       },
       key: ["gameId", "me"],
+    },
+
+    ProtocolFeeRecipient: {
+      schema: {
+        vaue: "address",
+      },
+      key: [],
+    },
+
+    ProtocolFeeBasisPoints: {
+      schema: {
+        value: "uint16",
+      },
+      key: [],
     },
   },
 

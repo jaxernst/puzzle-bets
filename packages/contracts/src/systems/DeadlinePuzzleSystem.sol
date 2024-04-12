@@ -7,7 +7,7 @@ import { RESOURCE_NAMESPACE } from "@latticexyz/world/src/worldResourceTypes.sol
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { ResourceIdLib } from "@latticexyz/store/src/ResourceId.sol";
 import { SolutionVerificationLib } from "../library/SolutionVerification.sol";
-import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch } from "../codegen/index.sol";
+import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch, ProtocolFeeBasisPoints, ProtocolFeeRecipient } from "../codegen/index.sol";
 import { Status, Puzzle } from "../codegen/common.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
@@ -186,7 +186,18 @@ contract DeadlinePuzzleSystem is System {
     uint depositLoser = Balance.get(gameId, loser);
     Balance.set(gameId, winner, 0);
     Balance.set(gameId, loser, 0);
-    _transfer(winner, depositWinner + depositLoser);
+
+    uint totalAmount = depositWinner + depositLoser;
+    uint16 protocolFeeBps = ProtocolFeeBasisPoints.get();
+    address feeRecipient = ProtocolFeeRecipient.get();
+
+    if (protocolFeeBps > 0 && feeRecipient != address(0)) {
+      uint fee = (totalAmount * ProtocolFeeBasisPoints.get()) / 10000;
+      _transfer(feeRecipient, fee);
+      _transfer(winner, totalAmount - fee);
+    } else {
+      _transfer(winner, totalAmount);
+    }
   }
 
   function _returnPlayerDeposit(bytes32 gameId) private {
@@ -200,13 +211,3 @@ contract DeadlinePuzzleSystem is System {
     IWorld(_world()).transferBalanceToAddress(ResourceIdLib.encode(RESOURCE_NAMESPACE, "v1"), to, amount);
   }
 }
-
-/* Exploring other system designs for games
-
-
-GameCreationSystem:
-  new()
-  join()
-
-
-*/

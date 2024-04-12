@@ -16,3 +16,5 @@ import { RematchCount } from "./tables/RematchCount.sol";
 import { Solved } from "./tables/Solved.sol";
 import { Balance } from "./tables/Balance.sol";
 import { VoteRematch } from "./tables/VoteRematch.sol";
+import { ProtocolFeeRecipient } from "./tables/ProtocolFeeRecipient.sol";
+import { ProtocolFeeBasisPoints } from "./tables/ProtocolFeeBasisPoints.sol";

@@ -97,6 +97,9 @@ contract DeadlinePuzzleSystem is System {
     uint32 submissionWindow = SubmissionWindow.get(gameId);
     uint startTime = GameStartTime.get(gameId);
 
+    require(block.timestamp <= startTime + submissionWindow, "Submission window closed");
+    require(status == Status.Active, "Game is not active");
+
     bool solved = SolutionVerificationLib.verifyPuzzleMasterSignature({
       gameId: gameId,
       player: _msgSender(),
@@ -105,11 +108,25 @@ contract DeadlinePuzzleSystem is System {
       puzzleMasterSignature: puzzleMasterSignature
     });
 
-    require(block.timestamp <= startTime + submissionWindow, "Submission window closed");
-    require(status == Status.Active, "Game is not active");
     require(solved, "Puzzle master signature invalid");
 
     Solved.set(gameId, _msgSender(), true);
+  }
+
+  /**
+   * Check outcome of the game and distribute funds to players.
+   * @notice Players can claim funds after the deadline has passed, but may claim before
+   * the deadline if both players have solved (tie game)
+   */
+  function claim(bytes32 gameId) public playerOnly(gameId) {
+    address p1 = Player1.get(gameId);
+    address p2 = Player2.get(gameId);
+
+    if (p1 == _msgSender()) {
+      _claim(gameId, p1, p2);
+    } else {
+      _claim(gameId, p2, p1);
+    }
   }
 
   function voteRematch(bytes32 gameId) public playerOnly(gameId) {
@@ -129,22 +146,6 @@ contract DeadlinePuzzleSystem is System {
       VoteRematch.set(gameId, p2, false);
       RematchCount.set(gameId, RematchCount.get(gameId) + 1);
       _startGame(gameId);
-    }
-  }
-
-  /**
-   * Check outcome of the game and distribute funds to players.
-   * @notice Players can claim funds after the deadline has passed, but may claim before
-   * the deadline if both players have solved (tie game)
-   */
-  function claim(bytes32 gameId) public playerOnly(gameId) {
-    address p1 = Player1.get(gameId);
-    address p2 = Player2.get(gameId);
-
-    if (p1 == _msgSender()) {
-      _claim(gameId, p1, p2);
-    } else {
-      _claim(gameId, p2, p1);
     }
   }
 

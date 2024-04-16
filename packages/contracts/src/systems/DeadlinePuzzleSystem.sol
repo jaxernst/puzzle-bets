@@ -92,6 +92,9 @@ contract DeadlinePuzzleSystem is System {
     _returnPlayerDeposit(gameId);
   }
 
+  /**
+   * Verify the puzzle master solution and mark the puzzle as solved.
+   */
   function submitSolution(bytes32 gameId, bytes memory puzzleMasterSignature) public playerOnly(gameId) {
     Status status = GameStatus.get(gameId);
     uint32 submissionWindow = SubmissionWindow.get(gameId);

@@ -1,25 +1,25 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import WordleGame from "../WordleGame.svelte";
-  import { user } from "$lib/mud/mudStore";
-  import { liveGameStatus, userGames, userSolvedGame } from "$lib/gameStores";
-  import { GameStatus, type EvmAddress } from "$lib/types";
-  import { launchConfetti } from "$lib/components/Confetti.svelte";
-  import { wordleGameStates } from "../../puzzleGameStates";
-  import { exportWordleBoard } from "../exportBoard";
-  import { cubicOut } from "svelte/easing";
-  import { slide } from "svelte/transition";
-  import DotLoader from "$lib/components/DotLoader.svelte";
+  import { page } from "$app/stores"
+  import WordleGame from "../WordleGame.svelte"
+  import { user } from "$lib/mud/mudStore"
+  import { liveGameStatus, userGames, userSolvedGame } from "$lib/gameStores"
+  import { GameStatus, type EvmAddress } from "$lib/types"
+  import { launchConfetti } from "$lib/components/Confetti.svelte"
+  import { wordleGameStates } from "../../puzzleGameStates"
+  import { exportWordleBoard } from "../exportBoard"
+  import { cubicOut } from "svelte/easing"
+  import { slide } from "svelte/transition"
+  import DotLoader from "$lib/components/DotLoader.svelte"
 
-  $: gameId = $page.params.gameId;
-  $: puzzleState = $wordleGameStates.get(gameId);
+  $: gameId = $page.params.gameId
+  $: puzzleState = $wordleGameStates.get(gameId)
 
   $: onchainGame = $userGames.find(
-    (g) => parseInt(g.id, 16).toString() === $page.params.gameId
-  );
+    (g) => parseInt(g.id, 16).toString() === $page.params.gameId,
+  )
 
   $: if (!puzzleState && $user.address && onchainGame?.opponent) {
-    wordleGameStates.getOrCreate(gameId, false, onchainGame.opponent);
+    wordleGameStates.getOrCreate(gameId, false, onchainGame.opponent)
   }
 
   $: if (
@@ -27,34 +27,34 @@
     puzzleState &&
     onchainGame.rematchCount > (puzzleState.resetCount ?? 1e10)
   ) {
-    wordleGameStates.reset(gameId, false);
+    wordleGameStates.reset(gameId, false)
   }
 
   $: enterGuess = async (guess: string) => {
-    await wordleGameStates.enterGuess(gameId, guess, false);
-    const puzzleState = $wordleGameStates.get(gameId);
+    await wordleGameStates.enterGuess(gameId, guess, false)
+    const puzzleState = $wordleGameStates.get(gameId)
     if (puzzleState?.solved) {
-      launchConfetti();
+      launchConfetti()
     }
-  };
+  }
 
-  $: gameOver = puzzleState?.solved || puzzleState?.lost;
-  $: submitted = onchainGame && $userSolvedGame(onchainGame.id, $user.address);
-  $: liveStatus = onchainGame && liveGameStatus(onchainGame.id);
-  $: expired = liveStatus && !$liveStatus?.submissionTimeLeft;
+  $: gameOver = puzzleState?.solved || puzzleState?.lost
+  $: submitted = onchainGame && $userSolvedGame(onchainGame.id, $user.address)
+  $: liveStatus = onchainGame && liveGameStatus(onchainGame.id)
+  $: expired = liveStatus && !$liveStatus?.submissionTimeLeft
 
-  let copied = false;
+  let copied = false
   const copyBoard = async (board: string[]) => {
-    if (typeof navigator === "undefined" || !navigator.clipboard) return;
+    if (typeof navigator === "undefined" || !navigator.clipboard) return
 
     try {
-      await navigator.clipboard.writeText(exportWordleBoard(gameId, board));
-      copied = true;
-      setTimeout(() => (copied = false), 1800);
+      await navigator.clipboard.writeText(exportWordleBoard(gameId, board))
+      copied = true
+      setTimeout(() => (copied = false), 1800)
     } catch (err) {
-      console.error("Failed to copy: ", err);
+      console.error("Failed to copy: ", err)
     }
-  };
+  }
 </script>
 
 {#if puzzleState}
@@ -64,10 +64,10 @@
       gameOver ||
         submitted ||
         expired ||
-        onchainGame?.status !== GameStatus.Active
+        onchainGame?.status !== GameStatus.Active,
     )}
     on:submitGuess={(e) => {
-      enterGuess(e.detail.guess);
+      enterGuess(e.detail.guess)
     }}
   />
   {#if puzzleState.solved && !submitted && !expired}
@@ -77,9 +77,9 @@
   {/if}
 
   {#if puzzleState.solved || puzzleState.lost}
-    <div class="pt-2 w-full flex justify-center">
+    <div class="flex w-full justify-center pt-2">
       <button
-        class="bg-pb-yellow font-semibold rounded-lg px-2 py-1 text-white"
+        class="rounded-lg bg-pb-yellow px-2 py-1 font-semibold text-white"
         on:click={() => copyBoard(puzzleState?.answers ?? [])}
       >
         {#if copied}
@@ -101,7 +101,7 @@
     </div>
   {/if}
 {:else if !puzzleState}
-  <div class="self-center h-[200px] flex items-center justify-center">
+  <div class="flex h-[200px] items-center justify-center self-center">
     <DotLoader klass="fill-neutral-200 h-10 w-10" />
   </div>
 {/if}

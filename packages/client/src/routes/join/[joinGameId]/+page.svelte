@@ -1,6 +1,6 @@
 <script>
-  export let data;
-  let { description, title } = data;
+  export let data
+  let { description, title } = data
 </script>
 
 <svelte:head>

@@ -1,5 +1,5 @@
-import type { RequestEvent } from "./$types";
-import { supabase } from "$lib/server/supabaseClient";
+import type { RequestEvent } from "./$types"
+import { supabase } from "$lib/server/supabaseClient"
 
 export async function POST({ params }: RequestEvent) {
   // Remove all entries from the supabase table with the given address
@@ -7,12 +7,12 @@ export async function POST({ params }: RequestEvent) {
     .from("notifications")
     .delete()
     .eq("user_address", params.user)
-    .eq("device_id", params.deviceId);
+    .eq("device_id", params.deviceId)
 
   if (error) {
-    return new Response(null, { status: 500 });
+    return new Response(null, { status: 500 })
   }
 
-  console.log("Unsubscribed from notifications");
-  return new Response(null, { status: 200 });
+  console.log("Unsubscribed from notifications")
+  return new Response(null, { status: 200 })
 }

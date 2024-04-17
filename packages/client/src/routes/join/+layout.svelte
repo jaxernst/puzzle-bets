@@ -1,45 +1,45 @@
 <script lang="ts">
-  import { mud } from "$lib/mud/mudStore";
-  import { page } from "$app/stores";
-  import Modal from "$lib/components/Modal.svelte";
-  import { systemTimestamp, intToEntity } from "$lib/util";
-  import JoinGame from "./JoinGame.svelte";
-  import { goto } from "$app/navigation";
-  import { onMount } from "svelte";
-  import { loginAndConnect } from "$lib/components/WalletConnector.svelte";
-  import { user } from "$lib/mud/mudStore";
-  import { getGame } from "$lib/gameStores";
-  import { GameStatus } from "$lib/types";
-  import DotLoader from "$lib/components/DotLoader.svelte";
+  import { mud } from "$lib/mud/mudStore"
+  import { page } from "$app/stores"
+  import Modal from "$lib/components/Modal.svelte"
+  import { systemTimestamp, intToEntity } from "$lib/util"
+  import JoinGame from "./JoinGame.svelte"
+  import { goto } from "$app/navigation"
+  import { onMount } from "svelte"
+  import { loginAndConnect } from "$lib/components/WalletConnector.svelte"
+  import { user } from "$lib/mud/mudStore"
+  import { getGame } from "$lib/gameStores"
+  import { GameStatus } from "$lib/types"
+  import DotLoader from "$lib/components/DotLoader.svelte"
 
-  let show = true;
+  let show = true
 
   onMount(() => {
     if (!$user.address) {
-      loginAndConnect();
+      loginAndConnect()
     }
-  });
+  })
 
   $: gameId = isNaN(parseInt($page.params.joinGameId))
     ? null
-    : intToEntity($page.params.joinGameId, true);
+    : intToEntity($page.params.joinGameId, true)
 
-  $: game = gameId && $getGame(gameId);
-  $: userIsEligible = $user.address && $user.address !== game?.p1;
+  $: game = gameId && $getGame(gameId)
+  $: userIsEligible = $user.address && $user.address !== game?.p1
 
-  let inviteExpired = false;
+  let inviteExpired = false
   const checkInviteExpired = (inviteExpirationTime: bigint) => {
-    const tDiff = Number(inviteExpirationTime) - systemTimestamp();
-    if (tDiff <= 0) inviteExpired = true;
-  };
+    const tDiff = Number(inviteExpirationTime) - systemTimestamp()
+    if (tDiff <= 0) inviteExpired = true
+  }
 
-  let intervalTimer: any;
+  let intervalTimer: any
   $: if (game && !intervalTimer) {
-    checkInviteExpired(game.inviteExpiration);
+    checkInviteExpired(game.inviteExpiration)
     intervalTimer = setInterval(
       () => checkInviteExpired(game!.inviteExpiration),
-      1000
-    );
+      1000,
+    )
   }
 </script>
 
@@ -47,18 +47,18 @@
   <Modal
     {show}
     on:close={() => {
-      show = false;
-      goto("/welcome");
+      show = false
+      goto("/welcome")
     }}
   >
     <div
-      class="relative bg-neutral-800 text-neutral-200 p-6 rounded-xl flex flex-col gap-2 max-w-[450px]"
+      class="relative flex max-w-[450px] flex-col gap-2 rounded-xl bg-neutral-800 p-6 text-neutral-200"
     >
       {#if !$mud.ready}
         <div class="self-center">
           <DotLoader klass="fill-neutral-200" />
         </div>
-        <div class="self-center text-neutral-400 text-xs">
+        <div class="self-center text-xs text-neutral-400">
           Syncing blockchain state...
         </div>
       {:else if !gameId || !game}

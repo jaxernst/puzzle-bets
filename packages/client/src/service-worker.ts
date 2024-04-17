@@ -1,19 +1,19 @@
 /// <reference lib="webworker" />
 /// <reference types="@sveltejs/kit" />
-import { deviceHash } from "$lib/notifications/notificationUtil";
-import { build, files, version } from "$service-worker";
+import { deviceHash } from "$lib/notifications/notificationUtil"
+import { build, files, version } from "$service-worker"
 
-declare const self: ServiceWorkerGlobalScope;
+declare const self: ServiceWorkerGlobalScope
 
 interface PushSubscriptionChangeEvent extends ExtendableEvent {
-  readonly newSubscription?: PushSubscription;
-  readonly oldSubscription?: PushSubscription;
+  readonly newSubscription?: PushSubscription
+  readonly oldSubscription?: PushSubscription
 }
 
 // Create a unique cache name for this deployment
-const CACHE = `cache-${version}`;
+const CACHE = `cache-${version}`
 
-const ASSETS = [...build, ...files];
+const ASSETS = [...build, ...files]
 
 /* 
 
@@ -76,40 +76,40 @@ self.addEventListener("fetch", (event) => {
 /** Push Notifications  **/
 
 self.addEventListener("push", (event) => {
-  console.log("Push event received");
+  console.log("Push event received")
 
-  let data;
+  let data
   try {
-    data = event.data?.json();
+    data = event.data?.json()
   } catch {
-    data = {};
+    data = {}
   }
 
-  const title = data.title || "Puzzle Bets";
+  const title = data.title || "Puzzle Bets"
 
   const options = {
     body: data.body,
     icon: "icons/icon-192x192.png",
     badge: data.badge,
-  };
+  }
 
-  event.waitUntil(self.registration.showNotification(title, options));
-});
+  event.waitUntil(self.registration.showNotification(title, options))
+})
 
 const handlePushRenew = async () => {
-  const newSubscription = await self.registration.pushManager.getSubscription();
+  const newSubscription = await self.registration.pushManager.getSubscription()
   await fetch(`api/notifications/_/${await deviceHash()}/update`, {
     method: "POST",
     body: JSON.stringify(newSubscription),
     headers: {
       "content-type": "application/json",
     },
-  });
-};
+  })
+}
 
 self.addEventListener(
   "pushsubscriptionchange" as any,
   (event: PushSubscriptionChangeEvent) => {
-    event.waitUntil(handlePushRenew());
-  }
-);
+    event.waitUntil(handlePushRenew())
+  },
+)

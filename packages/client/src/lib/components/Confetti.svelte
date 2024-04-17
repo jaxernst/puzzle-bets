@@ -1,34 +1,34 @@
 <script context="module">
-  import { browser } from "$app/environment";
-  import { prefersReducedMotion } from "$lib/accessibility";
-  import { writable, derived } from "svelte/store";
+  import { browser } from "$app/environment"
+  import { prefersReducedMotion } from "$lib/accessibility"
+  import { writable, derived } from "svelte/store"
 
-  const trigger = writable(0);
+  const trigger = writable(0)
 
   export const launchConfetti = () => {
-    trigger.update((n) => n + 1);
-  };
+    trigger.update((n) => n + 1)
+  }
 
   // Using writable stores to dynamically update stage dimensions
-  let stageWidth = writable(800);
-  let stageHeight = writable(2000);
+  let stageWidth = writable(800)
+  let stageHeight = writable(2000)
 
   // Update stage dimensions based on browser environment
   if (browser) {
     // Immediately set initial values
-    stageWidth.set(window.innerWidth);
-    stageHeight.set(window.innerHeight * 1.4);
+    stageWidth.set(window.innerWidth)
+    stageHeight.set(window.innerHeight * 1.4)
 
     // Update dimensions on window resize
     window.addEventListener("resize", () => {
-      stageWidth.set(window.innerWidth);
-      stageHeight.set(window.innerHeight * 1.4);
-    });
+      stageWidth.set(window.innerWidth)
+      stageHeight.set(window.innerHeight * 1.4)
+    })
   }
 </script>
 
 <script>
-  import { confetti } from "@neoconfetti/svelte";
+  import { confetti } from "@neoconfetti/svelte"
 </script>
 
 {#key $trigger}

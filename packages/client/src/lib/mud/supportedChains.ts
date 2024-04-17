@@ -1,5 +1,5 @@
-import { type MUDChain, mudFoundry } from "@latticexyz/common/chains";
-import { baseSepolia } from "viem/chains";
+import { type MUDChain, mudFoundry } from "@latticexyz/common/chains"
+import { baseSepolia, type Chain } from "viem/chains"
 
 // Override default lattice chain with 'miner.testnet' (from follower.testnet)
 export const latticeTestnet = {
@@ -23,14 +23,14 @@ export const latticeTestnet = {
     },
   },
   faucetUrl: "https://faucet.testnet-mud-services.linfra.xyz",
-} as const satisfies MUDChain;
+} as const satisfies MUDChain
 
 /*
  * See https://mud.dev/tutorials/minimal/deploy#run-the-user-interface
  * for instructions on how to add networks.
  */
-export const supportedChains: MUDChain[] = [
+export const supportedChains: Array<MUDChain | Chain> = [
   mudFoundry,
   latticeTestnet,
   baseSepolia,
-];
+]

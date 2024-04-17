@@ -1,5 +1,5 @@
 <div
-  class="flex-grow flex flex-col justify-center items-center font-mono text-lime-500 pt-8"
+  class="flex flex-grow flex-col items-center justify-center pt-8 font-mono text-lime-500"
 >
   Coming soon...
 </div>

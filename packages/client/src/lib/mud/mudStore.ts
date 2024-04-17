@@ -1,49 +1,53 @@
-import mudConfig from "contracts/mud.config";
-import { writable, derived, get } from "svelte/store";
-import { mount as mountDevTools } from "@latticexyz/dev-tools";
+import mudConfig from "contracts/mud.config"
+import { writable, derived, get } from "svelte/store"
+import { mount as mountDevTools } from "@latticexyz/dev-tools"
 import {
   type Component,
   type Entity,
   getComponentValue,
-} from "@latticexyz/recs";
+} from "@latticexyz/recs"
 
 import {
   setupNetwork,
   type SetupNetworkResult,
   type Wallet,
-} from "./setupNetwork";
-import { createSystemCalls } from "./createSystemCalls";
-import { walletStore } from "$lib/mud/connectWallet";
-import { PUBLIC_CHAIN_ID } from "$env/static/public";
-import { formatEther } from "viem";
+} from "./setupNetwork"
+import { createSystemCalls } from "./createSystemCalls"
+import { walletStore } from "$lib/mud/connectWallet"
+import { PUBLIC_CHAIN_ID } from "$env/static/public"
+import { formatEther, type Account } from "viem"
+import { browser } from "$app/environment"
 
 export const mud = (() => {
-  const mud = writable<SetupNetworkResult>();
+  const mud = writable<SetupNetworkResult | undefined>()
 
   const systemCalls = derived(mud, ($mud) => {
-    return $mud && createSystemCalls($mud);
-  });
+    return $mud && createSystemCalls($mud)
+  })
 
-  const stateSynced = writable(false);
+  const stateSynced = writable(false)
 
   const setup = async (wallet: Wallet) => {
-    const network = await setupNetwork(wallet);
-    mud.set(network);
+    const network = await setupNetwork(wallet)
+    mud.set(network)
 
     /**
      * Subscribe to component updates and propgate those changes to the mud store
      */
     Object.entries(network.components).forEach(([componentName, component]) => {
       return (component as Component).update$.subscribe((update) => {
-        mud.update((mud) => ({
-          ...mud,
-          components: {
-            ...mud.components,
-            [componentName]: update.component as any,
-          } as any,
-        }));
-      });
-    });
+        mud.update(
+          (mud) =>
+            ({
+              ...mud,
+              components: {
+                ...mud?.components,
+                [componentName]: update.component as any,
+              },
+            }) as SetupNetworkResult,
+        )
+      })
+    })
 
     if (Number(PUBLIC_CHAIN_ID) === 31337) {
       mountDevTools({
@@ -56,7 +60,7 @@ export const mud = (() => {
         worldAbi: network.worldContract.abi,
         write$: network.write$,
         recsWorld: network.world,
-      });
+      })
     }
 
     /**
@@ -65,24 +69,39 @@ export const mud = (() => {
     return await new Promise((resolve) => {
       stateSynced.subscribe((synced) => {
         if (synced) {
-          setTimeout(() => resolve(true), 50);
+          setTimeout(() => resolve(true), 50)
         }
-      });
-    });
-  };
+      })
+    })
+  }
 
   /**
    * Subscribe to the SyncProgress component to identify when all state is synced
    */
   mud.subscribe((_mud) => {
-    if (!_mud?.components?.SyncProgress) return;
+    if (!_mud?.components?.SyncProgress) return
     stateSynced.set(
       getComponentValue(_mud.components.SyncProgress, "0x" as Entity)?.step ===
-        "live"
-    );
-  });
+        "live",
+    )
+  })
 
-  let setupLoading = false;
+  /**
+   * Stop the RECs sync any reset store when the wallet disconnects.
+   * Temp: Reload the page as stopSync() doesn't seem to cleanup everything properly
+   */
+  walletStore.subscribe(({ account }) => {
+    if (browser && get(stateSynced) && !account) {
+      // get(mud)?.stopSync()
+      mud.set(undefined)
+      stateSynced.set(false)
+
+      // Reload the page
+      window.location.reload()
+    }
+  })
+
+  let setupLoading = false
 
   return {
     ...derived(
@@ -94,75 +113,79 @@ export const mud = (() => {
           systemCalls: $systemCalls,
           stateSynced: $stateSynced,
           ready:
-            $stateSynced && $network.components && $systemCalls && $network,
-        };
-      }
+            $stateSynced && $network?.components && $systemCalls && $network,
+        }
+      },
     ),
     setup: async (account: Wallet) => {
-      if (setupLoading || get(stateSynced)) return;
-      setupLoading = true;
+      if (setupLoading || get(stateSynced)) return
+      setupLoading = true
       try {
-        await setup(account);
+        await setup(account)
       } finally {
-        setupLoading = false;
+        setupLoading = false
       }
     },
-  };
-})();
+  }
+})()
 
 export const user = (() => {
   const { subscribe, set, update } = writable<{
-    address: string | undefined;
-    balance: string;
+    address: string | undefined
+    balance: string
   }>({
     address: undefined,
     balance: "0.00",
-  });
+  })
 
-  let balanceInterval: NodeJS.Timeout | null = null;
+  let unsub: null | (() => any) = null
+  const makeInitialBalanceRequest = async (account: Account) => {
+    if (unsub) return
+    unsub = mud.subscribe(($mud) => {
+      if ($mud.network) {
+        unsub?.()
+        updateBalance(account.address)
+      }
+    })
+  }
 
+  let balanceInterval: NodeJS.Timeout | null = null
   walletStore.subscribe(async ({ account }) => {
     if (account) {
-      // Once account is ready, listen for mud (w/ publicClient) to be ready
-      // to make the first balance query
-      const unsub = mud.subscribe(($mud) => {
-        if ($mud.network) {
-          updateBalance(account.address);
-          unsub();
-        }
-      });
+      update((x) => ({ ...x, address: account.address }))
 
-      update((x) => ({ ...x, address: account.address }));
+      makeInitialBalanceRequest(account)
 
       if (!balanceInterval) {
         balanceInterval = setInterval(
           () => updateBalance(account.address),
-          5000
-        );
+          4000,
+        )
       }
     } else {
-      balanceInterval && clearInterval(balanceInterval);
-      set({ address: undefined, balance: "0.00" }); // Reset store if no user
+      balanceInterval && clearInterval(balanceInterval)
+      unsub = null
+      set({ address: undefined, balance: "0.00" }) // Reset store if no user
     }
-  });
+  })
 
   // Function to update balance
-  let prevBalance: string;
+  let prevBalance: string
   async function updateBalance(address: string) {
-    const $mud = get(mud);
-    if (!$mud?.network?.publicClient) return;
+    const $mud = get(mud)
+    if (!$mud?.network?.publicClient) return
 
-    const balance = await $mud.network.publicClient.getBalance({ address });
-    const formattedBalance = Number(formatEther(balance)).toFixed(4);
+    const balance = await $mud.network.publicClient.getBalance({ address })
+    const formattedBalance = Number(formatEther(balance)).toFixed(4)
 
-    if (formattedBalance === prevBalance) return;
-    prevBalance = formattedBalance;
+    if (formattedBalance === prevBalance) return
+    prevBalance = formattedBalance
 
-    update((x) => ({ ...x, balance: formattedBalance }));
+    update((x) => ({ ...x, balance: formattedBalance }))
   }
 
   // Publicly expose only the subscribe method to prevent external updates
   return {
     subscribe,
-  };
-})();
+  }
+})()

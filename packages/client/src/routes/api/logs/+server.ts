@@ -1,22 +1,22 @@
-import { PUBLIC_CHAIN_ID } from "$env/static/public";
-import { indexerClient } from "$lib/server/supabaseClient.js";
-import { decodeDynamicField } from "@latticexyz/protocol-parser";
+import { PUBLIC_CHAIN_ID } from "$env/static/public"
+import { indexerClient } from "$lib/server/supabaseClient.js"
+import { decodeDynamicField } from "@latticexyz/protocol-parser"
 
 const fallbackHex = (str?: string) => {
-  return (str ?? "0x").replace("\\x", "0x") as `0x${string}`;
-};
+  return (str ?? "0x").replace("\\x", "0x") as `0x${string}`
+}
 
 export const GET = async ({ request }) => {
   if (PUBLIC_CHAIN_ID !== "4242") {
-    return new Response("Not on public chain", { status: 400 });
+    return new Response("Not on public chain", { status: 400 })
   }
 
   const { data, error } = await indexerClient.rpc("get_indexer_records", {
     chain: 4242,
-  });
+  })
 
   if (error) {
-    return new Response("Error fetching records", { status: 500 });
+    return new Response("Error fetching records", { status: 500 })
   }
 
   const logRecords = data.map(
@@ -31,14 +31,14 @@ export const GET = async ({ request }) => {
           encodedLengths: fallbackHex(row.encoded_lengths),
           dynamicData: fallbackHex(row.dynamic_data),
         },
-      } as const)
-  );
+      }) as const,
+  )
 
   return new Response(
     JSON.stringify({
       blockNumber: data[0].block_number.toString(),
       logs: logRecords,
     }),
-    { status: 200 }
-  );
-};
+    { status: 200 },
+  )
+}

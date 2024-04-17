@@ -8,7 +8,7 @@ export function exportWordleBoard(gameId: string, answers: string[]) {
     x: "🟩",
     c: "🟨",
     _: "⬜️",
-  } as const;
+  } as const
 
   const board = answers
     .map((answer) => {
@@ -16,13 +16,13 @@ export function exportWordleBoard(gameId: string, answers: string[]) {
         .split("")
         .map((letter) => {
           if (["x", "c", "_"].includes(letter)) {
-            return emojiMap[letter as "x" | "c" | "_"];
+            return emojiMap[letter as "x" | "c" | "_"]
           }
-          return letter;
+          return letter
         })
-        .join("");
+        .join("")
     })
-    .join(" \n");
+    .join(" \n")
 
-  return `Wordle Game #${gameId}\n${board}`;
+  return `Wordle Game #${gameId}\n${board}`
 }

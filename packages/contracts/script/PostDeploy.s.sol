@@ -24,6 +24,9 @@ contract PostDeploy is Script {
     IWorld(worldAddress).grantAccess(ProtocolFeeRecipient._tableId, creator);
     IWorld(worldAddress).grantAccess(ProtocolFeeBasisPoints._tableId, creator);
 
+    ProtocolFeeRecipient.set(0x9B8DB9bffcCd1F2Cc5044d67a1b9C68dD6Deff6a);
+    ProtocolFeeBasisPoints.set(250);
+
     vm.stopBroadcast();
   }
 }

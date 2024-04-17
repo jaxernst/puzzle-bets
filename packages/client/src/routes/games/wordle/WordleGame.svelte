@@ -318,7 +318,7 @@
   }
 
   .selected {
-    outline: 2px solid rgb(82 82 82);
+    outline: 2px solid #eacb28;
   }
 
   .controls {

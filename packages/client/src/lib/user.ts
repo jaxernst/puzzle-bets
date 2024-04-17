@@ -2,10 +2,11 @@ import { writable, get } from "svelte/store"
 import { walletStore } from "$lib/mud/connectWallet"
 import { formatEther, type Account } from "viem"
 import { mud } from "./mud/mudStore"
+import type { EvmAddress } from "./types"
 
 export const user = (() => {
   const { subscribe, set, update } = writable<{
-    address: string | undefined
+    address: EvmAddress | undefined
     balance: string
   }>({
     address: undefined,
@@ -26,7 +27,7 @@ export const user = (() => {
   let balanceInterval: NodeJS.Timeout | null = null
   walletStore.subscribe(async ({ account }) => {
     if (account) {
-      update((x) => ({ ...x, address: account.address }))
+      update((x) => ({ ...x, address: account.address as EvmAddress }))
 
       makeInitialBalanceRequest(account)
 

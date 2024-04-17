@@ -58,12 +58,12 @@
       {#if statusLabels[game.status]()}
         {statusLabels[game.status]()}
       {/if}
-    </div>
-    {#if dueIn !== undefined && dueIn > 0}
-      <div class="text-sm italic text-neutral-500">
-        * Win by being the sole player to solve + submit before the deadline
+      {#if dueIn !== undefined && dueIn > 0}
+      <div class="text-sm font-normal text-neutral-500">
+        - Win by being the sole player to solve + submit before the deadline
       </div>
-    {/if}
+      {/if}
+    </div>
 
     <div class="flex items-stretch gap-4 text-sm">
       <div

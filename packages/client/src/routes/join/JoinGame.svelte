@@ -25,7 +25,8 @@
 
   let joinGameLoading = false
   const joinGame = async () => {
-    if (!game) return
+    if (!game || !$mud.systemCalls) return
+    
     joinGameLoading = true
     try {
       await $mud.systemCalls.joinGame(

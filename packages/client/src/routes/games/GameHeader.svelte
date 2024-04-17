@@ -41,7 +41,7 @@
   let submitError: null | string = null
   $: submitted = gameId && $userSolvedGame(gameId, $user.address)
   const verifyAndSubmitSolution = async () => {
-    if (!gameId) return
+    if (!gameId || !$mud.systemCalls) return
 
     submitError = null
     submitting = true
@@ -93,7 +93,7 @@
 
   let cancellingGame = false
   $: cancelAndArchive = async () => {
-    if (!gameId) return
+    if (!gameId || !$mud.systemCalls) return
     cancellingGame = true
     try {
       await $mud.systemCalls.cancelPendingGame(gameId)

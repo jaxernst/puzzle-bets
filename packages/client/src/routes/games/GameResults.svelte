@@ -65,6 +65,8 @@
   let claimLoading = false
   let claimError: string | null = null
   $: claim = async () => {
+    if (!$mud.systemCalls) return
+
     claimLoading = true
     claimError = null
     try {
@@ -99,6 +101,8 @@
   let voteRematchLoading = false
   let voteRematchError: null | string = null
   $: voteRematch = async () => {
+    if (!$mud.systemCalls) return 
+    
     voteRematchLoading = true
     voteRematchError = null
     try {

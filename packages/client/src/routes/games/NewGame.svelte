@@ -44,6 +44,8 @@
   let gameCreated = false
   let createGameError: string | null = null
   async function createGame() {
+    if (!$mud.systemCalls) return 
+
     createGameError = null
     createGameLoading = true
     try {
@@ -64,7 +66,7 @@
   }
 
   let createdGameId: number | null = null
-  $: if (gameCreated && browser) {
+  $: if (gameCreated && browser && $mud.components) {
     const entities = runQuery([
       HasValue($mud.components.Player1, { value: $user.address }),
     ])

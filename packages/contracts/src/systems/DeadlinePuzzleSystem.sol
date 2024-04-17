@@ -194,6 +194,8 @@ contract DeadlinePuzzleSystem is System {
     uint16 protocolFeeBps = ProtocolFeeBasisPoints.get();
     address feeRecipient = ProtocolFeeRecipient.get();
 
+    if (totalAmount == 0) return;
+
     if (protocolFeeBps > 0 && feeRecipient != address(0)) {
       uint fee = (totalAmount * ProtocolFeeBasisPoints.get()) / 10000;
       _transfer(feeRecipient, fee);

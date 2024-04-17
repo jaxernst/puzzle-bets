@@ -26,7 +26,7 @@ export function createSystemCalls({
       systemTimestamp() + inviteExpirationMinutes * 60,
     )
 
-    const tx = await worldContract.write.games__newGame(
+    const tx = await worldContract.write.v1__newGame(
       [
         gameTypeToNumber[gameType],
         submissionWindowMinutes * 60,
@@ -41,7 +41,7 @@ export function createSystemCalls({
   }
 
   const joinGame = async (gameId: Entity, wagerEth: number) => {
-    const tx = await worldContract.write.games__joinGame(
+    const tx = await worldContract.write.v1__joinGame(
       [gameId as `0x${string}`],
       { value: parseEther(wagerEth.toString()) },
     )
@@ -52,7 +52,7 @@ export function createSystemCalls({
     gameId: Entity,
     solutionSignature: `0x${string}`,
   ) => {
-    const tx = await worldContract.write.v0__submitSolution([
+    const tx = await worldContract.write.v1__submitSolution([
       gameId as `0x${string}`,
       solutionSignature,
     ])
@@ -60,19 +60,19 @@ export function createSystemCalls({
   }
 
   const claim = async (gameId: Entity) => {
-    const tx = await worldContract.write.v0__claim([gameId as `0x${string}`]);
+    const tx = await worldContract.write.v1__claim([gameId as `0x${string}`]);
     await waitForTransaction(tx);
   };
 
   const voteRematch = async (gameId: Entity) => {
-    const tx = await worldContract.write.v0__voteRematch([
+    const tx = await worldContract.write.v1__voteRematch([
       gameId as `0x${string}`,
     ])
     await waitForTransaction(tx)
   }
 
   const cancelPendingGame = async (gameId: Entity) => {
-    const tx = await worldContract.write.v0__cancelPendingGame([
+    const tx = await worldContract.write.v1__cancelPendingGame([
       gameId as `0x${string}`,
     ])
     await waitForTransaction(tx)

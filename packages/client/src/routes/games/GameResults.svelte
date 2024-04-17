@@ -2,7 +2,8 @@
   import DotLoader from "$lib/components/DotLoader.svelte"
   import { ethPrice } from "$lib/ethPrice"
   import { getGame, liveGameStatus, userSolvedGame } from "$lib/gameStores"
-  import { user, mud } from "$lib/mud/mudStore"
+  import {  mud } from "$lib/mud/mudStore"
+  import { user } from "$lib/user"
   import { GameStatus, type StartedGame } from "$lib/types"
   import {
     entityToInt,

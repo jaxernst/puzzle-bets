@@ -5,7 +5,8 @@
   import { ethPrice } from "$lib/ethPrice";
   import { gameInviteUrls } from "$lib/gameStores";
   import EthSymbol from "$lib/icons/EthSymbol.svelte";
-  import { mud, user } from "$lib/mud/mudStore";
+  import { mud  } from "$lib/mud/mudStore";
+  import { user } from "$lib/user";
   import type { PuzzleType } from "$lib/types";
   import { capitalized } from "$lib/util";
   import { HasValue, runQuery } from "@latticexyz/recs";

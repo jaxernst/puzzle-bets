@@ -32,5 +32,4 @@ export const latticeTestnet = {
 export const supportedChains: Array<MUDChain | Chain> = [
   mudFoundry,
   latticeTestnet,
-  baseSepolia,
 ]

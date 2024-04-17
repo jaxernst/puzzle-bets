@@ -7,7 +7,7 @@ import {
   subscribeToPushNotifications,
   updatePushSubscription,
 } from "./notificationUtil"
-import { user } from "$lib/mud/mudStore"
+import { user } from "$lib/user"
 
 export const notifications = (() => {
   const enabledBackend = writable<boolean>()

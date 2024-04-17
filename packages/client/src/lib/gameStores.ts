@@ -1,5 +1,6 @@
 import { derived, get, writable } from "svelte/store"
-import { mud, user } from "./mud/mudStore"
+import { mud} from "./mud/mudStore"
+import { user } from "./user"
 import {
   Has,
   HasValue,
@@ -19,7 +20,7 @@ import type { SetupNetworkResult } from "./mud/setupNetwork";
 import { timeRemaining, intToEntity } from "./util";
 
 export const userGames = derived([mud, user], ([$mud, $user]) => {
-  if (!$mud?.ready || !$user.address) return []
+  if (!$mud?.ready || !$mud.components || !$user.address) return []
 
   const p1Games = runQuery([
     Has($mud.components.GameStatus),
@@ -32,7 +33,7 @@ export const userGames = derived([mud, user], ([$mud, $user]) => {
   ])
 
   return Array.from([...p1Games, ...p2Games]).map((gameId) => {
-    const game = gameIdToGame(gameId, $mud.components)
+    const game = gameIdToGame(gameId, $mud.components!)
     return {
       ...game,
       opponent: $user.address === game.p1 ? game.p2 : game.p1,
@@ -42,7 +43,7 @@ export const userGames = derived([mud, user], ([$mud, $user]) => {
 
 export const getGame = derived(mud, ($mud) => {
   return (gameId: Entity, opts?: { expectStarted?: boolean }) => {
-    if (!$mud?.ready) return undefined;
+    if (!$mud?.ready || !$mud.components) return undefined;
     if (!getComponentValue($mud.components.PuzzleType, gameId))
       return undefined;
 
@@ -58,7 +59,7 @@ export const getGame = derived(mud, ($mud) => {
 
 export const userSolvedGame = derived(mud, ($mud) => {
   return (gameId: Entity, user: EvmAddress | undefined) => {
-    if (!$mud?.ready || !user) return false
+    if (!$mud?.ready || !user || !$mud.components) return false
 
     const solved = getComponentValue(
       $mud.components.Solved,
@@ -88,9 +89,12 @@ export function liveGameStatus(gameId: Entity) {
 
   // Decrement timers and mark game as complete when time runs out
   const updateStatusTimers = (onGameFinalized: () => void) => {
+    const components = get(mud).components
+    if (!components) return
+
     const { inviteExpiration, startTime, submissionWindow } = gameIdToGame(
       gameId,
-      get(mud).components,
+      components,
     )
 
     store.update((g) => {
@@ -138,7 +142,7 @@ export function liveGameStatus(gameId: Entity) {
 
   // Listen for status updates to the onchain game state
   mud.subscribe(($mud) => {
-    if (!$mud?.ready) return undefined
+    if (!$mud?.ready || !$mud.components) return undefined
 
     const game = gameIdToGame(gameId, $mud.components)
 

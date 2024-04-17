@@ -5,7 +5,8 @@
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
   import Puzzly from "$lib/icons/puzzly.svelte"
   import { walletStore } from "$lib/mud/connectWallet"
-  import { mud, user } from "$lib/mud/mudStore"
+  import { mud  } from "$lib/mud/mudStore"
+  import { user } from "$lib/user"
   import { cubicOut } from "svelte/easing"
   import { fade, fly } from "svelte/transition"
 

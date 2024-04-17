@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { mud, user } from "$lib/mud/mudStore"
+  import { mud } from "$lib/mud/mudStore"
+  import { user } from "$lib/user"
   import WalletIcon from "$lib/icons/Wallet.svelte"
   import { walletStore } from "$lib/mud/connectWallet"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"

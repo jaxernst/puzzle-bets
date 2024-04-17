@@ -1,5 +1,5 @@
 import { getGame } from "$lib/gameStores";
-import { user } from "$lib/mud/mudStore";
+import { user } from "$lib/user";
 import type { EvmAddress, PuzzleType } from "$lib/types";
 import { intToEntity } from "$lib/util";
 

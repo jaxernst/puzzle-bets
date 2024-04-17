@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { mud, user } from "$lib/mud/mudStore";
+  import { mud  } from "$lib/mud/mudStore";
+  import { user } from "$lib/user";
   import { type Entity } from "@latticexyz/recs";
   import NewGameModal from "./NewGame.svelte";
   import { GameStatus, type Game, type PuzzleType } from "$lib/types";

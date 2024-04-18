@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { mud  } from "$lib/mud/mudStore";
-  import { user } from "$lib/user";
-  import { type Entity } from "@latticexyz/recs";
-  import NewGameModal from "./NewGame.svelte";
-  import { GameStatus, type Game, type PuzzleType } from "$lib/types";
-  import { capitalized, entityToInt } from "$lib/util";
-  import Modal from "$lib/components/Modal.svelte";
-  import GameResults from "./GameResults.svelte";
+  import { mud } from "$lib/mud/mudStore"
+  import { user } from "$lib/user"
+  import { type Entity } from "@latticexyz/recs"
+  import NewGameModal from "./NewGame.svelte"
+  import { GameStatus, type Game, type PuzzleType } from "$lib/types"
+  import { capitalized, entityToInt } from "$lib/util"
+  import Modal from "$lib/components/Modal.svelte"
+  import GameResults from "./GameResults.svelte"
   import {
     liveGameStatus,
     userSolvedGame,
@@ -22,8 +22,8 @@
   import { slide } from "svelte/transition"
   import { cubicOut } from "svelte/easing"
 
-  export let gameType: PuzzleType;
-  export let gameId: Entity | null = null;
+  export let gameType: PuzzleType
+  export let gameId: Entity | null = null
 
   let liveStatus: Readable<LiveStatus | null> = readable(null)
   $: if (gameId) {
@@ -151,7 +151,7 @@
     }`}
   >
     <div
-      class={`flex-grow text-lg font-bold text-off-black
+      class={`text-off-black flex-grow text-lg font-bold
       ${!gameId ? "text-center" : ""}
     `}
     >

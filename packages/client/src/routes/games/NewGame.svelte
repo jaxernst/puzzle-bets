@@ -1,21 +1,21 @@
 <script lang="ts">
-  import { browser } from "$app/environment";
-  import { goto } from "$app/navigation";
-  import DotLoader from "$lib/components/DotLoader.svelte";
-  import { ethPrice } from "$lib/ethPrice";
-  import { gameInviteUrls } from "$lib/gameStores";
-  import EthSymbol from "$lib/icons/EthSymbol.svelte";
-  import { mud  } from "$lib/mud/mudStore";
-  import { user } from "$lib/user";
-  import type { PuzzleType } from "$lib/types";
-  import { capitalized } from "$lib/util";
-  import { HasValue, runQuery } from "@latticexyz/recs";
-  import { cubicOut } from "svelte/easing";
-  import { slide } from "svelte/transition";
-  import { notifications } from "$lib/notifications/notificationStore";
-  import NotificationBell from "$lib/icons/NotificationBell.svelte";
+  import { browser } from "$app/environment"
+  import { goto } from "$app/navigation"
+  import DotLoader from "$lib/components/DotLoader.svelte"
+  import { ethPrice } from "$lib/ethPrice"
+  import { gameInviteUrls } from "$lib/gameStores"
+  import EthSymbol from "$lib/icons/EthSymbol.svelte"
+  import { mud } from "$lib/mud/mudStore"
+  import { user } from "$lib/user"
+  import type { PuzzleType } from "$lib/types"
+  import { capitalized } from "$lib/util"
+  import { HasValue, runQuery } from "@latticexyz/recs"
+  import { cubicOut } from "svelte/easing"
+  import { slide } from "svelte/transition"
+  import { notifications } from "$lib/notifications/notificationStore"
+  import NotificationBell from "$lib/icons/NotificationBell.svelte"
 
-  export let gameType: PuzzleType;
+  export let gameType: PuzzleType
 
   // Game params
   let wagerUSD: number = 2.5
@@ -40,11 +40,12 @@
     wagerETH = wagerUSD / $ethPrice
   }
 
+  let showConfirm = false
   let createGameLoading = false
   let gameCreated = false
   let createGameError: string | null = null
   async function createGame() {
-    if (!$mud.systemCalls) return 
+    if (!$mud.systemCalls) return
 
     createGameError = null
     createGameLoading = true
@@ -115,100 +116,111 @@
     ticking.
   </div>
 
-  <div
-    class="flex items-center justify-between px-2 py-2 text-neutral-400 sm:px-7"
-  >
-    <label class="flex flex-col gap-1 text-neutral-200">
-      <span class="text-sm text-neutral-400">Wager (USD)</span>
-      <div class="flex items-center gap-1">
-        <input
-          type="number"
-          min="5"
-          step="1"
-          class="w-[120px] rounded-lg bg-neutral-700 p-2"
-          placeholder="15"
-          value={wagerUSD}
-          on:input={(event) => updateUSD(event.target.value)}
-        />
-        <div class=" fill-neutral-300">$</div>
-      </div>
-    </label>
-
-    <div class="pt-3">or</div>
-
-    <label class="flex flex-col gap-1 text-neutral-200">
-      <span class="text-sm text-neutral-400">Wager (ETH)</span>
-      <div class="flex items-center gap-1">
-        <input
-          type="number"
-          min="0"
-          step="0.001"
-          class="w-[120px] rounded-lg bg-neutral-700 p-2"
-          placeholder="0.01"
-          value={wagerETH}
-          on:input={(event) => updateETH(event.target.value)}
-        />
-        <div class="h-4 w-4 fill-neutral-300">
-          <EthSymbol />
+  {#if showConfirm}
+    <div class="self-center p-4">
+      {#key [createGameLoading, gameCreated, inviteCopied]}
+        <button
+          class="whitespace-nowrap rounded-lg bg-lime-500 px-3 py-2 font-bold transition-all hover:bg-lime-400 hover:shadow-lg active:bg-lime-600"
+          on:click={() => (!gameCreated ? createGame() : copyInviteUrl())}
+          in:slide={{ axis: "x", easing: cubicOut }}
+        >
+          {#if createGameLoading}
+            <DotLoader />
+          {:else if inviteCopied}
+            Invite Copied!
+          {:else if gameCreated}
+            <div>Success! Click to copy invite link</div>
+          {:else}
+            Create Game & Generate Invite
+          {/if}
+        </button>
+      {/key}
+    </div>
+  {:else}
+    <!-- Input fields -->
+    <div
+      class="flex items-center justify-between px-2 py-2 text-neutral-400 sm:px-7"
+    >
+      <label class="flex flex-col gap-1 text-neutral-200">
+        <span class="text-sm text-neutral-400">Wager (USD)</span>
+        <div class="flex items-center gap-1">
+          <input
+            type="number"
+            min="5"
+            step="1"
+            class="w-[120px] rounded-lg bg-neutral-700 p-2"
+            placeholder="15"
+            value={wagerUSD}
+            on:input={(event) => updateUSD(event.target.value)}
+          />
+          <div class=" fill-neutral-300">$</div>
         </div>
+      </label>
+
+      <div class="pt-3">or</div>
+
+      <label class="flex flex-col gap-1 text-neutral-200">
+        <span class="text-sm text-neutral-400">Wager (ETH)</span>
+        <div class="flex items-center gap-1">
+          <input
+            type="number"
+            min="0"
+            step="0.001"
+            class="w-[120px] rounded-lg bg-neutral-700 p-2"
+            placeholder="0.01"
+            value={wagerETH}
+            on:input={(event) => updateETH(event.target.value)}
+          />
+          <div class="h-4 w-4 fill-neutral-300">
+            <EthSymbol />
+          </div>
+        </div>
+      </label>
+    </div>
+
+    <div class="flex flex-col gap-3 px-6 py-2">
+      <div class="text-neutral-400">
+        Puzzle deadline:
+        <input
+          type="number"
+          class="w-[50px] rounded-lg bg-neutral-700 px-2 text-neutral-200"
+          min="1"
+          max="100000"
+          bind:value={submissionWindowMinutes}
+        /> minutes
       </div>
-    </label>
-  </div>
 
-  <div class="flex flex-col gap-3 px-6 py-2">
-    <div class="text-neutral-400">
-      Puzzle deadline:
-      <input
-        type="number"
-        class="w-[50px] rounded-lg bg-neutral-700 px-2 text-neutral-200"
-        min="1"
-        max="100000"
-        bind:value={submissionWindowMinutes}
-      /> minutes
+      <div class="text-neutral-400">
+        Invite expires:
+        <input
+          type="number"
+          class="w-[50px] rounded-lg bg-neutral-700 px-2 text-neutral-200"
+          min="1"
+          max="100000"
+          bind:value={inviteExpirationMinutes}
+        />
+        minutes
+      </div>
+
+      <div class="text-neutral-400">
+        Your name (optional):
+        <input
+          type="text"
+          class="w-[130px] rounded-lg border-2 border-neutral-500 bg-transparent px-2 text-neutral-200"
+          bind:value={inviteName}
+          on:input|preventDefault|stopPropagation
+        />
+      </div>
     </div>
+    <button
+      class="self-end whitespace-nowrap rounded-lg bg-lime-500 px-3 py-2 font-bold transition-all hover:bg-lime-400 hover:shadow-lg active:bg-lime-600"
+      on:click={() => (showConfirm = !showConfirm)}
+      in:slide={{ axis: "x", easing: cubicOut }}
+    >
+      Confirm ->
+    </button>
+  {/if}
 
-    <div class="text-neutral-400">
-      Invite expires:
-      <input
-        type="number"
-        class="w-[50px] rounded-lg bg-neutral-700 px-2 text-neutral-200"
-        min="1"
-        max="100000"
-        bind:value={inviteExpirationMinutes}
-      />
-      minutes
-    </div>
-
-    <div class="text-neutral-400">
-      Your name (optional):
-      <input
-        type="text"
-        class="w-[130px] rounded-lg border-2 border-neutral-500 bg-transparent px-2 text-neutral-200"
-        bind:value={inviteName}
-        on:input|preventDefault|stopPropagation
-      />
-    </div>
-  </div>
-
-  <div class="self-center p-4">
-    {#key [createGameLoading, gameCreated, inviteCopied]}
-      <button
-        class="whitespace-nowrap rounded-lg bg-lime-500 px-3 py-2 font-bold transition-all hover:bg-lime-400 hover:shadow-lg active:bg-lime-600"
-        on:click={() => (!gameCreated ? createGame() : copyInviteUrl())}
-        in:slide={{ axis: "x", easing: cubicOut }}
-      >
-        {#if createGameLoading}
-          <DotLoader />
-        {:else if inviteCopied}
-          Invite Copied!
-        {:else if gameCreated}
-          <div>Success! Click to copy invite link</div>
-        {:else}
-          Create Game & Generate Invite
-        {/if}
-      </button>
-    {/key}
-  </div>
   {#if createGameError}
     <div class="text-sm text-red-500">{createGameError}</div>
   {/if}

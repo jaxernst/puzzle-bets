@@ -30,41 +30,44 @@
 
     const createGame = derived([params, mud], ([$params, $mud]) => {
       return async () => {
-        if (!$mud.systemCalls) return
+        if (!$mud.systemCalls) {
+          return error.set("Mud not setup")
+        }
         if (!paramsValid($params)) {
-          error.set("Invalid parameters")
+          return error.set("Invalid parameters")
         }
 
-        const {
-          gameType,
-          wagerEth,
-          submissionWindowMinutes,
-          inviteExpirationMinutes,
-        } = $params as NewGameParams
+        const { puzzleType, wagerEth, submissionWindow, inviteExpiration } =
+          $params as NewGameParams
 
         loading.set(true)
 
         try {
           await $mud.systemCalls.newGame(
-            gameType,
+            puzzleType,
             wagerEth,
-            submissionWindowMinutes,
-            inviteExpirationMinutes,
+            submissionWindow,
+            inviteExpiration,
           )
-          gameCreated = true
         } catch (e: any) {
           console.error(e)
-          createGameError =
-            "Game creation failed with:" + e.shortMessage ?? "unkown error"
+          error.set(
+            "Game creation failed with:" + e.shortMessage ?? "unkown error",
+          )
         } finally {
-          createGameLoading = false
+          loading.set(false)
         }
       }
     })
 
     return {
-      setParam: params,
-      create: create,
+      setParam: <T extends keyof NewGameParams>(
+        param: keyof NewGameParams,
+        value: NewGameParams[T],
+      ) => {
+        params.update((s) => ({ ...s, [param]: value }))
+      },
+      create: createGame,
     }
   }
 </script>

@@ -2,7 +2,7 @@
   import { mud } from "$lib/mud/mudStore"
   import { user } from "$lib/user"
   import { type Entity } from "@latticexyz/recs"
-  import NewGameModal from "./NewGame.svelte"
+  import NewGameModal from "./new-game/NewGame.svelte"
   import { GameStatus, type Game, type PuzzleType } from "$lib/types"
   import { capitalized, entityToInt } from "$lib/util"
   import Modal from "$lib/components/Modal.svelte"

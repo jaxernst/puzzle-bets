@@ -1,26 +1,29 @@
 <script lang="ts">
   import { ethPrice } from "$lib/ethPrice"
   import EthSymbol from "$lib/icons/EthSymbol.svelte"
-  import type { PuzzleType } from "$lib/types"
   import { cubicOut } from "svelte/easing"
   import { slide } from "svelte/transition"
+  import { NewGameStore } from "./NewGame.svelte"
+  import { onMount } from "svelte"
 
-  export let gameType: PuzzleType
   export let onConfirm: () => void
 
   // Game params
   let wagerUSD: number = 2.5
-  let wagerETH: number = wagerUSD / $ethPrice
-  let submissionWindowMinutes = 8
-  let inviteExpirationMinutes = 20
+  onMount(() => {
+    NewGameStore.setParam("wagerEth", wagerUSD / $ethPrice)
+    NewGameStore.setParam("submissionWindow", 8 * 60)
+    NewGameStore.setParam("inviteExpiration", 20 * 60)
+  })
+
   let inviteName: string | null = null
 
   function updateETH(input: string) {
     const value = parseFloat(input)
     if (isNaN(value)) return
 
-    wagerETH = value
-    wagerUSD = wagerETH * $ethPrice
+    wagerUSD = value * $ethPrice
+    NewGameStore.setParam("wagerEth", value)
   }
 
   function updateUSD(input: string) {
@@ -28,7 +31,7 @@
     if (isNaN(value)) return
 
     wagerUSD = value
-    wagerETH = wagerUSD / $ethPrice
+    NewGameStore.setParam("wagerEth", wagerUSD / $ethPrice)
   }
 </script>
 
@@ -63,7 +66,7 @@
         step="0.001"
         class="w-[120px] rounded-lg bg-neutral-700 p-2"
         placeholder="0.01"
-        value={wagerETH}
+        value={$NewGameStore.wagerEth}
         on:input={(event) => updateETH(event.target.value)}
       />
       <div class="h-4 w-4 fill-neutral-300">
@@ -81,7 +84,9 @@
       class="w-[50px] rounded-lg bg-neutral-700 px-2 text-neutral-200"
       min="1"
       max="100000"
-      bind:value={submissionWindowMinutes}
+      value={$NewGameStore.submissionWindow / 60}
+      on:input={(e) =>
+        NewGameStore.setParam("submissionWindow", (e.target?.value ?? 0) * 60)}
     /> minutes
   </div>
 
@@ -92,7 +97,9 @@
       class="w-[50px] rounded-lg bg-neutral-700 px-2 text-neutral-200"
       min="1"
       max="100000"
-      bind:value={inviteExpirationMinutes}
+      value={($NewGameStore.inviteExpiration ?? 0) / 60}
+      on:input={(e) =>
+        NewGameStore.setParam("inviteExpiration", (e.target?.value ?? 0) * 60)}
     />
     minutes
   </div>

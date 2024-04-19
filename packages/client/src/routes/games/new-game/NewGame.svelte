@@ -9,7 +9,7 @@
     inviteExpiration: number
   }
 
-  export let createGame = () => {
+  export let NewGameStore = (() => {
     const params = writable<Partial<NewGameParams>>({})
     const loading = writable()
     const error = writable()
@@ -61,51 +61,52 @@
     })
 
     return {
+      ...derived([params, loading, error], ([params, loading, error]) => ({
+        ...params,
+        loading,
+        error,
+      })),
+
       setParam: <T extends keyof NewGameParams>(
         param: keyof NewGameParams,
         value: NewGameParams[T],
       ) => {
         params.update((s) => ({ ...s, [param]: value }))
       },
+
       create: createGame,
     }
-  }
+  })()
 </script>
 
 <script lang="ts">
   import type { PuzzleType } from "$lib/types"
-
-  import { ethPrice } from "$lib/ethPrice"
   import { capitalized } from "$lib/util"
   import InputPage from "./InputPage.svelte"
   import ConfirmPage from "./ConfirmPage.svelte"
+  import { loadConfigFromFile } from "vite"
 
-  export let gameType: PuzzleType
-
-  // Game params
-  let wagerUSD: number = 2.5
-  let wagerETH: number = wagerUSD / $ethPrice
-  let submissionWindowMinutes = 8
-  let inviteExpirationMinutes = 20
-  let inviteName: string | null = null
+  export let puzzleType: PuzzleType
 
   let showConfirm = false
+
+  $: NewGameStore.setParam("puzzleType", puzzleType)
 </script>
 
 <div class="flex max-w-[450px] flex-col gap-2 rounded-xl bg-neutral-800 p-5">
   <div class="font-semibold">
-    Create a new <span class="text-lime-500">{capitalized(gameType)}</span> Game
-  </div>
-
-  <div class="text-sm text-neutral-100">
-    Enter your wager then send an invite link to your opponent. When they join
-    the game, the puzzle will be revealed and the deadline clock will start
-    ticking.
+    Create a new <span class="text-lime-500">{capitalized(puzzleType)}</span> Game
   </div>
 
   {#if showConfirm}
-    <ConfirmPage {gameType} />
+    <ConfirmPage />
   {:else}
-    <InputPage {gameType} onConfirm={() => showConfirm} />
+    <div class="text-sm text-neutral-100">
+      Enter your wager then send an invite link to your opponent. When they join
+      the game, the puzzle will be revealed and the deadline clock will start
+      ticking.
+    </div>
+
+    <InputPage onConfirm={() => showConfirm} />
   {/if}
 </div>

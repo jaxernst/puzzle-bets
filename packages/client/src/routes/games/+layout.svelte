@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { page } from "$app/stores";
-  import { GameStatus, type PuzzleType } from "$lib/types";
-  import GameHeader from "./GameHeader.svelte";
-  import GameHud from "./GameHud.svelte";
-  import { userGames } from "$lib/gameStores";
-  import { formatTime, systemTimestamp, intToEntity } from "$lib/util";
-  import { onMount } from "svelte";
-  import { goto } from "$app/navigation";
+  import { page } from "$app/stores"
+  import { GameStatus, type PuzzleType } from "$lib/types"
+  import GameHeader from "./GameHeader.svelte"
+  import GameHud from "./GameHud.svelte"
+  import { userGames } from "$lib/gameStores"
+  import { formatTime, systemTimestamp, intToEntity } from "$lib/util"
+  import { onMount } from "svelte"
+  import { goto } from "$app/navigation"
 
-  $: gameType = $page.route.id?.split("/")[2] as PuzzleType;
-  $: gameId = intToEntity($page.params.gameId);
-  $: game = $userGames.find((g) => g.id === gameId);
+  $: puzzleType = $page.route.id?.split("/")[2] as PuzzleType
+  $: gameId = intToEntity($page.params.gameId)
+  $: game = $userGames.find((g) => g.id === gameId)
 
   onMount(() => {
     if (gameId && !game) {
@@ -30,7 +30,7 @@
 </script>
 
 <div class="flex flex-grow flex-col gap-4">
-  <GameHeader {gameType} {gameId} />
+  <GameHeader {puzzleType} {gameId} />
 
   {#if gameId}
     <div class="w-full">

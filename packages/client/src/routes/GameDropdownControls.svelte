@@ -16,7 +16,7 @@
   )
 
   $: dropdownSelection = gameRoute ?? null
-  $: gameType = (dropdownSelection?.toLowerCase() ?? "wordle") as PuzzleType
+  $: puzzleType = (dropdownSelection?.toLowerCase() ?? "wordle") as PuzzleType
 
   const homeRoutes = ["/", "/welcome", "/about"]
 
@@ -31,7 +31,7 @@
     showNewGameModal = false
   }}
 >
-  <NewGame {gameType} />
+  <NewGame {puzzleType} />
 </Modal>
 
 <Dropdown
@@ -47,7 +47,7 @@
     <button
       class="rounded-full border border-lime-500 px-2 text-sm font-semibold text-lime-500 active:bg-neutral-300 disabled:opacity-50"
       on:click={() => (showNewGameModal = true)}
-      disabled={!$user.address || !SUPPORTED_GAME_TYPES.includes(gameType)}
+      disabled={!$user.address || !SUPPORTED_GAME_TYPES.includes(puzzleType)}
       >New
     </button>
   {:else}
@@ -86,15 +86,15 @@
         showJoinGameInput = true
       }
     }}
-    disabled={!$user.address || !SUPPORTED_GAME_TYPES.includes(gameType)}
+    disabled={!$user.address || !SUPPORTED_GAME_TYPES.includes(puzzleType)}
   >
     Join
   </button>
 
   <button
     class="rounded-full border border-lime-500 px-2 text-sm font-semibold text-lime-500 active:bg-neutral-300 disabled:opacity-50"
-    on:click={() => goto(`/games/${gameType}/demo`)}
-    disabled={!SUPPORTED_GAME_TYPES.includes(gameType)}
+    on:click={() => goto(`/games/${puzzleType}/demo`)}
+    disabled={!SUPPORTED_GAME_TYPES.includes(puzzleType)}
   >
     Practice
   </button>

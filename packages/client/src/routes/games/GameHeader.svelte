@@ -22,7 +22,7 @@
   import { slide } from "svelte/transition"
   import { cubicOut } from "svelte/easing"
 
-  export let gameType: PuzzleType
+  export let puzzleType: PuzzleType
   export let gameId: Entity | null = null
 
   let liveStatus: Readable<LiveStatus | null> = readable(null)
@@ -32,7 +32,7 @@
     liveStatus = readable(null)
   }
 
-  $: puzzleState = gameId && $puzzleStores[gameType].get(entityToInt(gameId))
+  $: puzzleState = gameId && $puzzleStores[puzzleType].get(entityToInt(gameId))
 
   let showNewGameModal = false
   let showResultsModal = false
@@ -46,7 +46,7 @@
     submitError = null
     submitting = true
     try {
-      const res = await fetch(`/api/${gameType}/verify-user-solution`, {
+      const res = await fetch(`/api/${puzzleType}/verify-user-solution`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -112,7 +112,7 @@
     const gId = Number(entityToInt(gameId))
     let url = $gameInviteUrls[gId]
     if (!url) {
-      url = gameInviteUrls.create(gameType, gId)
+      url = gameInviteUrls.create(puzzleType, gId)
     }
 
     navigator.clipboard.writeText(url)
@@ -130,7 +130,7 @@
     showNewGameModal = false
   }}
 >
-  <NewGameModal {gameType} />
+  <NewGameModal {puzzleType} />
 </Modal>
 
 {#if gameId}
@@ -155,7 +155,7 @@
       ${!gameId ? "text-center" : ""}
     `}
     >
-      {capitalized(gameType)}
+      {capitalized(puzzleType)}
       {gameId ? `#${entityToInt(gameId)}` : "(practice game)"}
     </div>
 

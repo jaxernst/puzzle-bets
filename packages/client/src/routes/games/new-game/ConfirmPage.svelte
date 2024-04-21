@@ -2,55 +2,29 @@
   import { browser } from "$app/environment"
   import { goto } from "$app/navigation"
   import DotLoader from "$lib/components/DotLoader.svelte"
-  import { ethPrice } from "$lib/ethPrice"
   import { gameInviteUrls } from "$lib/gameStores"
   import { mud } from "$lib/mud/mudStore"
   import { user } from "$lib/user"
-  import type { PuzzleType } from "$lib/types"
   import { HasValue, runQuery } from "@latticexyz/recs"
   import { cubicOut } from "svelte/easing"
   import { slide } from "svelte/transition"
   import { notifications } from "$lib/notifications/notificationStore"
   import NotificationBell from "$lib/icons/NotificationBell.svelte"
-  import InputPage from "./InputPage.svelte"
-  import ConfirmPage from "./ConfirmPage.svelte"
+  import { newGame } from "./newGame"
 
-  export let gameType: PuzzleType
+  export let onCreate = () => {}
+  export let onCancel = () => {}
 
-  // Game params
   let wagerUSD: number = 2.5
-  let wagerETH: number = wagerUSD / $ethPrice
-  let submissionWindowMinutes = 8
-  let inviteExpirationMinutes = 20
   let inviteName: string | null = null
-
-  let createGameLoading = false
   let gameCreated = false
-  let createGameError: string | null = null
-  async function createGame() {
-    if (!$mud.systemCalls) return
+  $: createGameError = $newGame.error
+  $: createGameLoading = $newGame.loading
+  $: puzzleType = $newGame.puzzleType
 
-    createGameError = null
-    createGameLoading = true
-    try {
-      await $mud.systemCalls.newGame(
-        gameType,
-        wagerETH,
-        submissionWindowMinutes,
-        inviteExpirationMinutes,
-      )
-      gameCreated = true
-    } catch (e: any) {
-      console.error(e)
-      createGameError =
-        "Game creation failed with:" + e.shortMessage ?? "unkown error"
-    } finally {
-      createGameLoading = false
-    }
-  }
-
+  // Query mud components to check for most recent gameId
   let createdGameId: number | null = null
-  $: if (gameCreated && browser && $mud.components) {
+  $: if (browser && gameCreated && $mud.components) {
     const entities = runQuery([
       HasValue($mud.components.Player1, { value: $user.address }),
     ])
@@ -63,13 +37,18 @@
 
     if (newest) {
       createdGameId = parseInt(newest, 16)
-      gameInviteUrls.create(gameType, createdGameId, wagerUSD, inviteName)
+      gameInviteUrls.create(puzzleType, createdGameId, wagerUSD, inviteName)
     }
   }
 
-  // Go to the game page (doesn't close modal)
+  const create = async () => {
+    await newGame.create()
+    gameCreated = true
+  }
+
+  // Go to the game page once created (doesn't close modal)
   $: if (createdGameId) {
-    goto(`/games/${gameType}/${createdGameId}`)
+    goto(`/games/${puzzleType}/${createdGameId}`)
   }
 
   let inviteCopied = false
@@ -92,7 +71,7 @@
   {#key [createGameLoading, gameCreated, inviteCopied]}
     <button
       class="whitespace-nowrap rounded-lg bg-lime-500 px-3 py-2 font-bold transition-all hover:bg-lime-400 hover:shadow-lg active:bg-lime-600"
-      on:click={() => (!gameCreated ? createGame() : copyInviteUrl())}
+      on:click={() => (!gameCreated ? create() : copyInviteUrl())}
       in:slide={{ axis: "x", easing: cubicOut }}
     >
       {#if createGameLoading}

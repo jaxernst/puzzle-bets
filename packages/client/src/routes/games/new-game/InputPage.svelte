@@ -3,17 +3,17 @@
   import EthSymbol from "$lib/icons/EthSymbol.svelte"
   import { cubicOut } from "svelte/easing"
   import { slide } from "svelte/transition"
-  import { NewGameStore } from "./NewGame.svelte"
   import { onMount } from "svelte"
+  import { newGame } from "./newGame"
 
   export let onConfirm: () => void
 
   // Game params
   let wagerUSD: number = 2.5
   onMount(() => {
-    NewGameStore.setParam("wagerEth", wagerUSD / $ethPrice)
-    NewGameStore.setParam("submissionWindow", 8 * 60)
-    NewGameStore.setParam("inviteExpiration", 20 * 60)
+    newGame.setParam("wagerEth", wagerUSD / $ethPrice)
+    newGame.setParam("submissionWindow", 8 * 60)
+    newGame.setParam("inviteExpiration", 20 * 60)
   })
 
   let inviteName: string | null = null
@@ -23,7 +23,7 @@
     if (isNaN(value)) return
 
     wagerUSD = value * $ethPrice
-    NewGameStore.setParam("wagerEth", value)
+    newGame.setParam("wagerEth", value)
   }
 
   function updateUSD(input: string) {
@@ -31,7 +31,7 @@
     if (isNaN(value)) return
 
     wagerUSD = value
-    NewGameStore.setParam("wagerEth", wagerUSD / $ethPrice)
+    newGame.setParam("wagerEth", wagerUSD / $ethPrice)
   }
 </script>
 
@@ -66,7 +66,7 @@
         step="0.001"
         class="w-[120px] rounded-lg bg-neutral-700 p-2"
         placeholder="0.01"
-        value={$NewGameStore.wagerEth}
+        value={$newGame.wagerEth}
         on:input={(event) => updateETH(event.target.value)}
       />
       <div class="h-4 w-4 fill-neutral-300">
@@ -84,9 +84,9 @@
       class="w-[50px] rounded-lg bg-neutral-700 px-2 text-neutral-200"
       min="1"
       max="100000"
-      value={$NewGameStore.submissionWindow / 60}
+      value={$newGame.submissionWindow / 60}
       on:input={(e) =>
-        NewGameStore.setParam("submissionWindow", (e.target?.value ?? 0) * 60)}
+        newGame.setParam("submissionWindow", (e.target?.value ?? 0) * 60)}
     /> minutes
   </div>
 
@@ -97,9 +97,9 @@
       class="w-[50px] rounded-lg bg-neutral-700 px-2 text-neutral-200"
       min="1"
       max="100000"
-      value={($NewGameStore.inviteExpiration ?? 0) / 60}
+      value={($newGame.inviteExpiration ?? 0) / 60}
       on:input={(e) =>
-        NewGameStore.setParam("inviteExpiration", (e.target?.value ?? 0) * 60)}
+        newGame.setParam("inviteExpiration", (e.target?.value ?? 0) * 60)}
     />
     minutes
   </div>
@@ -117,7 +117,7 @@
 
 <button
   class="self-end whitespace-nowrap rounded-lg bg-lime-500 px-3 py-2 font-bold transition-all hover:bg-lime-400 hover:shadow-lg active:bg-lime-600"
-  on:click={() => onConfirm()}
+  on:click={onConfirm}
   in:slide={{ axis: "x", easing: cubicOut }}
 >
   Confirm ->

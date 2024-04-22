@@ -1,39 +1,39 @@
 <script lang="ts">
   import { ethPrice } from "$lib/ethPrice"
   import EthSymbol from "$lib/icons/EthSymbol.svelte"
-  import { cubicOut } from "svelte/easing"
-  import { slide } from "svelte/transition"
-  import { onMount } from "svelte"
   import { newGame } from "./newGame"
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import ButtonPrimary from "$lib/components/ButtonPrimary.svelte"
 
   export let onConfirm: () => void
 
-  // Game params
-  let wagerUSD: number = 2.5
-  onMount(() => {
-    newGame.setParam("wagerEth", wagerUSD / $ethPrice)
-    newGame.setParam("submissionWindow", 8 * 60)
-    newGame.setParam("inviteExpiration", 20 * 60)
-  })
-
+  let wagerUSD: number = $newGame.wagerEth * $ethPrice
   let inviteName: string | null = null
 
-  function updateETH(input: string) {
-    const value = parseFloat(input)
+  function updateETH(event: Event) {
+    const value = parseFloat((event.target as HTMLInputElement).value)
     if (isNaN(value)) return
 
     wagerUSD = value * $ethPrice
     newGame.setParam("wagerEth", value)
   }
 
-  function updateUSD(input: string) {
-    const value = parseFloat(input)
+  function updateUSD(event: Event) {
+    const value = parseFloat((event.target as HTMLInputElement).value)
     if (isNaN(value)) return
 
     wagerUSD = value
     newGame.setParam("wagerEth", wagerUSD / $ethPrice)
+  }
+
+  function updateSubmissionWindow(event: Event) {
+    const value = parseFloat((event.target as HTMLInputElement).value)
+    newGame.setParam("submissionWindow", value * 60)
+  }
+
+  function updateInviteExpiration(event: Event) {
+    const value = parseFloat((event.target as HTMLInputElement).value)
+    newGame.setParam("inviteExpiration", value * 60)
   }
 </script>
 
@@ -46,12 +46,12 @@
     <div class="flex items-center gap-1">
       <input
         type="number"
-        min="5"
-        step="1"
+        min="0"
+        step=".5"
         class="w-[120px] rounded-lg bg-neutral-700 p-2"
         placeholder="15"
         value={wagerUSD}
-        on:input={(event) => updateUSD(event.target.value)}
+        on:input={updateUSD}
       />
       <div class=" fill-neutral-300">$</div>
     </div>
@@ -69,7 +69,7 @@
         class="w-[120px] rounded-lg bg-neutral-700 p-2"
         placeholder="0.01"
         value={$newGame.wagerEth}
-        on:input={(event) => updateETH(event.target.value)}
+        on:input={updateETH}
       />
       <div class="h-4 w-4 fill-neutral-300">
         <EthSymbol />
@@ -87,8 +87,7 @@
       min="1"
       max="100000"
       value={$newGame.submissionWindow / 60}
-      on:input={(e) =>
-        newGame.setParam("submissionWindow", (e.target?.value ?? 0) * 60)}
+      on:input={updateSubmissionWindow}
     /> minutes
   </div>
 
@@ -100,8 +99,7 @@
       min="1"
       max="100000"
       value={($newGame.inviteExpiration ?? 0) / 60}
-      on:input={(e) =>
-        newGame.setParam("inviteExpiration", (e.target?.value ?? 0) * 60)}
+      on:input={updateInviteExpiration}
     />
     minutes
   </div>

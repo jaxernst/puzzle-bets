@@ -11,6 +11,8 @@
   import { notifications } from "$lib/notifications/notificationStore"
   import NotificationBell from "$lib/icons/NotificationBell.svelte"
   import { newGame } from "./newGame"
+  import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
+  import ButtonPrimary from "$lib/components/ButtonPrimary.svelte"
 
   export let onCreate = () => {}
   export let onCancel = () => {}
@@ -106,3 +108,11 @@
     to get notified when your opponent joins
   </div>
 {/if}
+
+<div class="flex items-center justify-between">
+  <ButtonPrimary on:click={onCancel}>
+    <AnimatedArrow direction="left" klass="w-5" />
+  </ButtonPrimary>
+
+  <ButtonPrimary on:click={onCancel}>Create (.01 eth)</ButtonPrimary>
+</div>

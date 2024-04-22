@@ -13,13 +13,18 @@
 
 <div class="flex max-w-[450px] flex-col gap-2 rounded-xl bg-neutral-800 p-5">
   <div class="font-semibold">
-    Create a new <span class="text-lime-500">{capitalized(puzzleType)}</span> Game
+    {#if showConfirm}
+      Confirm your <span class="text-lime-500">{capitalized(puzzleType)}</span> game
+      details
+    {:else}
+      Create a new <span class="text-lime-500">{capitalized(puzzleType)}</span> game
+    {/if}
   </div>
 
   {#if showConfirm}
     <div class="text-sm text-neutral-100">
-      Confirm your Puzzle Bet details. You may cancel the game to withdraw up
-      until your opponent joins:
+      This action will deposit your wager and create a new Puzzle Bet. You may
+      cancel and withdraw up until your opponent joins
     </div>
     <ConfirmPage onCancel={() => (showConfirm = false)} />
   {:else}

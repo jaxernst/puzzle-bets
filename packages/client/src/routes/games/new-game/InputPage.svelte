@@ -5,6 +5,8 @@
   import { slide } from "svelte/transition"
   import { onMount } from "svelte"
   import { newGame } from "./newGame"
+  import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
+  import ButtonPrimary from "$lib/components/ButtonPrimary.svelte"
 
   export let onConfirm: () => void
 
@@ -115,10 +117,6 @@
   </div>
 </div>
 
-<button
-  class="self-end whitespace-nowrap rounded-lg bg-lime-500 px-3 py-2 font-bold transition-all hover:bg-lime-400 hover:shadow-lg active:bg-lime-600"
-  on:click={onConfirm}
-  in:slide={{ axis: "x", easing: cubicOut }}
->
-  Confirm ->
-</button>
+<ButtonPrimary class="self-end whitespace-nowrap" on:click={onConfirm}>
+  <AnimatedArrow direction="right" klass="w-5 fill-white stroke-white" />
+</ButtonPrimary>

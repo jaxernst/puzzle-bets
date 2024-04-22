@@ -13,6 +13,9 @@
   import { newGame } from "./newGame"
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import ButtonPrimary from "$lib/components/ButtonPrimary.svelte"
+  import ButtonSecondary from "$lib/components/ButtonSecondary.svelte"
+  import { formatAsDollar } from "$lib/util"
+  import { ethPrice } from "$lib/ethPrice"
 
   export let onCreate = () => {}
   export let onCancel = () => {}
@@ -69,25 +72,45 @@
   }
 </script>
 
-<div class="self-center p-4">
+<div class="p-2">
+  <div class="grid grid-cols-[1fr_auto] gap-1 rounded-md bg-neutral-700 p-3">
+    <div>Wager</div>
+    <div class="text-neutral-300">
+      {$newGame.wagerEth} eth ({formatAsDollar($newGame.wagerEth * $ethPrice)} USD)
+    </div>
+    <div>Submission Window</div>
+    <div class="text-neutral-300">{$newGame.submissionWindow / 60} minutes</div>
+    <div>Invite Expires</div>
+    <div class="text-neutral-300">{$newGame.inviteExpiration / 60} minutes</div>
+  </div>
+</div>
+<div></div>
+
+<div class="flex items-center justify-between">
+  <ButtonSecondary on:click={onCancel}>
+    <AnimatedArrow direction="left" klass="fill-lime-500 w-5" />
+  </ButtonSecondary>
+
   {#key [createGameLoading, gameCreated, inviteCopied]}
-    <button
-      class="whitespace-nowrap rounded-lg bg-lime-500 px-3 py-2 font-bold transition-all hover:bg-lime-400 hover:shadow-lg active:bg-lime-600"
-      on:click={() => (!gameCreated ? create() : copyInviteUrl())}
-      in:slide={{ axis: "x", easing: cubicOut }}
-    >
-      {#if createGameLoading}
-        <DotLoader />
-      {:else if inviteCopied}
-        Invite Copied!
-      {:else if gameCreated}
-        <div>Success! Click to copy invite link</div>
-      {:else}
-        Create Game & Generate Invite
-      {/if}
-    </button>
+    <div in:slide={{ axis: "x", easing: cubicOut }}>
+      <ButtonPrimary
+        on:click={() => (!gameCreated ? create() : copyInviteUrl())}
+      >
+        {#if createGameLoading}
+          <DotLoader />
+        {:else if inviteCopied}
+          Invite Copied!
+        {:else if gameCreated}
+          <div>Success! Click to copy invite link</div>
+        {:else}
+          Create Game
+        {/if}
+      </ButtonPrimary>
+    </div>
   {/key}
 </div>
+
+<div></div>
 
 {#if createGameError}
   <div class="text-sm text-red-500">{createGameError}</div>
@@ -108,11 +131,3 @@
     to get notified when your opponent joins
   </div>
 {/if}
-
-<div class="flex items-center justify-between">
-  <ButtonPrimary on:click={onCancel}>
-    <AnimatedArrow direction="left" klass="w-5" />
-  </ButtonPrimary>
-
-  <ButtonPrimary on:click={onCancel}>Create (.01 eth)</ButtonPrimary>
-</div>

@@ -57,7 +57,7 @@ function makeNewGameStore(initialParams: NewGameParams) {
     } catch (e: any) {
       console.error(e)
       error.set(
-        "Game creation failed with:" + (e.shortMessage ?? "unkown error"),
+        "Game creation failed with: " + (e.shortMessage ?? "unkown error"),
       )
       throw e
     } finally {

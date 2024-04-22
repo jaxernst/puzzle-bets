@@ -9,7 +9,7 @@
 <button
   on:click
   class={twMerge(
-    "whitespace-nowrap rounded-lg bg-lime-500 px-2 py-1 font-semibold transition-all hover:bg-lime-400 hover:shadow-lg active:bg-lime-600",
+    "rounded-lg border border-lime-500 px-2 py-1 font-semibold text-lime-500 transition-all hover:border-lime-400 active:border-lime-600",
     overrideClass,
   )}
 >

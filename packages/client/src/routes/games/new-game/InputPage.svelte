@@ -47,7 +47,7 @@
       <input
         type="number"
         min="0"
-        step=".5"
+        step="1"
         class="w-[120px] rounded-lg bg-neutral-700 p-2"
         placeholder="15"
         value={wagerUSD}

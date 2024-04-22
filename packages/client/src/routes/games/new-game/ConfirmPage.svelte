@@ -72,7 +72,7 @@
   }
 </script>
 
-<div class="p-2">
+<div class="px-2 py-6">
   <div class="grid grid-cols-[1fr_auto] gap-1 rounded-md bg-neutral-700 p-3">
     <div>Wager</div>
     <div class="text-neutral-300">
@@ -86,12 +86,16 @@
     <div class="text-neutral-300">{$newGame.inviteExpiration / 60} minutes</div>
   </div>
 </div>
-<div></div>
 
-<div class="flex items-center justify-between">
-  <ButtonSecondary on:click={onCancel}>
-    <AnimatedArrow direction="left" klass="fill-lime-500 w-5" />
-  </ButtonSecondary>
+<div class="flex items-center justify-center">
+  <!--Hide this once a game has been created or is loading (show if errored)-->
+  {#if !createGameLoading && !gameCreated}
+    <div class="flex-grow">
+      <ButtonSecondary on:click={onCancel}>
+        <AnimatedArrow direction="left" klass="fill-lime-500 w-5" />
+      </ButtonSecondary>
+    </div>
+  {/if}
 
   {#key [createGameLoading, gameCreated, inviteCopied]}
     <div in:slide={{ axis: "x", easing: cubicOut }}>

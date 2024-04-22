@@ -31,16 +31,19 @@
   {#if showConfirm}
     <div class="text-sm text-neutral-100">
       This action will deposit your wager and create a new Puzzle Bet. You may
-      cancel and withdraw up until your opponent joins
+      cancel and withdraw up until your opponent joins.
     </div>
     <ConfirmPage onCancel={() => (showConfirm = false)} />
   {:else}
-    <div class="text-sm text-neutral-100">
-      Enter your wager then send an invite link to your opponent. When they join
-      the game, the puzzle will be revealed and the deadline clock will start
-      ticking.
+    <div class="text-sm text-neutral-200">
+      - Enter your wager then send an invite link to your opponent. When they
+      join the game, the puzzle will be revealed and the deadline clock will
+      start ticking.
     </div>
 
+    <div class="text-sm text-neutral-200">
+      - The sole player to solve + submit before the deadline wins.
+    </div>
     <InputPage onConfirm={() => (showConfirm = true)} />
   {/if}
 </div>

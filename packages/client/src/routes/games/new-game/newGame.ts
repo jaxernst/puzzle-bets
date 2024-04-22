@@ -32,8 +32,9 @@ const paramsValid = ({
 
 function makeNewGameStore(initialParams: NewGameParams) {
   const params = writable<NewGameParams>(initialParams)
-  const loading = writable()
-  const error = writable()
+  const loading = writable(false)
+  const error = writable<string | null>(null)
+  const gameCreated = writable(false)
 
   const createGame = async () => {
     const $params = get(params)
@@ -54,6 +55,8 @@ function makeNewGameStore(initialParams: NewGameParams) {
         submissionWindow,
         inviteExpiration,
       )
+
+      gameCreated.set(true)
     } catch (e: any) {
       console.error(e)
       error.set(
@@ -66,11 +69,15 @@ function makeNewGameStore(initialParams: NewGameParams) {
   }
 
   return {
-    ...derived([params, loading, error], ([params, loading, error]) => ({
-      ...params,
-      loading,
-      error,
-    })),
+    ...derived(
+      [params, loading, error, gameCreated],
+      ([params, loading, error, gameCreated]) => ({
+        ...params,
+        loading,
+        error,
+        gameCreated,
+      }),
+    ),
 
     setParam: <T extends keyof NewGameParams>(
       param: keyof NewGameParams,
@@ -80,6 +87,12 @@ function makeNewGameStore(initialParams: NewGameParams) {
     },
 
     create: createGame,
+
+    reset: () => {
+      error.set(null)
+      params.set(initialParams)
+      gameCreated.set(false)
+    },
   }
 }
 

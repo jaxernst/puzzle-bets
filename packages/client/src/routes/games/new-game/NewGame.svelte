@@ -4,11 +4,18 @@
   import InputPage from "./InputPage.svelte"
   import ConfirmPage from "./ConfirmPage.svelte"
   import { newGame } from "./newGame"
+  import { onDestroy } from "svelte"
+  import { ethPrice } from "$lib/ethPrice"
 
   export let puzzleType: PuzzleType
   $: newGame.setParam("puzzleType", puzzleType)
 
+  // Default eth wager to a prefixed usd amount
+  newGame.setParam("wagerEth", 2.5 / $ethPrice)
+
   let showConfirm = false
+
+  onDestroy(newGame.reset)
 </script>
 
 <div class="flex max-w-[450px] flex-col gap-2 rounded-xl bg-neutral-800 p-5">

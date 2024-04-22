@@ -14,11 +14,11 @@
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import ButtonPrimary from "$lib/components/ButtonPrimary.svelte"
   import ButtonSecondary from "$lib/components/ButtonSecondary.svelte"
-  import { formatAsDollar } from "$lib/util"
+  import { formatAsDollar, formatSigFig } from "$lib/util"
   import { ethPrice } from "$lib/ethPrice"
 
-  export let onCreate = () => {}
   export let onCancel = () => {}
+  // export let onCreate = () => {}
 
   let wagerUSD: number = 2.5
   let inviteName: string | null = null
@@ -76,7 +76,9 @@
   <div class="grid grid-cols-[1fr_auto] gap-1 rounded-md bg-neutral-700 p-3">
     <div>Wager</div>
     <div class="text-neutral-300">
-      {$newGame.wagerEth} eth ({formatAsDollar($newGame.wagerEth * $ethPrice)} USD)
+      {formatSigFig($newGame.wagerEth, 3)} eth ({formatAsDollar(
+        $newGame.wagerEth * $ethPrice,
+      )} USD)
     </div>
     <div>Submission Window</div>
     <div class="text-neutral-300">{$newGame.submissionWindow / 60} minutes</div>

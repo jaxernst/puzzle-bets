@@ -190,6 +190,17 @@ export const formatAsDollar = (value: number) => {
   }).format(value)
 }
 
+export const formatSigFig = (num: number, sigFigs = 3) => {
+  if (num === 0) return 0
+
+  const d = Math.ceil(Math.log10(num < 0 ? -num : num)) // Order of magnitude
+  const power = sigFigs - d
+
+  const magnitude = Math.pow(10, power)
+  const shifted = Math.round(num * magnitude)
+  return shifted / magnitude
+}
+
 export const weiToDollar = (wei: bigint, ethPrice: number) => {
   return formatAsDollar(Number(formatEther(wei)) * ethPrice)
 }

@@ -17,8 +17,6 @@
   import { readable, writable, type Readable } from "svelte/store"
   import DotLoader from "$lib/components/DotLoader.svelte"
   import { puzzleStores } from "./puzzleGameStates"
-  import Minus from "$lib/icons/Minus.svelte"
-  import Plus from "$lib/icons/Plus.svelte"
   import { slide } from "svelte/transition"
   import { cubicOut } from "svelte/easing"
 

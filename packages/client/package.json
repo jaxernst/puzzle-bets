@@ -47,5 +47,8 @@
     "wait-port": "^1.0.4",
     "web-push": "^3.6.7"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "tailwind-merge": "^2.3.0"
+  }
 }

@@ -45,7 +45,7 @@
   />
 {:else if !game}
   <div class="flex h-[200px] items-center justify-center self-center">
-    <DotLoader klass="fill-neutral-500 h-10 w-10" />
+    <DotLoader class="h-10 w-10 fill-neutral-500" />
   </div>
 {/if}
 

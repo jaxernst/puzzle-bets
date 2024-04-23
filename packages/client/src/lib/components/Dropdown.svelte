@@ -47,7 +47,7 @@
   bind:this={dropdownButton}
 >
   <button
-    class="flex items-center justify-between gap-1 whitespace-nowrap rounded-lg bg-pb-yellow p-2 font-semibold"
+    class="bg-pb-yellow flex items-center justify-between gap-1 whitespace-nowrap rounded-lg p-2 font-semibold"
     aria-haspopup="listbox"
     aria-expanded={isOpen}
     transition:slide={{ axis: "x" }}
@@ -56,7 +56,7 @@
     {selection ?? placeholder}
     <AnimatedArrow
       direction={isOpen ? "up" : "down"}
-      klass="fill-white h-5 w-5"
+      class="h-5 w-5 fill-white"
     />
   </button>
   <div class="absolute left-0 z-50 mt-2 rounded-lg shadow">

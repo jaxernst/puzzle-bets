@@ -116,5 +116,5 @@
 </div>
 
 <ButtonPrimary class="self-end whitespace-nowrap" on:click={onConfirm}>
-  <AnimatedArrow direction="right" klass="w-5 fill-white stroke-white" />
+  <AnimatedArrow direction="right" class="w-5 fill-white stroke-white" />
 </ButtonPrimary>

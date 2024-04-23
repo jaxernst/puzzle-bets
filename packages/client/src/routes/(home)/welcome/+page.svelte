@@ -5,7 +5,7 @@
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
   import Puzzly from "$lib/icons/puzzly.svelte"
   import { walletStore } from "$lib/mud/connectWallet"
-  import { mud  } from "$lib/mud/mudStore"
+  import { mud } from "$lib/mud/mudStore"
   import { user } from "$lib/user"
   import { cubicOut } from "svelte/easing"
   import { fade, fly } from "svelte/transition"
@@ -34,11 +34,11 @@
 >
   <div class="flex flex-col items-center gap-1">
     <div class="p-4">
-      <div class="h-28 w-28 fill-off-black">
+      <div class="fill-off-black h-28 w-28">
         <Puzzly />
       </div>
     </div>
-    <div class="relative text-xl font-bold text-off-black sm:text-2xl">
+    <div class="text-off-black relative text-xl font-bold sm:text-2xl">
       Welcome to Puzzle Bets.
       <div
         in:fade={{ duration: 500, delay: 600 }}
@@ -69,7 +69,7 @@
       Learn more
       <AnimatedArrow
         direction={path === "/welcome" ? "down" : "up"}
-        klass="h-5 w-5 fill-neutral-600 stroke-neutral-400"
+        class="h-5 w-5 fill-neutral-600 stroke-neutral-400"
       />
     </a>
   </div>

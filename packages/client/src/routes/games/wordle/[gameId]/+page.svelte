@@ -79,7 +79,7 @@
   {#if puzzleState.solved || puzzleState.lost}
     <div class="flex w-full justify-center pt-2">
       <button
-        class="rounded-lg bg-pb-yellow px-2 py-1 font-semibold text-white"
+        class="bg-pb-yellow rounded-lg px-2 py-1 font-semibold text-white"
         on:click={() => copyBoard(puzzleState?.answers ?? [])}
       >
         {#if copied}
@@ -102,6 +102,6 @@
   {/if}
 {:else if !puzzleState}
   <div class="flex h-[200px] items-center justify-center self-center">
-    <DotLoader klass="fill-neutral-200 h-10 w-10" />
+    <DotLoader class="h-10 w-10 fill-neutral-200" />
   </div>
 {/if}

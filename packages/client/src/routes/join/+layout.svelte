@@ -56,7 +56,7 @@
     >
       {#if !$mud.ready}
         <div class="self-center">
-          <DotLoader klass="fill-neutral-200" />
+          <DotLoader class="fill-neutral-200" />
         </div>
         <div class="self-center text-xs text-neutral-400">
           Syncing blockchain state...

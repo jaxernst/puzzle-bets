@@ -28,7 +28,7 @@
       Return home
       <AnimatedArrow
         direction={path === "/about" ? "up" : "down"}
-        klass="h-5 w-5 fill-neutral-600 stroke-neutral-400"
+        class="h-5 w-5 fill-neutral-600 stroke-neutral-400"
       />
     </a>
 

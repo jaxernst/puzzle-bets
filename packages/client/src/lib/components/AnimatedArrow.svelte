@@ -1,6 +1,9 @@
 <script lang="ts">
+  import { twMerge } from "tailwind-merge"
+
+  let className = ""
+  export { className as class }
   export let direction: "up" | "down" | "left" | "right"
-  export let klass = ""
 
   $: rotation = {
     up: "rotate-90",
@@ -12,7 +15,7 @@
 
 <svg
   viewBox="0 0 24 24"
-  class={`${rotation} transition-transform duration-150 ${klass}`}
+  class={twMerge("transition-transform duration-150", rotation, className)}
   ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g
     id="SVGRepo_tracerCarrier"
     stroke-linecap="round"

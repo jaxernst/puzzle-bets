@@ -40,9 +40,9 @@
 
 <div class="flex w-full items-center justify-between">
   <div
-    class="flex items-center text-lg font-bold tracking-wide text-off-black sm:text-xl"
+    class="text-off-black flex items-center text-lg font-bold tracking-wide sm:text-xl"
   >
-    <a href="/welcome" class="h-10 w-10 fill-off-black sm:h-11 sm:w-11">
+    <a href="/welcome" class="fill-off-black h-10 w-10 sm:h-11 sm:w-11">
       <Puzzly />
     </a>
     <div style="line-height: 1em">
@@ -58,10 +58,10 @@
   <div class="flex items-center justify-end gap-2 sm:gap-3">
     {#if $user.address}
       <div class="flex items-center gap-1">
-        <div class="font-mono text-sm text-off-black sm:text-base">
+        <div class="text-off-black font-mono text-sm sm:text-base">
           {$user.balance}
         </div>
-        <div class="h-4 w-4 fill-off-black">
+        <div class="fill-off-black h-4 w-4">
           <EthSymbol />
         </div>
       </div>
@@ -72,7 +72,7 @@
     >
       {#if !$user.address}
         {#if $walletStore.connecting}
-          <DotLoader klass="fill-neutral-600" />
+          <DotLoader class="fill-neutral-600" />
         {:else}
           <button
             class="whitespace-nowrap rounded-full bg-lime-500 px-2 py-1 text-[.8rem] font-semibold"
@@ -82,7 +82,7 @@
           </button>
         {/if}
       {:else}
-        <div class="h-6 w-6 stroke-off-black">
+        <div class="stroke-off-black h-6 w-6">
           <WalletIcon />
         </div>
         {#if $walletStore && $mud.ready}
@@ -98,7 +98,7 @@
         on:click={maybeToggleNotifications}
       >
         <div
-          class={`h-5 w-5 fill-off-black/90 transition-colors
+          class={`fill-off-black/90 h-5 w-5 transition-colors
               ${$notifications.enabled ? "" : "opacity-50"} 
               ${$notifications.loading ? "animate-pulse" : ""}
             `}

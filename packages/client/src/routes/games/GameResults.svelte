@@ -2,7 +2,7 @@
   import DotLoader from "$lib/components/DotLoader.svelte"
   import { ethPrice } from "$lib/ethPrice"
   import { getGame, liveGameStatus, userSolvedGame } from "$lib/gameStores"
-  import {  mud } from "$lib/mud/mudStore"
+  import { mud } from "$lib/mud/mudStore"
   import { user } from "$lib/user"
   import { GameStatus, type StartedGame } from "$lib/types"
   import {
@@ -101,8 +101,8 @@
   let voteRematchLoading = false
   let voteRematchError: null | string = null
   $: voteRematch = async () => {
-    if (!$mud.systemCalls) return 
-    
+    if (!$mud.systemCalls) return
+
     voteRematchLoading = true
     voteRematchError = null
     try {
@@ -223,7 +223,7 @@
           <span class="text-sm text-neutral-400">or</span>
         {/if}
         <button
-          class={`self-center whitespace-nowrap rounded-lg border border-pb-yellow p-2 text-neutral-100 ${
+          class={`border-pb-yellow self-center whitespace-nowrap rounded-lg border p-2 text-neutral-100 ${
             claimed ? "opacity-50" : ""
           }`}
           disabled={claimed}
@@ -231,7 +231,7 @@
           in:slide={{ axis: "x" }}
         >
           {#if claimLoading}
-            <DotLoader klass="fill-neutral-100" />
+            <DotLoader class="fill-neutral-100" />
           {:else if claimed}
             {formatAsDollar(potSizeUsd / 2)} claimed!
           {:else if !game.buyInAmount}

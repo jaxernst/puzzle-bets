@@ -92,7 +92,7 @@
   {#if !createGameLoading && !gameCreated}
     <div class="flex-grow">
       <ButtonSecondary on:click={onCancel}>
-        <AnimatedArrow direction="left" klass="fill-lime-500 w-5" />
+        <AnimatedArrow direction="left" class="w-5 fill-lime-500" />
       </ButtonSecondary>
     </div>
   {/if}

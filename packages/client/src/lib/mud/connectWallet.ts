@@ -24,11 +24,13 @@ export const walletStore = (() => {
     let account: TwAccount
     if (authMethod === "auto") {
       account = await twWallet.autoConnect({ client: tw })
-    } else {
+    } else if (authMethod !== "email") {
       account = await twWallet.connect({
         client: tw,
         strategy: authMethod,
       })
+    } else {
+      throw new Error("Email auth not yet supported")
     }
 
     const walletClient = viemAdapter.walletClient.toViem({

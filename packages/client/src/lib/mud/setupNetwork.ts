@@ -31,6 +31,7 @@ export const world = createWorld()
  */
 import mudConfig from "contracts/mud.config"
 import { browser } from "$app/environment"
+import type { WaitForTransactionResult } from "@latticexyz/store-sync/src/common"
 
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>
 export type Wallet = WalletClient<Transport, Chain, Account>
@@ -114,7 +115,7 @@ export async function setupNetwork(wallet: Wallet) {
   const retryWaitForTransaction = async (
     tx: `0x${string}`,
     retries = 0,
-  ): Promise<void> => {
+  ): Promise<WaitForTransactionResult> => {
     try {
       return await waitForTransaction(tx)
     } catch (e) {

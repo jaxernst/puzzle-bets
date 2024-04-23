@@ -28,6 +28,7 @@ import { supportedChains } from "./supportedChains"
 import { PUBLIC_CHAIN_ID } from "$env/static/public"
 import { fallback, http, webSocket } from "viem"
 import { transportObserver } from "@latticexyz/common"
+import type { MUDChain } from "@latticexyz/common/chains"
 
 export const networkConfig = (() => {
   const params = new URLSearchParams("") // window.location.search);
@@ -79,7 +80,7 @@ export const networkConfig = (() => {
   return {
     chainId,
     chain,
-    faucetServiceUrl: params.get("faucet") ?? chain.faucetUrl,
+    faucetServiceUrl: params.get("faucet") ?? (chain as MUDChain).faucetUrl,
     worldAddress,
     initialBlockNumber,
     transport: transportObserver(fallback([http()])),

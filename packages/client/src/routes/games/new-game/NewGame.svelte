@@ -35,14 +35,19 @@
     </div>
     <ConfirmPage onCancel={() => (showConfirm = false)} />
   {:else}
-    <div class="text-sm text-neutral-200">
-      - Enter your wager then send an invite link to your opponent. When they
-      join the game, the puzzle will be revealed and the deadline clock will
-      start ticking.
-    </div>
-
-    <div class="text-sm text-neutral-200">
-      - The sole player to solve + submit before the deadline wins.
+    <div class="text-neutral-200">
+      <div class="flex gap-1">
+        <span class="font-bold text-neutral-400">-</span> Choose your wager and bet
+        parameters
+      </div>
+      <div class="flex gap-1">
+        <span class="font-bold text-neutral-400">-</span> Invite a friend to your
+        game or post it to the public lobby
+      </div>
+      <div class="flex gap-1">
+        <span class="font-bold text-neutral-400">-</span> The sole player to solve
+        + submit before the deadline wins.
+      </div>
     </div>
     <InputPage onConfirm={() => (showConfirm = true)} />
   {/if}

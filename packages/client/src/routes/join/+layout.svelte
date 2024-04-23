@@ -72,7 +72,8 @@
       {:else}
         <JoinGame
           {gameId}
-          on:joined={() => goto(`/games/${game?.type}/${parseInt(gameId, 16)}`)}
+          on:joined={() =>
+            goto(`/games/${game?.type}/${parseInt(gameId ?? "", 16)}`)}
         />
       {/if}
 

@@ -12,8 +12,8 @@ export type NewGameParams = {
 export const DEFAULT_PARAMS: NewGameParams = {
   puzzleType: "wordle",
   wagerEth: 0.001,
-  submissionWindow: 8 * 60,
-  inviteExpiration: 20 * 60,
+  submissionWindow: 8, // Minutes
+  inviteExpiration: 20, // Minutes
 }
 
 const paramsValid = ({

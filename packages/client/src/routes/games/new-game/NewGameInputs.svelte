@@ -28,12 +28,12 @@
 
   function updateSubmissionWindow(event: Event) {
     const value = parseFloat((event.target as HTMLInputElement).value)
-    newGame.setParam("submissionWindow", value * 60)
+    newGame.setParam("submissionWindow", value)
   }
 
   function updateInviteExpiration(event: Event) {
     const value = parseFloat((event.target as HTMLInputElement).value)
-    newGame.setParam("inviteExpiration", value * 60)
+    newGame.setParam("inviteExpiration", value)
   }
 </script>
 
@@ -86,7 +86,7 @@
       class="w-[50px] rounded-lg bg-neutral-700 px-2 text-neutral-200"
       min="1"
       max="100000"
-      value={$newGame.submissionWindow / 60}
+      value={$newGame.submissionWindow}
       on:input={updateSubmissionWindow}
     /> minutes
   </div>
@@ -98,7 +98,7 @@
       class="w-[50px] rounded-lg bg-neutral-700 px-2 text-neutral-200"
       min="1"
       max="100000"
-      value={($newGame.inviteExpiration ?? 0) / 60}
+      value={$newGame.inviteExpiration}
       on:input={updateInviteExpiration}
     />
     minutes

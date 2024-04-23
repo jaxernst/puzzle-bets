@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { PuzzleType } from "$lib/types"
   import { capitalized } from "$lib/util"
-  import InputPage from "./InputPage.svelte"
-  import ConfirmPage from "./ConfirmPage.svelte"
+  import InputPage from "./NewGameInputs.svelte"
+  import ConfirmPage from "./NewGameConfirm.svelte"
   import { newGame } from "./newGame"
   import { onDestroy } from "svelte"
   import { ethPrice } from "$lib/ethPrice"

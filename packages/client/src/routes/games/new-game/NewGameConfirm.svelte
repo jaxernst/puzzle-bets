@@ -81,9 +81,9 @@
       )} USD)
     </div>
     <div>Submission Window</div>
-    <div class="text-neutral-300">{$newGame.submissionWindow / 60} minutes</div>
+    <div class="text-neutral-300">{$newGame.submissionWindow} minutes</div>
     <div>Invite Expires</div>
-    <div class="text-neutral-300">{$newGame.inviteExpiration / 60} minutes</div>
+    <div class="text-neutral-300">{$newGame.inviteExpiration} minutes</div>
   </div>
 </div>
 

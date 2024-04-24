@@ -3,14 +3,14 @@
   import { page } from "$app/stores"
   import WalletConnector, {
     loginAndConnect,
-  } from "$lib/components/WalletConnector.svelte";
-  import GameSelector from "./GameSelector.svelte";
-  import AppHeader from "./AppHeader.svelte";
-  import Confetti from "$lib/components/Confetti.svelte";
-  import { user } from "$lib/user";
-  import { slide } from "svelte/transition";
-  import { type PuzzleType } from "$lib/types";
-  import GameDropdownControls from "./GameDropdownControls.svelte";
+  } from "$lib/components/WalletConnector.svelte"
+  import GameSelector from "./game-selector/GameSelector.svelte"
+  import AppHeader from "./AppHeader.svelte"
+  import Confetti from "$lib/components/Confetti.svelte"
+  import { user } from "$lib/user"
+  import { slide } from "svelte/transition"
+  import { type PuzzleType } from "$lib/types"
+  import GameDropdownControls from "./GameDropdownControls.svelte"
 
   const gameNames = ["Wordle", "Connections", "Crossword", "Sudoku"]
   $: gameRoute = gameNames.find((game) =>

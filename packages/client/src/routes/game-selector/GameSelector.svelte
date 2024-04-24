@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { userArchivedGames, userGames } from "$lib/gameStores";
-  import { type PuzzleType, GameStatus } from "$lib/types";
+  import { userArchivedGames, userGames } from "$lib/gameStores"
+  import { type PuzzleType, GameStatus } from "$lib/types"
 
   import { slide } from "svelte/transition"
   import { cubicInOut, cubicOut, sineInOut } from "svelte/easing"
-  import GamePreviewCard from "./GamePreviewCard.svelte"
+  import GamePreviewCard from "../GamePreviewCard.svelte"
   import Expand from "$lib/icons/Expand.svelte"
   import { flip } from "svelte/animate"
   import { page } from "$app/stores"
@@ -24,23 +24,27 @@
     (g) => g.status === GameStatus.Complete,
   )
 
+  $: lobbyGames = []
+
   $: archivedGames = $userGames.filter((g) => $userArchivedGames.includes(g.id))
 
-  let selectedTab: "live" | "completed" | "archived" = "live"
+  let selectedTab: "lobby" | "live" | "completed" | "archived" = "live"
 
   $: gameId = $page.params.gameId && intToEntity($page.params.gameId)
   $: gameIdTab = archivedGames.some((g) => g.id === gameId)
     ? "archived"
     : completedGames.some((g) => g.id === gameId)
-      ? "completed"
-      : activeGames.some((g) => g.id === gameId)
-        ? "live"
-        : "live"
+    ? "completed"
+    : activeGames.some((g) => g.id === gameId)
+    ? "live"
+    : "live"
 
   $: selectedTab = gameIdTab as any
 
   $: currentTabGames = (() => {
     switch (selectedTab) {
+      case "lobby":
+        return lobbyGames
       case "live":
         return activeGames
       case "completed":
@@ -67,23 +71,34 @@
   }
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-  class="flex flex-col gap-2 rounded-t-xl bg-neutral-800 px-1.5 pt-2 text-[.82rem] font-semibold sm:text-sm"
+  class="flex flex-col gap-2 rounded-t-xl bg-neutral-800 px-1 pt-2 font-semibold"
   style={`height: ${$height}px`}
   use:clickOutside={{
     enabled: expandedView,
     cb: () => (expandedView = false),
   }}
+  on:click={() => (expandedView = true)}
 >
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <!-- svelte-ignore a11y-no-static-element-interactions -->
   <div
-    class={`flex cursor-pointer items-center gap-2 pl-2 transition-all duration-500 sm:gap-3`}
-    on:click={() => (expandedView = true)}
+    class={`flex cursor-pointer items-center gap-2 pl-2  text-[.82rem] transition-all duration-500 sm:gap-3`}
   >
     <button
+      on:click={() => (selectedTab = "lobby")}
+      class={`flex py-1 text-lime-500 transition-all duration-200 ${
+        selectedTab === "lobby" ? "" : "opacity-50"
+      }`}
+    >
+      Lobby
+    </button>
+
+    <div class="text-neutral-500">|</div>
+
+    <button
       on:click={() => (selectedTab = "live")}
-      class={`flex rounded-lg py-1 transition-all duration-200 ${
+      class={`flex py-1 transition-all duration-200 ${
         selectedTab === "live" ? "" : "opacity-50"
       }`}
     >
@@ -101,7 +116,7 @@
 
     <button
       on:click={() => (selectedTab = "completed")}
-      class={`flex rounded-lg py-1 transition-all duration-200 ${
+      class={`flex py-1 transition-all duration-200 ${
         selectedTab === "completed" ? "" : "opacity-50"
       }`}
     >
@@ -118,7 +133,7 @@
 
     <button
       on:click={() => (selectedTab = "archived")}
-      class={`flex rounded-lg py-1 transition-all duration-200 ${
+      class={`flex py-1 transition-all duration-200 ${
         selectedTab === "archived" ? " " : "opacity-50"
       }`}
     >

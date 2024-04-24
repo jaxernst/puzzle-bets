@@ -86,7 +86,7 @@
             showModal.set(false)
           }}
         >
-          Connect Burner
+          Connect
         </ButtonPrimary>
       {:else if $walletStore.connecting}
         <DotLoader />

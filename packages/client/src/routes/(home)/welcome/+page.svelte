@@ -9,6 +9,7 @@
   import { user } from "$lib/user"
   import { cubicOut } from "svelte/easing"
   import { fade, fly } from "svelte/transition"
+  import ButtonPrimary from "$lib/components/ButtonPrimary.svelte"
 
   const loginAndConnect = async () => {
     const wallet = await promptConnectWallet()
@@ -51,16 +52,16 @@
   </div>
   <div class="flex flex-col items-center gap-2 text-sm sm:text-base">
     {#if !$user.address}
-      <button
+      <ButtonPrimary
         on:click={loginAndConnect}
-        class="rounded-xl bg-lime-500 p-3 font-semibold text-white transition-all duration-300 hover:bg-lime-400 hover:shadow active:bg-lime-600"
+        class="rounded-xl p-3 hover:shadow"
       >
         {#if $walletStore.connecting}
           <DotLoader />
         {:else}
           Connect to Play
         {/if}
-      </button>
+      </ButtonPrimary>
 
       <div class="text-xs text-neutral-400">or</div>
     {/if}

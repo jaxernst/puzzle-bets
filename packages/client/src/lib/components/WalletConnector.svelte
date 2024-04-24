@@ -8,11 +8,10 @@
   import type { Wallet } from "$lib/mud/setupNetwork"
   import Google from "$lib/icons/Google.svelte"
   import Apple from "$lib/icons/Apple.svelte"
-  import { onMount } from "svelte"
   import { browser } from "$app/environment"
   import DotLoader from "./DotLoader.svelte"
-  import { PUBLIC_CHAIN_ID } from "$env/static/public"
   import { networkConfig } from "$lib/mud/networkConfig"
+  import ButtonPrimary from "./ButtonPrimary.svelte"
 
   const showModal = writable(false)
 
@@ -80,15 +79,15 @@
           This is a testnet preview of Puzzle bets. Connect to create a burner
           wallet and get it auto-funded with testnet eth!
         </div>
-        <button
-          class="mb-2 mt-3 self-center rounded-lg bg-lime-500 px-3 py-2 font-bold"
+        <ButtonPrimary
+          class="mb-2 mt-3 self-center"
           on:click={() => {
             walletStore.tryConnect("auto")
             showModal.set(false)
           }}
         >
           Connect Burner
-        </button>
+        </ButtonPrimary>
       {:else if $walletStore.connecting}
         <DotLoader />
       {:else if $walletStore.account}

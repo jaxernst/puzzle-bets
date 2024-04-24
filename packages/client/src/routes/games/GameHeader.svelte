@@ -173,7 +173,7 @@
         on:click={cancelAndArchive}
       >
         {#if cancellingGame}
-          <DotLoader class="fill-pb-yellow" />
+          <DotLoader class="fill-neutral-400" />
         {:else}
           Cancel
         {/if}

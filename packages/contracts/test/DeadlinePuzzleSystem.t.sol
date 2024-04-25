@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import { IWorld } from "../src/codegen/world/IWorld.sol";
 import { Puzzle, Status } from "../src/codegen/common.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
-import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch, ProtocolFeeBasisPoints, ProtocolFeeRecipient } from "../src/codegen/index.sol";
+import { GamePasswordHash, PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch, ProtocolFeeBasisPoints, ProtocolFeeRecipient } from "../src/codegen/index.sol";
 import "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 
 import "forge-std/Test.sol";
@@ -16,9 +16,16 @@ contract DeadlinePuzzleSystemTest is MudTest {
   uint DEFAULT_INVITE_WINDOW_DURATION = 100;
 
   function test_newGame_GameVariablesAreSetOnCreation() public {
-    bytes32 gameId = newDefaultGame(1 ether, address(0x123));
+    bytes32 gameId = IWorld(worldAddress).v1__newGame{ value: 1 ether }({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: 1,
+      inviteExpirationTimestamp: block.timestamp + DEFAULT_INVITE_WINDOW_DURATION,
+      puzzleMaster: address(0x456),
+      passwordHash: bytes32(uint256(999))
+    });
+
     assertEq(Player1.get(gameId), address(this));
-    assertEq(Player2.get(gameId), address(0x123));
+    assertEq(GamePasswordHash.get(gameId), bytes32(uint256(999)));
     assertEq(PuzzleMasterEoa.get(gameId), address(0x456));
     assertEq(uint(GameStatus.get(gameId)), uint(Status.Pending));
     assertEq(BuyIn.get(gameId), 1 ether);
@@ -29,7 +36,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
 
   function test_joinGame_JoinGameRequiresBuyInDeposit() public {
     address opponent = address(0x123);
-    bytes32 gameId = newDefaultGame(1 ether, opponent);
+    bytes32 gameId = newDefaultGame(1 ether);
 
     vm.startPrank(opponent);
     vm.deal(opponent, 1 ether);
@@ -41,20 +48,30 @@ contract DeadlinePuzzleSystemTest is MudTest {
     assertEq(Balance.get(gameId, opponent), 1 ether);
   }
 
-  function test_joinGame_OnlySpecifiedOpponentCanJoinGame() public {
-    address opponent = address(0x123);
-    bytes32 gameId = newDefaultGame(0 ether, opponent);
+  function test_joinGame_RequiresPasswordWhenOneIsSet() public {
+    string memory password = "password";
 
-    vm.prank(address(0x999));
-    vm.expectRevert("You are not the specified player2");
+    bytes32 gameId = IWorld(worldAddress).v1__newGame({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: 1,
+      inviteExpirationTimestamp: block.timestamp + DEFAULT_INVITE_WINDOW_DURATION,
+      puzzleMaster: address(0x456),
+      passwordHash: keccak256(abi.encodePacked(password))
+    });
+
+    vm.startPrank(address(0x123));
+    vm.expectRevert("Must provide a password");
     IWorld(worldAddress).v1__joinGame(gameId);
 
-    vm.prank(opponent);
-    IWorld(worldAddress).v1__joinGame(gameId);
+    vm.expectRevert("Incorrect password");
+    IWorld(worldAddress).v1__joinGame(gameId, "wrong password");
+
+    IWorld(worldAddress).v1__joinGame(gameId, "password");
+    assertEq(address(0x123), Player2.get(gameId));
   }
 
   function test_joinGame_CancelledGameCannotBeJoined() public {
-    bytes32 gameId = newDefaultGame(1 ether, address(0));
+    bytes32 gameId = newDefaultGame(1 ether);
     IWorld(worldAddress).v1__cancelPendingGame(gameId);
 
     vm.prank(address(0x123));
@@ -63,7 +80,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
   }
 
   function test_joinGame_GameIsStartedWhenOpponentJoins() public {
-    bytes32 gameId = newDefaultGame(0 ether, address(0));
+    bytes32 gameId = newDefaultGame(0 ether);
 
     vm.prank(address(0x999));
     IWorld(worldAddress).v1__joinGame(gameId);
@@ -72,7 +89,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
   }
 
   function test_joinGame_JoinNotAllowedAfterInviteExpires() public {
-    bytes32 gameId = newDefaultGame(0, address(0));
+    bytes32 gameId = newDefaultGame(0);
     skip(DEFAULT_INVITE_WINDOW_DURATION + 1);
 
     vm.expectRevert("Invite expired");
@@ -81,7 +98,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
 
   function test_cancelPendingGame_BuyInReturnedWhenCreatorCancelsGame() public {
     uint startingBalance = address(this).balance;
-    bytes32 gameId = newDefaultGame(1 ether, address(0x123));
+    bytes32 gameId = newDefaultGame(1 ether);
 
     assertEq(address(this).balance, startingBalance - 1 ether);
     IWorld(worldAddress).v1__cancelPendingGame(gameId);
@@ -89,7 +106,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
   }
 
   function test_cancelPendingGame_GameCannotBeCancelledOnceStarted() public {
-    bytes32 gameId = newDefaultGame(1 ether, address(0));
+    bytes32 gameId = newDefaultGame(1 ether);
 
     IWorld(worldAddress).v1__joinGame{ value: 1 ether }(gameId);
 
@@ -107,8 +124,8 @@ contract DeadlinePuzzleSystemTest is MudTest {
       puzzleType: Puzzle.Wordle,
       submissionWindowSeconds: 1,
       inviteExpirationTimestamp: block.timestamp + 100,
-      opponent: opponent,
-      puzzleMaster: master
+      puzzleMaster: master,
+      passwordHash: bytes32(0)
     });
 
     vm.prank(opponent);
@@ -142,8 +159,8 @@ contract DeadlinePuzzleSystemTest is MudTest {
       puzzleType: Puzzle.Wordle,
       submissionWindowSeconds: 1,
       inviteExpirationTimestamp: block.timestamp + 100,
-      opponent: opponent,
-      puzzleMaster: master
+      puzzleMaster: master,
+      passwordHash: bytes32(0)
     });
 
     vm.prank(opponent);
@@ -162,7 +179,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
   }
 
   function test_submitSolution_RevertsWhen_SubmissionWindowHasClosed() public {
-    bytes32 gameId = newDefaultGame(0 ether, address(0));
+    bytes32 gameId = newDefaultGame(0 ether);
     IWorld(worldAddress).v1__joinGame(gameId);
 
     skip(10000);
@@ -179,7 +196,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
     vm.deal(p2, 2 ether);
 
     vm.prank(p1);
-    bytes32 gameId = newDefaultGame(1 ether, address(0));
+    bytes32 gameId = newDefaultGame(1 ether);
 
     vm.prank(p2);
     IWorld(worldAddress).v1__joinGame{ value: 1 ether }(gameId);
@@ -211,8 +228,8 @@ contract DeadlinePuzzleSystemTest is MudTest {
       puzzleType: Puzzle.Wordle,
       submissionWindowSeconds: submissionWindow,
       inviteExpirationTimestamp: block.timestamp + 100,
-      opponent: p2,
-      puzzleMaster: master
+      puzzleMaster: master,
+      passwordHash: bytes32(0)
     });
 
     // Deposit more than needed for p2 to show it will be returned
@@ -259,8 +276,8 @@ contract DeadlinePuzzleSystemTest is MudTest {
       puzzleType: Puzzle.Wordle,
       submissionWindowSeconds: 1,
       inviteExpirationTimestamp: block.timestamp + 100,
-      opponent: p2,
-      puzzleMaster: master
+      puzzleMaster: master,
+      passwordHash: bytes32(0)
     });
 
     vm.prank(p2);
@@ -299,8 +316,8 @@ contract DeadlinePuzzleSystemTest is MudTest {
       puzzleType: Puzzle.Wordle,
       submissionWindowSeconds: 1,
       inviteExpirationTimestamp: block.timestamp + 100,
-      opponent: p2,
-      puzzleMaster: master
+      puzzleMaster: master,
+      passwordHash: bytes32(0)
     });
 
     vm.prank(p2);
@@ -333,8 +350,8 @@ contract DeadlinePuzzleSystemTest is MudTest {
       puzzleType: Puzzle.Wordle,
       submissionWindowSeconds: 1,
       inviteExpirationTimestamp: block.timestamp + 100,
-      opponent: p2,
-      puzzleMaster: master
+      puzzleMaster: master,
+      passwordHash: bytes32(0)
     });
 
     vm.prank(p2);
@@ -367,8 +384,8 @@ contract DeadlinePuzzleSystemTest is MudTest {
       puzzleType: Puzzle.Wordle,
       submissionWindowSeconds: 1,
       inviteExpirationTimestamp: block.timestamp + 100,
-      opponent: opponent,
-      puzzleMaster: master
+      puzzleMaster: master,
+      passwordHash: bytes32(0)
     });
 
     vm.prank(opponent);
@@ -407,7 +424,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
     address creator = address(0x456);
 
     vm.prank(creator);
-    bytes32 gameId = newDefaultGame(0, opponent);
+    bytes32 gameId = newDefaultGame(0);
 
     vm.prank(opponent);
     IWorld(worldAddress).v1__joinGame(gameId);
@@ -421,14 +438,14 @@ contract DeadlinePuzzleSystemTest is MudTest {
     IWorld(worldAddress).v1__voteRematch(gameId);
   }
 
-  function newDefaultGame(uint value, address opponent) private returns (bytes32) {
+  function newDefaultGame(uint value) private returns (bytes32) {
     return
       IWorld(worldAddress).v1__newGame{ value: value }({
         puzzleType: Puzzle.Wordle,
         submissionWindowSeconds: 1,
         inviteExpirationTimestamp: block.timestamp + DEFAULT_INVITE_WINDOW_DURATION,
-        opponent: opponent,
-        puzzleMaster: address(0x456)
+        puzzleMaster: address(0x456),
+        passwordHash: bytes32(0)
       });
   }
 

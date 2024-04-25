@@ -1311,6 +1311,24 @@
   },
   {
     "type": "function",
+    "name": "v1__joinGame",
+    "inputs": [
+      {
+        "name": "gameId",
+        "type": "bytes32",
+        "internalType": "bytes32"
+      },
+      {
+        "name": "password",
+        "type": "string",
+        "internalType": "string"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
     "name": "v1__newGame",
     "inputs": [
       {
@@ -1329,14 +1347,14 @@
         "internalType": "uint256"
       },
       {
-        "name": "opponent",
+        "name": "puzzleMaster",
         "type": "address",
         "internalType": "address"
       },
       {
-        "name": "puzzleMaster",
-        "type": "address",
-        "internalType": "address"
+        "name": "passwordHash",
+        "type": "bytes32",
+        "internalType": "bytes32"
       }
     ],
     "outputs": [

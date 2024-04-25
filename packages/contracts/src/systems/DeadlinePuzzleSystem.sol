@@ -7,7 +7,7 @@ import { RESOURCE_NAMESPACE } from "@latticexyz/world/src/worldResourceTypes.sol
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { ResourceIdLib } from "@latticexyz/store/src/ResourceId.sol";
 import { SolutionVerificationLib } from "../library/SolutionVerification.sol";
-import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch, ProtocolFeeBasisPoints, ProtocolFeeRecipient } from "../codegen/index.sol";
+import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch, ProtocolFeeBasisPoints, ProtocolFeeRecipient, GamePasswordHash } from "../codegen/index.sol";
 import { Status, Puzzle } from "../codegen/common.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
@@ -21,6 +21,13 @@ import { console } from "forge-std/console.sol";
  * Solution verification: When creating a game, a 'puzzle master' address can be provided. The puzzle master is an
  * address that can attest to the validity of a solution, and players must submit a signed message from the master
  * in order to verify their solution.
+ *
+ * Public vs Private games:
+ * - Games can be made private by including a inviteKeyHash when creating the game
+ * - The creator sets a 'password' offchain, and posts only the hash to the 'newGame' function
+ * - The joining player submits the raw password when joining, which is hashed and verified against the creators hash
+ * - The main shortcoming to this is the a mempool obvserving agent could technically frontrun a joining player, causing
+ *   an unintended 2nd player to join, but this is a low probability and minimal severity risk
  */
 contract DeadlinePuzzleSystem is System {
   modifier playerOnly(bytes32 gameId) {
@@ -33,8 +40,8 @@ contract DeadlinePuzzleSystem is System {
     Puzzle puzzleType,
     uint32 submissionWindowSeconds,
     uint inviteExpirationTimestamp,
-    address opponent,
-    address puzzleMaster
+    address puzzleMaster,
+    bytes32 passwordHash
   ) public payable returns (bytes32) {
     address creator = _msgSender();
     uint betAmount = _msgValue();
@@ -48,9 +55,8 @@ contract DeadlinePuzzleSystem is System {
 
     Player1.set(gameId, creator);
 
-    // Opponent can be set to 0 address (allows anyone to join)
-    if (opponent != address(0)) {
-      Player2.set(gameId, opponent);
+    if (passwordHash != bytes32(0)) {
+      GamePasswordHash.set(gameId, passwordHash);
     }
 
     Balance.set(gameId, creator, betAmount);
@@ -61,13 +67,21 @@ contract DeadlinePuzzleSystem is System {
   }
 
   function joinGame(bytes32 gameId) public payable {
+    // Require that this game has no password hash set when called without a password
+    bytes32 passwordHash = GamePasswordHash.get(gameId);
+    require(passwordHash == bytes32(0), "Must provide a password");
+    _joinGame(gameId);
+  }
+
+  function joinGame(bytes32 gameId, string memory password) public payable {
+    // Assume passwordHash is set and check the password when provided
+    bytes32 checkHash = keccak256(abi.encodePacked(password));
+    require(checkHash == GamePasswordHash.get(gameId), "Incorrect password");
+    _joinGame(gameId);
+  }
+
+  function _joinGame(bytes32 gameId) private {
     Status status = GameStatus.get(gameId);
-    address specifiedPlayer2 = Player2.get(gameId);
-    if (specifiedPlayer2 != address(0)) {
-      require(specifiedPlayer2 == _msgSender(), "You are not the specified player2");
-    } else {
-      Player2.set(gameId, _msgSender());
-    }
 
     uint betAmount = BuyIn.get(gameId);
 
@@ -75,6 +89,7 @@ contract DeadlinePuzzleSystem is System {
     require(InviteExpiration.get(gameId) > block.timestamp, "Invite expired");
     require(_msgValue() >= betAmount, "Insufficient buy in");
 
+    Player2.set(gameId, _msgSender());
     Balance.set(gameId, _msgSender(), _msgValue());
 
     _startGame(gameId);

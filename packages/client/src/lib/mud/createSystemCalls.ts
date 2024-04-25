@@ -1,9 +1,9 @@
-import { type Entity } from "@latticexyz/recs";
-import type { SetupNetworkResult } from "./setupNetwork";
-import { gameTypeToNumber, type EvmAddress, type PuzzleType } from "../types";
-import { parseEther, zeroAddress } from "viem";
-import { systemTimestamp } from "$lib/util";
-import { env } from "$env/dynamic/public";
+import { type Entity } from "@latticexyz/recs"
+import type { SetupNetworkResult } from "./setupNetwork"
+import { gameTypeToNumber, type EvmAddress, type PuzzleType } from "../types"
+import { hashMessage, parseEther, zeroAddress } from "viem"
+import { systemTimestamp } from "$lib/util"
+import { env } from "$env/dynamic/public"
 
 export type SystemCalls = ReturnType<typeof createSystemCalls>
 
@@ -20,19 +20,21 @@ export function createSystemCalls({
     wagerEth: number,
     submissionWindowMinutes: number,
     inviteExpirationMinutes: number,
-    specifiedOpponent: EvmAddress = zeroAddress,
+    password?: string,
   ) => {
     const inviteExpirationTimestamp = BigInt(
       systemTimestamp() + inviteExpirationMinutes * 60,
     )
+
+    const passwordHash = password ? hashMessage(password) : "0x0"
 
     const tx = await worldContract.write.v1__newGame(
       [
         gameTypeToNumber[gameType],
         submissionWindowMinutes * 60,
         inviteExpirationTimestamp,
-        specifiedOpponent,
         env.PUBLIC_PUZZLE_MASTER_ADDRESS as EvmAddress,
+        passwordHash,
       ],
       { value: parseEther(wagerEth.toString()) },
     )
@@ -40,11 +42,29 @@ export function createSystemCalls({
     await waitForTransaction(tx)
   }
 
-  const joinGame = async (gameId: Entity, wagerEth: number) => {
-    const tx = await worldContract.write.v1__joinGame(
-      [gameId as `0x${string}`],
-      { value: parseEther(wagerEth.toString()) },
-    )
+  const joinGame = async (
+    gameId: Entity,
+    wagerEth: number,
+    password: string | undefined,
+  ) => {
+    const params = password
+      ? [gameId as `0x${string}`, password]
+      : [gameId as `0x${string}`]
+
+    let tx: `0x${string}`
+    if (password) {
+      tx = await worldContract.write.v1__joinGame(
+        [gameId as `0x${string}`, password],
+        {
+          value: parseEther(wagerEth.toString()),
+        },
+      )
+    } else {
+      tx = await worldContract.write.v1__joinGame([gameId as `0x${string}`], {
+        value: parseEther(wagerEth.toString()),
+      })
+    }
+
     await waitForTransaction(tx)
   }
 
@@ -60,9 +80,9 @@ export function createSystemCalls({
   }
 
   const claim = async (gameId: Entity) => {
-    const tx = await worldContract.write.v1__claim([gameId as `0x${string}`]);
-    await waitForTransaction(tx);
-  };
+    const tx = await worldContract.write.v1__claim([gameId as `0x${string}`])
+    await waitForTransaction(tx)
+  }
 
   const voteRematch = async (gameId: Entity) => {
     const tx = await worldContract.write.v1__voteRematch([

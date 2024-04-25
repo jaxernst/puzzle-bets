@@ -1,5 +1,5 @@
 import { derived, get, writable } from "svelte/store"
-import { mud} from "./mud/mudStore"
+import { mud } from "./mud/mudStore"
 import { user } from "./user"
 import {
   Has,
@@ -14,10 +14,10 @@ import {
   gameNumberToType,
   type EvmAddress,
   type PuzzleType,
-} from "$lib/types";
-import { encodeEntity } from "@latticexyz/store-sync/recs";
-import type { SetupNetworkResult } from "./mud/setupNetwork";
-import { timeRemaining, intToEntity } from "./util";
+} from "$lib/types"
+import { encodeEntity } from "@latticexyz/store-sync/recs"
+import type { SetupNetworkResult } from "./mud/setupNetwork"
+import { timeRemaining, intToEntity } from "./util"
 
 export const userGames = derived([mud, user], ([$mud, $user]) => {
   if (!$mud?.ready || !$mud.components || !$user.address) return []
@@ -43,9 +43,8 @@ export const userGames = derived([mud, user], ([$mud, $user]) => {
 
 export const getGame = derived(mud, ($mud) => {
   return (gameId: Entity, opts?: { expectStarted?: boolean }) => {
-    if (!$mud?.ready || !$mud.components) return undefined;
-    if (!getComponentValue($mud.components.PuzzleType, gameId))
-      return undefined;
+    if (!$mud?.ready || !$mud.components) return undefined
+    if (!getComponentValue($mud.components.PuzzleType, gameId)) return undefined
 
     const game = gameIdToGame(gameId, $mud.components)
 
@@ -225,43 +224,49 @@ export const userArchivedGames = (() => {
   }
 })()
 
+interface InviteUrlParams {
+  puzzleType: PuzzleType
+  gameId: number
+  gameWagerUsd?: number
+  inviteName?: string | null
+  password?: string
+}
+
+const makeInviteUrl = ({
+  puzzleType,
+  gameId,
+  gameWagerUsd,
+  inviteName,
+  password,
+}: InviteUrlParams) => {
+  const urlParams = new URLSearchParams({ puzzleType })
+
+  if (inviteName) {
+    urlParams.set("from", inviteName.split(" ").join("_"))
+  }
+
+  if (gameWagerUsd) {
+    urlParams.set("valUsd", gameWagerUsd.toFixed(2))
+  }
+
+  if (password) {
+    urlParams.set("pw", password)
+  }
+
+  return `${window.location.origin}/join/${gameId}?${urlParams.toString()}`
+}
+
 export const gameInviteUrls = (() => {
   const urls = writable<Record<number, string>>("")
 
-  const makeInviteUrl = (
-    gameType: PuzzleType,
-    gameId: number,
-    gameWagerUsd?: number,
-    inviteName?: string | null,
-  ) => {
-    const urlParams = new URLSearchParams({
-      gameType: gameType,
-    })
-
-    if (inviteName) {
-      urlParams.set("from", inviteName.split(" ").join("_"))
-    }
-
-    if (gameWagerUsd) {
-      urlParams.set("valUsd", gameWagerUsd.toFixed(2))
-    }
-
-    return `${window.location.origin}/join/${gameId}?${urlParams.toString()}`
-  }
-
   return {
     subscribe: urls.subscribe,
-    create: (
-      gameType: PuzzleType,
-      gameId: number,
-      gameWagerUsd?: number,
-      inviteName?: string | null,
-    ) => {
-      const url = makeInviteUrl(gameType, gameId, gameWagerUsd, inviteName)
+    create: (params: InviteUrlParams) => {
+      const url = makeInviteUrl(params)
       urls.update((urls) => {
         return {
           ...urls,
-          [gameId]: url,
+          [params.gameId]: url,
         }
       })
 
@@ -279,7 +284,7 @@ const gameIdToGame = (
   const gameType =
     gameNumberToType[
       getComponentValueStrict(mudComponents.PuzzleType, gameId).value
-    ];
+    ]
 
   const p1 = getComponentValueStrict(mudComponents.Player1, gameId)
     .value as EvmAddress

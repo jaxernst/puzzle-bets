@@ -4,14 +4,19 @@
   import InputPage from "./NewGameInputs.svelte"
   import ConfirmPage from "./NewGameConfirm.svelte"
   import { newGame } from "./newGame"
-  import { onDestroy } from "svelte"
+  import { onDestroy, onMount } from "svelte"
   import { ethPrice } from "$lib/ethPrice"
 
   export let puzzleType: PuzzleType
   $: newGame.setParam("puzzleType", puzzleType)
 
-  // Default eth wager to a prefixed usd amount
-  newGame.setParam("wagerEth", 2.5 / $ethPrice)
+  onMount(() => {
+    // Default eth wager to a prefixed usd amount
+    newGame.setParam("wagerEth", 2.5 / $ethPrice)
+
+    // Default to password protected game
+    newGame.setRandomPassword()
+  })
 
   let showConfirm = false
 

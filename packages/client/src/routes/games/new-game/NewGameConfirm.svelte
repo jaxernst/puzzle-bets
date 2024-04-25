@@ -42,7 +42,13 @@
 
     if (newest) {
       createdGameId = parseInt(newest, 16)
-      gameInviteUrls.create(puzzleType, createdGameId, wagerUSD, inviteName)
+      gameInviteUrls.create({
+        puzzleType,
+        inviteName,
+        gameId: createdGameId,
+        gameWagerUsd: wagerUSD,
+        password: $newGame.password,
+      })
     }
   }
 
@@ -74,6 +80,10 @@
 
 <div class="px-2 py-6">
   <div class="grid grid-cols-[1fr_auto] gap-1 rounded-md bg-neutral-700 p-3">
+    <div>Game visibility</div>
+    <div class="text-neutral-300">
+      {$newGame.password ? "Private (Invite Only)" : "Public (In Lobby)"}
+    </div>
     <div>Wager</div>
     <div class="text-neutral-300">
       {formatSigFig($newGame.wagerEth, 3)} eth ({formatAsDollar(

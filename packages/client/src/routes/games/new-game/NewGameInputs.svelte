@@ -4,6 +4,7 @@
   import { newGame } from "./newGame"
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import ButtonPrimary from "$lib/components/ButtonPrimary.svelte"
+  import { fade } from "svelte/transition"
 
   export let onConfirm: () => void
 
@@ -34,6 +35,14 @@
   function updateInviteExpiration(event: Event) {
     const value = parseFloat((event.target as HTMLInputElement).value)
     newGame.setParam("inviteExpiration", value)
+  }
+
+  $: togglePassword = () => {
+    if ($newGame.password) {
+      newGame.setParam("password", undefined)
+    } else {
+      newGame.setRandomPassword()
+    }
   }
 </script>
 
@@ -104,14 +113,50 @@
     minutes
   </div>
 
-  <div class="text-neutral-400">
+  <div class="flex gap-2 text-neutral-400">
     Your name (optional):
     <input
       type="text"
-      class="w-[130px] rounded-lg border-2 border-neutral-500 bg-transparent px-2 text-neutral-200"
+      class="h-6 w-[130px] rounded-full bg-transparent px-3 text-neutral-200 outline outline-neutral-700"
       bind:value={inviteName}
       on:input|preventDefault|stopPropagation
     />
+  </div>
+
+  <div class="flex items-center gap-2 text-neutral-400">
+    Game visibility:
+    <button on:click={togglePassword}>
+      <div
+        class={`relative flex h-6 w-20 flex-none rounded-full transition-all duration-300 ${
+          !$newGame.password
+            ? "bg-neutral-700 outline outline-neutral-600"
+            : "outline outline-neutral-700"
+        }`}
+      >
+        {#if !$newGame.password}
+          <div
+            transition:fade={{ duration: 150 }}
+            class="absolute h-6 pl-2 text-sm"
+          >
+            <div class="flex h-full items-center">Public</div>
+          </div>
+        {:else}
+          <div
+            transition:fade={{ duration: 150 }}
+            class="absolute h-6 w-full pr-2 text-sm"
+          >
+            <div class="flex h-full w-full items-center justify-end">
+              Private
+            </div>
+          </div>
+        {/if}
+        <div
+          class={`m-1 h-4 w-4 rounded-full bg-lime-500 transition-all ${
+            !$newGame.password ? "translate-x-14" : ""
+          }`}
+        ></div>
+      </div>
+    </button>
   </div>
 </div>
 

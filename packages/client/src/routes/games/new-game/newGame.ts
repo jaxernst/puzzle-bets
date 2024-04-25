@@ -7,6 +7,7 @@ export type NewGameParams = {
   wagerEth: number
   submissionWindow: number
   inviteExpiration: number
+  password?: string
 }
 
 export const DEFAULT_PARAMS: NewGameParams = {
@@ -84,6 +85,11 @@ function makeNewGameStore(initialParams: NewGameParams) {
       value: NewGameParams[T],
     ) => {
       params.update((s) => ({ ...s, [param]: value }))
+    },
+
+    setRandomPassword: () => {
+      const password = Math.random().toString(36).substring(2)
+      params.update((s) => ({ ...s, password }))
     },
 
     create: createGame,

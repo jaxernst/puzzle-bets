@@ -12,8 +12,8 @@
     userSolvedGame,
     type LiveStatus,
     userArchivedGames,
-    gameInviteUrls,
   } from "$lib/gameStores"
+  import { gameInviteUrls } from "$lib/inviteUrls"
   import { readable, writable, type Readable } from "svelte/store"
   import DotLoader from "$lib/components/DotLoader.svelte"
   import { puzzleStores } from "./puzzleGameStates"
@@ -110,9 +110,15 @@
   $: copyInviteUrl = () => {
     if (!gameId) return
     const gId = Number(entityToInt(gameId))
-    let url = $gameInviteUrls[gId]
+    let url = gameInviteUrls.getOrLoadInviteUrl(gId)
+    
+    // TODO: If we don't have a url saved (with the password) and the game is password protected,
+    // set and error to alert the user
     if (!url) {
-      url = gameInviteUrls.create(puzzleType, gId)
+      url = gameInviteUrls.create({
+        gameId: gId,
+        puzzleType,
+      })
     }
 
     navigator.clipboard.writeText(url)

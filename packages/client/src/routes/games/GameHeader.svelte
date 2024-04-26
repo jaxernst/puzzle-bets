@@ -19,6 +19,8 @@
   import { puzzleStores } from "./puzzleGameStates"
   import { slide } from "svelte/transition"
   import { cubicOut } from "svelte/easing"
+  import ButtonPrimary from "$lib/components/ButtonPrimary.svelte"
+  import ButtonSecondary from "$lib/components/ButtonSecondary.svelte"
 
   export let puzzleType: PuzzleType
   export let gameId: Entity | null = null
@@ -158,16 +160,13 @@
     </div>
 
     {#if $liveStatus?.status === GameStatus.Pending}
-      <button
-        on:click={copyInviteUrl}
-        class="whitespace-nowrap rounded-full bg-lime-500 px-2 py-1 text-sm font-semibold"
-      >
+      <ButtonPrimary on:click={copyInviteUrl} class="rounded-full text-sm">
         {#if urlCopied}
           <div in:slide={{ axis: "x" }}>Invite Copied!</div>
         {:else}
           <div in:slide={{ axis: "x", easing: cubicOut }}>Copy Invite</div>
         {/if}
-      </button>
+      </ButtonPrimary>
       <button
         class="text-sm font-semibold text-neutral-400"
         on:click={cancelAndArchive}
@@ -179,19 +178,19 @@
         {/if}
       </button>
     {:else if canViewResult}
-      <button
+      <ButtonPrimary
         on:click={() => {
           showResultsModal = true
         }}
-        class="whitespace-nowrap rounded-full bg-lime-500 px-2 py-1 font-semibold"
+        class="rounded-full text-sm"
       >
-        View Results {puzzleState?.lost ? "" : "+ Claim"}
-      </button>
+        View Results
+      </ButtonPrimary>
     {:else if $liveStatus?.status === GameStatus.Active}
-      <button
+      <ButtonPrimary
         class={`${
-          submitError ? "italicx bg-red-500" : "bg-lime-500"
-        } flex min-w-[70px] justify-center rounded-full px-2 py-1 font-semibold transition-all disabled:opacity-60`}
+          submitError ? "bg-red-500 italic" : "bg-lime-500"
+        } flex min-w-[70px] justify-center `}
         disabled={!puzzleState?.solved}
         on:click={verifyAndSubmitSolution}
       >
@@ -202,7 +201,7 @@
         {:else}
           Submit
         {/if}
-      </button>
+      </ButtonPrimary>
     {/if}
 
     {#if gameId && ($liveStatus?.status === GameStatus.Complete || $liveStatus?.status === GameStatus.Inactive)}

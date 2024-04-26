@@ -2,7 +2,7 @@
   import { browser } from "$app/environment"
   import { goto } from "$app/navigation"
   import DotLoader from "$lib/components/DotLoader.svelte"
-  import { gameInviteUrls } from "$lib/gameStores"
+  import { gameInviteUrls } from "$lib/inviteUrls"
   import { mud } from "$lib/mud/mudStore"
   import { user } from "$lib/user"
   import { HasValue, runQuery } from "@latticexyz/recs"

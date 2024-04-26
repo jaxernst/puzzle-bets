@@ -8,14 +8,14 @@
 
   export let onConfirm: () => void
 
-  let wagerUSD: number = $newGame.wagerEth * $ethPrice
+  $: wagerUSD = $newGame.wagerEth * $ethPrice
+
   let inviteName: string | null = null
 
   function updateETH(event: Event) {
     const value = parseFloat((event.target as HTMLInputElement).value)
     if (isNaN(value)) return
 
-    wagerUSD = value * $ethPrice
     newGame.setParam("wagerEth", value)
   }
 
@@ -23,8 +23,7 @@
     const value = parseFloat((event.target as HTMLInputElement).value)
     if (isNaN(value)) return
 
-    wagerUSD = value
-    newGame.setParam("wagerEth", wagerUSD / $ethPrice)
+    newGame.setParam("wagerEth", value / $ethPrice)
   }
 
   function updateSubmissionWindow(event: Event) {

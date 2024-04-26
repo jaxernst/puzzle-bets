@@ -116,7 +116,7 @@
     Your name (optional):
     <input
       type="text"
-      class="h-6 w-[130px] rounded-full bg-transparent px-3 text-neutral-200 outline outline-neutral-700"
+      class="h-5 w-[130px] rounded-full bg-transparent px-3 text-neutral-200 outline outline-neutral-700"
       bind:value={inviteName}
       on:input|preventDefault|stopPropagation
     />
@@ -126,7 +126,7 @@
     Game visibility:
     <button on:click={togglePassword}>
       <div
-        class={`relative flex h-6 w-20 flex-none rounded-full transition-all duration-300 ${
+        class={`relative flex h-5 w-[4.75rem] flex-none rounded-full transition-all duration-300 ${
           !$newGame.password
             ? "bg-neutral-700 outline outline-neutral-600"
             : "outline outline-neutral-700"
@@ -135,14 +135,14 @@
         {#if !$newGame.password}
           <div
             transition:fade={{ duration: 150 }}
-            class="absolute h-6 pl-2 text-sm"
+            class="absolute h-5 pl-2 text-sm"
           >
             <div class="flex h-full items-center">Public</div>
           </div>
         {:else}
           <div
             transition:fade={{ duration: 150 }}
-            class="absolute h-6 w-full pr-2 text-sm"
+            class="absolute h-5 w-full pr-2 text-sm"
           >
             <div class="flex h-full w-full items-center justify-end">
               Private
@@ -150,7 +150,7 @@
           </div>
         {/if}
         <div
-          class={`m-1 h-4 w-4 rounded-full bg-lime-500 transition-all ${
+          class={`m-[.12rem] h-4 w-4 rounded-full bg-lime-500 transition-all ${
             !$newGame.password ? "translate-x-14" : ""
           }`}
         ></div>

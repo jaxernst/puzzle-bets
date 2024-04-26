@@ -34,10 +34,10 @@
   $: gameIdTab = archivedGames.some((g) => g.id === gameId)
     ? "archived"
     : completedGames.some((g) => g.id === gameId)
-    ? "completed"
-    : activeGames.some((g) => g.id === gameId)
-    ? "live"
-    : "live"
+      ? "completed"
+      : activeGames.some((g) => g.id === gameId)
+        ? "live"
+        : "live"
 
   $: selectedTab = gameIdTab as any
 
@@ -163,6 +163,14 @@
   </div>
 
   <div class="overflow-y-auto px-2">
+    {#if selectedTab === "lobby"}
+      <div
+        class="flex w-full items-center justify-center py-4 font-mono text-neutral-400"
+      >
+        Coming soon...
+      </div>
+    {/if}
+
     <div
       class={`no-scrollbar mt-1 grid w-full grid-cols-2 gap-1 sm:grid-cols-3`}
     >

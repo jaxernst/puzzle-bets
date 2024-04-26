@@ -224,57 +224,6 @@ export const userArchivedGames = (() => {
   }
 })()
 
-interface InviteUrlParams {
-  puzzleType: PuzzleType
-  gameId: number
-  gameWagerUsd?: number
-  inviteName?: string | null
-  password?: string
-}
-
-const makeInviteUrl = ({
-  puzzleType,
-  gameId,
-  gameWagerUsd,
-  inviteName,
-  password,
-}: InviteUrlParams) => {
-  const urlParams = new URLSearchParams({ puzzleType })
-
-  if (inviteName) {
-    urlParams.set("from", inviteName.split(" ").join("_"))
-  }
-
-  if (gameWagerUsd) {
-    urlParams.set("valUsd", gameWagerUsd.toFixed(2))
-  }
-
-  if (password) {
-    urlParams.set("pw", password)
-  }
-
-  return `${window.location.origin}/join/${gameId}?${urlParams.toString()}`
-}
-
-export const gameInviteUrls = (() => {
-  const urls = writable<Record<number, string>>("")
-
-  return {
-    subscribe: urls.subscribe,
-    create: (params: InviteUrlParams) => {
-      const url = makeInviteUrl(params)
-      urls.update((urls) => {
-        return {
-          ...urls,
-          [params.gameId]: url,
-        }
-      })
-
-      return url
-    },
-  }
-})()
-
 // Util //
 
 const gameIdToGame = (

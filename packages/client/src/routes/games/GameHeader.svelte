@@ -67,7 +67,7 @@
     } catch (e: any) {
       console.error("Failed to submit solution")
       console.error(e)
-      submitError = e.shortMessage
+      submitError = e.shortMessage ?? "Error submitting"
     } finally {
       submitting = false
     }
@@ -111,7 +111,7 @@
     if (!gameId) return
     const gId = Number(entityToInt(gameId))
     let url = gameInviteUrls.getOrLoadInviteUrl(gId)
-    
+
     // TODO: If we don't have a url saved (with the password) and the game is password protected,
     // set and error to alert the user
     if (!url) {
@@ -195,8 +195,8 @@
     {:else if $liveStatus?.status === GameStatus.Active}
       <ButtonPrimary
         class={`${
-          submitError ? "bg-red-500 italic" : "bg-lime-500"
-        } flex min-w-[70px] justify-center `}
+          submitError ? "bg-red-500 italic hover:bg-red-400" : "bg-lime-500"
+        } flex min-w-[70px] justify-center rounded-full `}
         disabled={!puzzleState?.solved}
         on:click={verifyAndSubmitSolution}
       >

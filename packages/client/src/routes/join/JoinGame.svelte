@@ -26,13 +26,19 @@
   let joinGameLoading = false
   const joinGame = async () => {
     if (!game || !$mud.systemCalls) return
-    
+
+    const pw =
+      new URLSearchParams(window.location.search).get("pw") ?? undefined
+
+    // TODO: Display proper error when password is incorrect
     joinGameLoading = true
     try {
       await $mud.systemCalls.joinGame(
         gameId,
         Number(formatEther(game?.buyInAmount)),
+        pw,
       )
+
       dispatch("joined")
 
       fetch(`/api/notifications/${game.p1}/notify-game-joined`, {

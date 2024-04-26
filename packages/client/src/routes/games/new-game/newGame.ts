@@ -44,8 +44,13 @@ function makeNewGameStore(initialParams: NewGameParams) {
     if (!$mud.systemCalls) return error.set("Mud not setup")
     if (!paramsValid($params)) return error.set("Invalid parameters")
 
-    const { puzzleType, wagerEth, submissionWindow, inviteExpiration } =
-      $params as NewGameParams
+    const {
+      puzzleType,
+      wagerEth,
+      submissionWindow,
+      inviteExpiration,
+      password,
+    } = $params as NewGameParams
 
     loading.set(true)
 
@@ -55,6 +60,7 @@ function makeNewGameStore(initialParams: NewGameParams) {
         wagerEth,
         submissionWindow,
         inviteExpiration,
+        password,
       )
 
       gameCreated.set(true)

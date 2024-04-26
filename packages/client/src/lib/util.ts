@@ -1,6 +1,13 @@
 import { browser } from "$app/environment"
 import type { Entity } from "@latticexyz/recs"
-import { formatEther, numberToHex, padHex } from "viem"
+import {
+  encodePacked,
+  formatEther,
+  keccak256,
+  numberToHex,
+  padHex,
+  toHex,
+} from "viem"
 
 export const localTzOffsetHrs = () => {
   return -new Date().getTimezoneOffset() / 60
@@ -223,4 +230,8 @@ export function getPWADisplayMode() {
     return "standalone"
   }
   return "browser"
+}
+
+export function hashString(str: string) {
+  return keccak256(toHex(str))
 }

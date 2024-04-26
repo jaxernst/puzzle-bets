@@ -1,7 +1,7 @@
 import { type Entity } from "@latticexyz/recs"
 import type { SetupNetworkResult } from "./setupNetwork"
 import { gameTypeToNumber, type EvmAddress, type PuzzleType } from "../types"
-import { hashMessage, parseEther, zeroAddress } from "viem"
+import { hashMessage, padHex, parseEther, zeroAddress } from "viem"
 import { systemTimestamp } from "$lib/util"
 import { env } from "$env/dynamic/public"
 
@@ -26,7 +26,9 @@ export function createSystemCalls({
       systemTimestamp() + inviteExpirationMinutes * 60,
     )
 
-    const passwordHash = password ? hashMessage(password) : "0x0"
+    const passwordHash = password
+      ? hashMessage(password)
+      : padHex("0x0", { size: 32 })
 
     const tx = await worldContract.write.v1__newGame(
       [
@@ -45,12 +47,8 @@ export function createSystemCalls({
   const joinGame = async (
     gameId: Entity,
     wagerEth: number,
-    password: string | undefined,
+    password?: string,
   ) => {
-    const params = password
-      ? [gameId as `0x${string}`, password]
-      : [gameId as `0x${string}`]
-
     let tx: `0x${string}`
     if (password) {
       tx = await worldContract.write.v1__joinGame(

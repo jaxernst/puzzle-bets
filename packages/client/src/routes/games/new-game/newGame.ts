@@ -8,6 +8,7 @@ export type NewGameParams = {
   submissionWindow: number
   inviteExpiration: number
   password?: string
+  inviteName?: string
 }
 
 export const DEFAULT_PARAMS: NewGameParams = {

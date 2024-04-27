@@ -1,21 +1,7 @@
 import { capitalized, formatAsDollar } from "$lib/util"
 
-function getGameType(url: URL) {
-  const gameType = url?.searchParams.get("gameType") ?? "game"
-  return capitalized(gameType)
-}
-
-function getSenderName(url: URL) {
-  const senderNameParam = url?.searchParams.get("from")
-  return senderNameParam ? senderNameParam.split("_").join(" ") : null
-}
-
-function formatChallengeAmount(usdValue: string) {
-  return usdValue ? `${formatAsDollar(Number(usdValue))} ` : ""
-}
-
 export async function load({ url }) {
-  const gameTypeParam = url?.searchParams.get("gameType")
+  const gameTypeParam = url?.searchParams.get("puzzleType")
   const gameType = gameTypeParam ? capitalized(gameTypeParam) : ""
 
   const senderNameParam = url?.searchParams.get("from")

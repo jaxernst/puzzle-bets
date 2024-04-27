@@ -36,6 +36,11 @@
     newGame.setParam("inviteExpiration", value)
   }
 
+  function updateInviteName(event: Event) {
+    const value = (event.target as HTMLInputElement).value
+    newGame.setParam("inviteName", value)
+  }
+
   $: togglePassword = () => {
     if ($newGame.password) {
       newGame.setParam("password", undefined)
@@ -117,7 +122,8 @@
     <input
       type="text"
       class="h-5 w-[130px] rounded-full bg-transparent px-3 text-neutral-200 outline outline-neutral-700"
-      bind:value={inviteName}
+      value={$newGame.inviteName ?? null}
+      on:input={updateInviteName}
       on:input|preventDefault|stopPropagation
     />
   </div>

@@ -20,8 +20,6 @@
   export let onCancel = () => {}
   // export let onCreate = () => {}
 
-  let wagerUSD: number = 2.5
-  let inviteName: string | null = null
   let gameCreated = false
   $: createGameError = $newGame.error
   $: createGameLoading = $newGame.loading
@@ -44,9 +42,9 @@
       createdGameId = parseInt(newest, 16)
       gameInviteUrls.create({
         puzzleType,
-        inviteName,
         gameId: createdGameId,
-        gameWagerUsd: wagerUSD,
+        inviteName: $newGame.inviteName,
+        gameWagerUsd: $newGame.wagerEth * $ethPrice,
         password: $newGame.password,
       })
     }

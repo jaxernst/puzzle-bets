@@ -117,7 +117,7 @@
     minutes
   </div>
 
-  <div class="flex gap-2 text-neutral-400">
+  <div class="flex items-center gap-2 text-neutral-400">
     Your name (optional):
     <input
       type="text"

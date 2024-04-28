@@ -14,7 +14,7 @@
     // Default eth wager to a prefixed usd amount
     newGame.setParam("wagerEth", 2.5 / $ethPrice)
 
-    // Default to password protected game
+    // Default to a password protected game
     newGame.setRandomPassword()
   })
 
@@ -40,20 +40,11 @@
     </div>
     <ConfirmPage onCancel={() => (showConfirm = false)} />
   {:else}
-    <div class="text-neutral-200">
-      <div class="flex gap-1">
-        <span class="font-bold text-neutral-400">-</span> Choose your wager and bet
-        parameters
-      </div>
-      <div class="flex gap-1">
-        <span class="font-bold text-neutral-400">-</span> Invite a friend to your
-        game or post it to the public lobby
-      </div>
-      <div class="flex gap-1">
-        <span class="font-bold text-neutral-400">-</span> The sole player to solve
-        + submit before the deadline wins.
-      </div>
-    </div>
+    <ul class="ml-4 list-disc">
+      <li>Choose your wager and bet parameters</li>
+      <li>Invite a friend to your game or post it to the public lobby</li>
+      <li>The sole player to solve + submit before the deadline wins.</li>
+    </ul>
     <InputPage onConfirm={() => (showConfirm = true)} />
   {/if}
 </div>

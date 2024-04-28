@@ -76,8 +76,10 @@
   }
 </script>
 
-<div class="px-2 py-6">
-  <div class="grid grid-cols-[1fr_auto] gap-1 rounded-md bg-neutral-700 p-3">
+<div class="py-4">
+  <div
+    class="grid grid-cols-[1fr_auto] gap-1 rounded-md bg-neutral-700 p-3 text-sm sm:text-base"
+  >
     <div>Game visibility</div>
     <div class="text-neutral-300">
       {$newGame.password ? "Private (Invite Only)" : "Public (In Lobby)"}
@@ -92,6 +94,9 @@
     <div class="text-neutral-300">{$newGame.submissionWindow} minutes</div>
     <div>Invite Expires</div>
     <div class="text-neutral-300">{$newGame.inviteExpiration} minutes</div>
+  </div>
+  <div class="pt-1 text-xs italic text-neutral-500">
+    ** A 2.5% protocol fee will be applied the winners' payout
   </div>
 </div>
 
@@ -117,14 +122,12 @@
         {:else if gameCreated}
           <div>Success! Click to copy invite link</div>
         {:else}
-          Create Game
+          Create Game ({formatAsDollar($newGame.wagerEth * $ethPrice)})
         {/if}
       </ButtonPrimary>
     </div>
   {/key}
 </div>
-
-<div></div>
 
 {#if createGameError}
   <div class="text-sm text-red-500">{createGameError}</div>

@@ -85,7 +85,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-  class="flex flex-col gap-1 rounded-t-xl bg-neutral-800 px-1 pt-2 font-semibold"
+  class="flex flex-col gap-2 rounded-t-xl bg-neutral-800 px-1 pt-2 font-semibold"
   style={`height: ${$height}px`}
   use:clickOutside={{
     enabled: expandedView,
@@ -182,7 +182,7 @@
     class="flex items-center gap-2 px-2 text-sm font-normal text-neutral-300"
   >
     {#if selectedTab === "lobby"}
-      <span class="text-base font-semibold text-lime-500"
+      <span class="ptext-base font-semibold text-lime-500"
         >{$lobbyGames.length}</span
       >
       public {$lobbyGames.length === 1 ? "game" : "games"} available to join

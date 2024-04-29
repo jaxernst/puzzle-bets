@@ -1,13 +1,6 @@
 <script lang="ts">
-  import { page } from "$app/stores"
   import { ethPrice } from "$lib/ethPrice"
-  import {
-    getGame,
-    liveGameStatus,
-    userArchivedGames,
-    userSolvedGame,
-  } from "$lib/gameStores"
-  import { user } from "$lib/user"
+  import { getGame, liveGameStatus } from "$lib/gameStores"
   import { GameStatus, type Game, type PuzzleType } from "$lib/types"
   import {
     capitalized,

@@ -1,56 +1,67 @@
 <script lang="ts">
-  import { userArchivedGames, userGames } from "$lib/gameStores"
-  import { type PuzzleType, GameStatus } from "$lib/types"
+  import {
+    lobbyGames,
+    userArchivedGames,
+    userGames as userGameStore,
+  } from "$lib/gameStores"
+  import { type PuzzleType, GameStatus, type Game } from "$lib/types"
 
   import { slide } from "svelte/transition"
   import { cubicInOut, cubicOut, sineInOut } from "svelte/easing"
-  import GamePreviewCard from "../GamePreviewCard.svelte"
+  import GamePreviewCard from "./GamePreviewCard.svelte"
   import Expand from "$lib/icons/Expand.svelte"
   import { flip } from "svelte/animate"
   import { page } from "$app/stores"
   import { entityToInt, intToEntity } from "$lib/util"
   import { clickOutside } from "$lib/actions/clickOutside"
-  import { spring, tweened } from "svelte/motion"
+  import { spring } from "svelte/motion"
+  import PublicGameCard from "./PublicGameCard.svelte"
 
-  $: nonArchivedGames = $userGames.filter(
-    (g) => !$userArchivedGames.includes(g.id),
+  $: userGames = $userGameStore.reduce<{
+    active: Game[]
+    completed: Game[]
+    archived: Game[]
+  }>(
+    (acc, game) => {
+      if ($userArchivedGames.includes(game.id)) {
+        return { ...acc, archived: [...acc.archived, game] }
+      }
+
+      if (
+        game.status === GameStatus.Complete ||
+        game.status === GameStatus.Inactive
+      ) {
+        return { ...acc, completed: [...acc.completed, game] }
+      }
+
+      return { ...acc, active: [...acc.active, game] }
+    },
+    { active: [], completed: [], archived: [] },
   )
-
-  $: activeGames = nonArchivedGames.filter(
-    (g) => g.status !== GameStatus.Complete,
-  )
-
-  $: completedGames = nonArchivedGames.filter(
-    (g) => g.status === GameStatus.Complete,
-  )
-
-  $: lobbyGames = []
-
-  $: archivedGames = $userGames.filter((g) => $userArchivedGames.includes(g.id))
 
   let selectedTab: "lobby" | "live" | "completed" | "archived" = "live"
 
   $: gameId = $page.params.gameId && intToEntity($page.params.gameId)
-  $: gameIdTab = archivedGames.some((g) => g.id === gameId)
+  $: gameIdTab = userGames.archived.some((g) => g.id === gameId)
     ? "archived"
-    : completedGames.some((g) => g.id === gameId)
-      ? "completed"
-      : activeGames.some((g) => g.id === gameId)
-        ? "live"
-        : "live"
+    : userGames.completed.some((g) => g.id === gameId)
+    ? "completed"
+    : userGames.active.some((g) => g.id === gameId)
+    ? "live"
+    : "live"
 
   $: selectedTab = gameIdTab as any
 
   $: currentTabGames = (() => {
     switch (selectedTab) {
       case "lobby":
-        return lobbyGames
+        return $lobbyGames
       case "live":
-        return activeGames
+        return userGames.active
       case "completed":
-        return completedGames
+        return userGames.completed
       case "archived":
-        return archivedGames
+        return userGames.archived
     }
   })().sort((a, b) => {
     return Number(entityToInt(b.id)) - Number(entityToInt(a.id))
@@ -74,7 +85,7 @@
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
 <div
-  class="flex flex-col gap-2 rounded-t-xl bg-neutral-800 px-1 pt-2 font-semibold"
+  class="flex flex-col gap-1 rounded-t-xl bg-neutral-800 px-1 pt-2 font-semibold"
   style={`height: ${$height}px`}
   use:clickOutside={{
     enabled: expandedView,
@@ -92,6 +103,11 @@
       }`}
     >
       Lobby
+      {#if $lobbyGames.length > 0}
+        <div
+          class="ml-[.14rem] h-1.5 w-1.5 animate-pulse rounded-full bg-lime-500"
+        />
+      {/if}
     </button>
 
     <div class="text-neutral-500">|</div>
@@ -106,7 +122,7 @@
         <span
           transition:slide={{ axis: "x", duration: 200, easing: cubicOut }}
           class="min-w-0 pr-2 font-bold text-lime-500"
-          >{activeGames.length}</span
+          >{userGames.active.length}</span
         >
       {/if}
       Live Games
@@ -123,7 +139,7 @@
       {#if selectedTab === "completed"}
         <span
           transition:slide={{ axis: "x", duration: 200, easing: cubicOut }}
-          class="min-w-0 pr-2 text-lime-400">{completedGames.length}</span
+          class="min-w-0 pr-2 text-lime-400">{userGames.completed.length}</span
         >
       {/if}
       Completed
@@ -140,7 +156,7 @@
       {#if selectedTab === "archived"}
         <span
           transition:slide={{ axis: "x", duration: 200, easing: cubicOut }}
-          class="min-w-0 pr-2 text-lime-400">{archivedGames.length}</span
+          class="min-w-0 pr-2 text-lime-400">{userGames.archived.length}</span
         >
       {/if}
       Archived
@@ -162,21 +178,28 @@
     </div>
   </div>
 
-  <div class="overflow-y-auto px-2">
+  <div
+    class="flex items-center gap-2 px-2 text-sm font-normal text-neutral-300"
+  >
     {#if selectedTab === "lobby"}
-      <div
-        class="flex w-full items-center justify-center py-4 font-mono text-neutral-400"
+      <span class="text-base font-semibold text-lime-500"
+        >{$lobbyGames.length}</span
       >
-        Coming soon...
-      </div>
+      public {$lobbyGames.length === 1 ? "game" : "games"} available to join
     {/if}
+  </div>
 
+  <div class="overflow-y-auto px-2">
     <div
       class={`no-scrollbar mt-1 grid w-full grid-cols-2 gap-1 sm:grid-cols-3`}
     >
       {#each currentTabGames as game (game.id)}
         <div animate:flip={{ duration: 650, easing: cubicInOut }}>
-          <GamePreviewCard {game} />
+          {#if "public" in game}
+            <PublicGameCard {game} />
+          {:else}
+            <GamePreviewCard {game} />
+          {/if}
         </div>
       {/each}
     </div>

@@ -8,16 +8,13 @@ import {
   getComponentValueStrict,
   getComponentValue,
   type Entity,
+  Not,
 } from "@latticexyz/recs"
-import {
-  GameStatus,
-  gameNumberToType,
-  type EvmAddress,
-  type PuzzleType,
-} from "$lib/types"
+import { GameStatus, gameNumberToType, type EvmAddress } from "$lib/types"
 import { encodeEntity } from "@latticexyz/store-sync/recs"
 import type { SetupNetworkResult } from "./mud/setupNetwork"
-import { timeRemaining, intToEntity } from "./util"
+import { timeRemaining, intToEntity, systemTimestamp } from "./util"
+import { PUBLIC_PUZZLE_MASTER_ADDRESS } from "$env/static/public"
 
 export const userGames = derived([mud, user], ([$mud, $user]) => {
   if (!$mud?.ready || !$mud.components || !$user.address) return []
@@ -25,11 +22,17 @@ export const userGames = derived([mud, user], ([$mud, $user]) => {
   const p1Games = runQuery([
     Has($mud.components.GameStatus),
     HasValue($mud.components.Player1, { value: $user.address }),
+    HasValue($mud.components.PuzzleMasterEoa, {
+      value: PUBLIC_PUZZLE_MASTER_ADDRESS,
+    }),
   ])
 
   const p2Games = runQuery([
     Has($mud.components.GameStatus),
     HasValue($mud.components.Player2, { value: $user.address }),
+    HasValue($mud.components.PuzzleMasterEoa, {
+      value: PUBLIC_PUZZLE_MASTER_ADDRESS,
+    }),
   ])
 
   return Array.from([...p1Games, ...p2Games]).map((gameId) => {
@@ -39,6 +42,29 @@ export const userGames = derived([mud, user], ([$mud, $user]) => {
       opponent: $user.address === game.p1 ? game.p2 : game.p1,
     }
   })
+})
+
+export const lobbyGames = derived(mud, ($mud) => {
+  if (!$mud?.ready || !$mud.components) return []
+
+  const publicGames = runQuery([
+    HasValue($mud.components.GameStatus, { value: GameStatus.Pending }),
+    HasValue($mud.components.PuzzleMasterEoa, {
+      value: PUBLIC_PUZZLE_MASTER_ADDRESS,
+    }),
+    Not($mud.components.GamePasswordHash),
+  ])
+
+  const now = systemTimestamp()
+
+  return Array.from([...publicGames])
+    .map((gameId) => {
+      return {
+        ...gameIdToGame(gameId, $mud.components!),
+        public: true,
+      }
+    })
+    .filter((game) => Number(game.inviteExpiration) > now)
 })
 
 export const getGame = derived(mud, ($mud) => {

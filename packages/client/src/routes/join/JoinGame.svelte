@@ -6,9 +6,9 @@
   import {
     capitalized,
     formatAsDollar,
+    formatSigFig,
     formatTime,
     shortenAddress,
-    systemTimestamp,
   } from "$lib/util"
   import { type Entity } from "@latticexyz/recs"
   import { createEventDispatcher, onMount } from "svelte"
@@ -50,6 +50,7 @@
   }
 
   $: liveStatus = liveGameStatus(gameId)
+  $: buyIn = Number(formatEther(game?.buyInAmount ?? 0n))
 </script>
 
 {#if game && gameType}
@@ -75,33 +76,33 @@
         <li>
           Be the sole player to solve and submit the Wordle before the deadline
         </li>
-
-        <li>Vote to rematch in the event of a tie</li>
+        <li>Players may vote to rematch in the event of a tie</li>
       </ul>
     {/if}
 
-    <div class="px-1 py-4 text-sm text-neutral-100">
-      <div class="flex gap-4">
-        <div class="flex flex-col gap-1 text-neutral-400">
-          <div class="">Game Creator</div>
-          <div class="">Bet Amount</div>
-          <div class="">Solution Deadline</div>
+    <div class="px-2 py-4 text-sm">
+      <div
+        class="grid grid-cols-[1fr_auto] gap-1 rounded-md bg-neutral-700 p-3 text-sm sm:text-base"
+      >
+        <div class="">Game Creator</div>
+        <div class="">{shortenAddress(game.p1)}</div>
+
+        <div class="">Bet Amount</div>
+        <div class="">
+          {#if $ethPrice}
+            {formatSigFig(buyIn, 3)} eth ({formatAsDollar(buyIn * $ethPrice)} USD)}
+          {:else}
+            {formatEther(game.buyInAmount)} eth
+          {/if}
         </div>
-        <div class="flex flex-col gap-1 text-neutral-100">
-          <div class="">{shortenAddress(game.p1)}</div>
-          <div class="">
-            {#if $ethPrice}
-              {formatAsDollar(
-                Number(formatEther(game.buyInAmount)) * $ethPrice,
-              )}
-            {:else}
-              {formatEther(game.buyInAmount)} eth
-            {/if}
-          </div>
-          <div class="">
-            {Math.round(game.submissionWindow / 60)}<span>{" "}minutes</span>
-          </div>
+
+        <div class="">Solution Deadline</div>
+        <div class="">
+          {Math.round(game.submissionWindow / 60)}<span>{" "}minutes</span>
         </div>
+      </div>
+      <div class="pt-1 text-xs italic text-neutral-500">
+        ** A 2.5% protocol fee will be applied the winners' payout
       </div>
     </div>
 

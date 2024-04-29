@@ -23,7 +23,9 @@
   onDestroy(newGame.reset)
 </script>
 
-<div class="flex max-w-[450px] flex-col gap-2 rounded-xl bg-neutral-800 p-5">
+<div
+  class="flex max-w-[450px] flex-col gap-2 rounded-xl bg-neutral-800 p-4 sm:p-5"
+>
   <div class="font-semibold">
     {#if showConfirm}
       Confirm your <span class="text-lime-500">{capitalized(puzzleType)}</span> game
@@ -34,7 +36,7 @@
   </div>
 
   {#if showConfirm}
-    <div class="text-sm text-neutral-100">
+    <div class="text-sm">
       This action will deposit your wager and create a new Puzzle Bet. You may
       cancel and withdraw up until your opponent joins.
     </div>

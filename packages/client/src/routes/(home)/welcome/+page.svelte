@@ -3,12 +3,12 @@
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import DotLoader from "$lib/components/DotLoader.svelte"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
-  import Puzzly from "$lib/icons/puzzly.svelte"
+  import Puzzly from "$lib/icons/Puzzly.svelte"
   import { walletStore } from "$lib/mud/connectWallet"
   import { mud } from "$lib/mud/mudStore"
   import { user } from "$lib/user"
   import { cubicOut } from "svelte/easing"
-  import { fade, fly } from "svelte/transition"
+  import { fade } from "svelte/transition"
   import ButtonPrimary from "$lib/components/ButtonPrimary.svelte"
 
   const loginAndConnect = async () => {
@@ -35,9 +35,7 @@
 >
   <div class="flex flex-col items-center gap-1">
     <div class="p-4">
-      <div class="fill-off-black h-28 w-28">
-        <Puzzly />
-      </div>
+        <Puzzly class="fill-off-black h-28 w-28"/>
     </div>
     <div class="text-off-black relative text-xl font-bold sm:text-2xl">
       Welcome to Puzzle Bets.

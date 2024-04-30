@@ -4,16 +4,13 @@
   import WalletIcon from "$lib/icons/Wallet.svelte"
   import { walletStore } from "$lib/mud/connectWallet"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
-  import Puzzly from "$lib/icons/puzzly.svelte"
+  import Puzzly from "$lib/icons/Puzzly.svelte"
   import EthSymbol from "$lib/icons/EthSymbol.svelte"
   import CopyableAddress from "$lib/components/CopyableAddress.svelte"
   import NotificationBell from "$lib/icons/NotificationBell.svelte"
-  import { formatEther, type PublicClient } from "viem"
-  import { onMount } from "svelte"
   import { notifications } from "$lib/notifications/notificationStore"
   import { getPWADisplayMode, isIosSafari } from "$lib/util"
   import { browser } from "$app/environment"
-  import type { EvmAddress } from "$lib/types"
   import DotLoader from "$lib/components/DotLoader.svelte"
 
   const loginAndConnect = async () => {
@@ -42,9 +39,10 @@
   <div
     class="text-off-black flex items-center text-lg font-bold tracking-wide sm:text-xl"
   >
-    <a href="/welcome" class="fill-off-black h-10 w-10 sm:h-11 sm:w-11">
-      <Puzzly />
+    <a href="/welcome">
+      <Puzzly class="fill-off-black h-10 w-10 sm:h-11 sm:w-11" />
     </a>
+
     <div style="line-height: 1em">
       {#if $user.address}
         <div class="text-base sm:text-lg">
@@ -82,9 +80,7 @@
           </button>
         {/if}
       {:else}
-        <div class="stroke-off-black h-6 w-6">
-          <WalletIcon />
-        </div>
+        <WalletIcon class="stroke-off-black h-6 w-6" />
         {#if $walletStore && $mud.ready}
           <div
             class="h-[.4rem] w-[.4rem] self-start rounded-full bg-green-500"

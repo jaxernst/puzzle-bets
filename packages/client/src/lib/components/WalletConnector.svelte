@@ -3,7 +3,6 @@
   import { mud } from "$lib/mud/mudStore"
   import { shortenAddress } from "$lib/util"
   import { get, writable } from "svelte/store"
-  import { fade } from "svelte/transition"
   import Modal from "./Modal.svelte"
   import type { Wallet } from "$lib/mud/setupNetwork"
   import Google from "$lib/icons/Google.svelte"
@@ -12,6 +11,7 @@
   import DotLoader from "./DotLoader.svelte"
   import { networkConfig } from "$lib/mud/networkConfig"
   import ButtonPrimary from "./ButtonPrimary.svelte"
+  import WalletIcon from "$lib/icons/Wallet.svelte"
 
   const showModal = writable(false)
 
@@ -54,13 +54,14 @@
 
 <Modal show={$showModal} on:close={() => ($showModal = false)} title="">
   <div
-    class="relative z-10 flex min-h-[200px] min-w-[200px] flex-col items-center gap-4 rounded-lg bg-neutral-800 p-6 text-neutral-100"
+    class="relative z-10 flex min-h-[200px] min-w-[220px] flex-col items-center gap-4 rounded-lg bg-neutral-800 p-6 text-neutral-100"
   >
-    <div class="self-start font-bold">
+    <div class="flex items-center gap-2 self-start pr-4 text-lg font-bold">
+      <WalletIcon class="h-5 w-5 stroke-white" />
       {#if $walletStore.account}
         Welcome {shortenAddress($walletStore?.account.address ?? "")}
       {:else}
-        Puzzle Bets Wallet Sign In
+        Wallet Sign In
       {/if}
     </div>
 
@@ -76,11 +77,12 @@
         <div
           class="max-w-[300px] border-l border-neutral-400 px-3 text-sm text-neutral-400"
         >
-          This is a testnet preview of Puzzle bets. Connect to create a burner
-          wallet and get it auto-funded with testnet eth!
+          This is a testnet preview of Puzzle Bets. Click 'Connect' to create a
+          temporary wallet auto-funded with testnet Ethereum (ETH).
         </div>
+
         <ButtonPrimary
-          class="mb-2 mt-3 self-center"
+          class="mb-2 mt-3 self-center rounded-full px-3 py-1"
           on:click={() => {
             walletStore.tryConnect("auto")
             showModal.set(false)
@@ -91,12 +93,13 @@
       {:else if $walletStore.connecting}
         <DotLoader />
       {:else if $walletStore.account}
-        <button
-          class=" rounded-lg border border-lime-500 bg-lime-500 px-2 py-1 text-center font-semibold text-white"
+        <div class="flex-grow" />
+        <ButtonPrimary
+          class="mb-2 mt-3 self-center rounded-full px-3 py-1"
           on:click={walletStore.disconnect}
         >
           Disconnect
-        </button>
+        </ButtonPrimary>
       {:else}
         <div class="flex w-full items-center justify-evenly">
           <button

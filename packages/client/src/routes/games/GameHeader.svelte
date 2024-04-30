@@ -20,7 +20,6 @@
   import { slide } from "svelte/transition"
   import { cubicOut } from "svelte/easing"
   import ButtonPrimary from "$lib/components/ButtonPrimary.svelte"
-  import ButtonSecondary from "$lib/components/ButtonSecondary.svelte"
 
   export let puzzleType: PuzzleType
   export let gameId: Entity | null = null

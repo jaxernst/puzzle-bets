@@ -110,7 +110,7 @@
       {#key joinGameLoading}
         <button
           in:slide={{ axis: "x" }}
-          class="whitespace-nowrap rounded-lg bg-lime-500 p-2 text-white transition-all hover:bg-lime-400 hover:shadow"
+          class="whitespace-nowrap rounded-lg bg-lime-500 p-2 font-semibold text-white transition-all hover:bg-lime-400 hover:shadow"
           on:click={joinGame}
         >
           {#if joinGameLoading}

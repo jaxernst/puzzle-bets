@@ -12,10 +12,13 @@
   import Expand from "$lib/icons/Expand.svelte"
   import { flip } from "svelte/animate"
   import { page } from "$app/stores"
-  import { entityToInt, intToEntity } from "$lib/util"
+  import { capitalized, entityToInt, intToEntity } from "$lib/util"
   import { clickOutside } from "$lib/actions/clickOutside"
   import { spring } from "svelte/motion"
   import PublicGameCard from "./PublicGameCard.svelte"
+  import ButtonSecondary from "$lib/components/ButtonSecondary.svelte"
+  import Modal from "$lib/components/Modal.svelte"
+  import NewGameModal from "../games/new-game/NewGame.svelte"
 
   $: userGames = $userGameStore.reduce<{
     active: Game[]
@@ -39,7 +42,9 @@
     { active: [], completed: [], archived: [] },
   )
 
-  let selectedTab: "lobby" | "live" | "completed" | "archived" = "live"
+  type Tab = "lobby" | "active" | "completed" | "archived"
+  let selectedTab: Tab = "active"
+  const myGameTabs = ["active", "completed", "archived"] as const
 
   $: gameId = $page.params.gameId && intToEntity($page.params.gameId)
   $: gameIdTab = userGames.archived.some((g) => g.id === gameId)
@@ -47,8 +52,8 @@
     : userGames.completed.some((g) => g.id === gameId)
     ? "completed"
     : userGames.active.some((g) => g.id === gameId)
-    ? "live"
-    : "live"
+    ? "active"
+    : "active"
 
   $: selectedTab = gameIdTab as any
 
@@ -56,7 +61,7 @@
     switch (selectedTab) {
       case "lobby":
         return $lobbyGames
-      case "live":
+      case "active":
         return userGames.active
       case "completed":
         return userGames.completed
@@ -80,7 +85,18 @@
   } else {
     $height = 65
   }
+
+  let showNewGameModal = false
 </script>
+
+<Modal
+  show={showNewGameModal}
+  on:close={() => {
+    showNewGameModal = false
+  }}
+>
+  <NewGameModal puzzleType="wordle" />
+</Modal>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -94,7 +110,7 @@
   on:click={() => (expandedView = true)}
 >
   <div
-    class={`flex cursor-pointer items-center gap-2 pl-2  text-[.82rem] transition-all duration-500 sm:gap-3`}
+    class={`flex cursor-pointer items-center gap-4 pl-2 text-[.82rem] transition-all duration-500`}
   >
     <button
       on:click={() => (selectedTab = "lobby")}
@@ -112,55 +128,23 @@
 
     <div class="text-neutral-500">|</div>
 
-    <button
-      on:click={() => (selectedTab = "live")}
-      class={`flex py-1 transition-all duration-200 ${
-        selectedTab === "live" ? "" : "opacity-50"
-      }`}
-    >
-      {#if selectedTab === "live"}
-        <span
-          transition:slide={{ axis: "x", duration: 200, easing: cubicOut }}
-          class="min-w-0 pr-2 font-bold text-lime-500"
-          >{userGames.active.length}</span
-        >
-      {/if}
-      Live Games
-    </button>
-
-    <div class="text-neutral-500">|</div>
-
-    <button
-      on:click={() => (selectedTab = "completed")}
-      class={`flex py-1 transition-all duration-200 ${
-        selectedTab === "completed" ? "" : "opacity-50"
-      }`}
-    >
-      {#if selectedTab === "completed"}
-        <span
-          transition:slide={{ axis: "x", duration: 200, easing: cubicOut }}
-          class="min-w-0 pr-2 text-lime-400">{userGames.completed.length}</span
-        >
-      {/if}
-      Completed
-    </button>
-
-    <div class="text-neutral-500">|</div>
-
-    <button
-      on:click={() => (selectedTab = "archived")}
-      class={`flex py-1 transition-all duration-200 ${
-        selectedTab === "archived" ? " " : "opacity-50"
-      }`}
-    >
-      {#if selectedTab === "archived"}
-        <span
-          transition:slide={{ axis: "x", duration: 200, easing: cubicOut }}
-          class="min-w-0 pr-2 text-lime-400">{userGames.archived.length}</span
-        >
-      {/if}
-      Archived
-    </button>
+    {#each myGameTabs as tab}
+      <button
+        on:click={() => (selectedTab = tab)}
+        class={`flex py-1 transition-all duration-200 ${
+          selectedTab === tab ? "" : "opacity-50"
+        }`}
+      >
+        {#if selectedTab === tab}
+          <span
+            transition:slide={{ axis: "x", duration: 200, easing: cubicOut }}
+            class="min-w-0 pr-2 font-bold text-lime-500"
+            >{userGames[tab].length}</span
+          >
+        {/if}
+        {capitalized(tab)}
+      </button>
+    {/each}
 
     <div class="flex flex-grow items-center justify-end">
       <button
@@ -178,18 +162,38 @@
     </div>
   </div>
 
-  <div
-    class="flex items-center gap-2 px-2 text-sm font-normal text-neutral-300"
-  >
-    {#if selectedTab === "lobby"}
-      <span class="ptext-base font-semibold text-lime-500"
-        >{$lobbyGames.length}</span
-      >
-      public {$lobbyGames.length === 1 ? "game" : "games"} available to join
+  {#if ["active", "completed", "archived"].includes(selectedTab)}
+    {#if userGames[selectedTab].length === 0}
+      <div class="px-4 py-1 text-xs italic text-neutral-400">
+        Your {selectedTab} games will show up here...
+      </div>
     {/if}
-  </div>
+  {/if}
 
-  <div class="overflow-y-auto px-2">
+  {#if selectedTab === "lobby"}
+    {#if $lobbyGames.length === 0}
+      <div
+        class="flex flex-col items-start gap-3 px-3 text-sm text-neutral-300"
+      >
+        No public games available...
+        <ButtonSecondary
+          on:click={() => (showNewGameModal = true)}
+          class="text-sm">Start Your Own</ButtonSecondary
+        >
+      </div>
+    {:else}
+      <div
+        class="flex items-center gap-2 px-3 text-sm font-normal text-neutral-300"
+      >
+        <span class="ptext-base font-semibold text-lime-500"
+          >{$lobbyGames.length}</span
+        >
+        public {$lobbyGames.length === 1 ? "game" : "games"} available to join
+      </div>
+    {/if}
+  {/if}
+
+  <div class="overflow-y-auto px-3">
     <div
       class={`no-scrollbar mt-1 grid w-full grid-cols-2 gap-1 sm:grid-cols-3`}
     >

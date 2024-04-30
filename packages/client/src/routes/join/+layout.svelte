@@ -52,7 +52,7 @@
     }}
   >
     <div
-      class="relative flex max-w-[450px] flex-col gap-2 rounded-xl bg-neutral-800 p-4 text-neutral-200 sm:p-5"
+      class="relative flex min-w-[200px] max-w-[450px] flex-col gap-2 rounded-xl bg-neutral-800 p-4 text-neutral-200 sm:p-5"
     >
       {#if !$mud.ready}
         <div class="self-center">

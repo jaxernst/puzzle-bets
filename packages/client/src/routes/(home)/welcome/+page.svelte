@@ -21,16 +21,22 @@
 </script>
 
 <svelte:head>
-  <title>Puzzle Bets | Welcome</title>
-  <meta property="og:title" content="Puzzle Bets | Welcome" />
-  <meta property="twitter:title" content="Puzzle Bets | Welcome" />
+  <title>Puzzle Bets | Solve puzzles, compete with friends</title>
+  <meta
+    property="og:title"
+    content="Puzzle Bets | Solve puzzles, compete with friends"
+  />
+  <meta
+    property="twitter:title"
+    content="Puzzle Bets | Solve puzzles, compete with friends"
+  />
   <meta
     property="og:description"
-    content="Challenge your friends, solve puzzles"
+    content="Play puzzle games and put your money on the line to show off your skills"
   />
   <meta
     property="twitter:description"
-    content="Challenge your friends, solve puzzles"
+    content="Play puzzle games and put your money on the line to show off your skills"
   />
 </svelte:head>
 

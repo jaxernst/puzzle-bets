@@ -9,7 +9,7 @@
   import { cubicOut } from "svelte/easing"
   import { fade } from "svelte/transition"
   import ButtonPrimary from "$lib/components/ButtonPrimary.svelte"
-  import Puzzly from "$lib/icons/_Puzzly.svelte"
+  import Puzzly from "$lib/icons/Puzzly.svelte"
 
   const loginAndConnect = async () => {
     const wallet = await promptConnectWallet()

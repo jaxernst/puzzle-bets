@@ -8,7 +8,11 @@
 
   export let onConfirm: () => void
 
-  $: wagerUSD = $newGame.wagerEth * $ethPrice
+  let lockUsd = false
+  let wagerUSD = 0
+  $: if (!lockUsd) {
+    wagerUSD = $newGame.wagerEth * $ethPrice
+  }
 
   let inviteName: string | null = null
 
@@ -16,6 +20,7 @@
     const value = parseFloat((event.target as HTMLInputElement).value)
     if (isNaN(value)) return
 
+    lockUsd = false
     newGame.setParam("wagerEth", value)
   }
 
@@ -23,6 +28,7 @@
     const value = parseFloat((event.target as HTMLInputElement).value)
     if (isNaN(value)) return
 
+    lockUsd = true
     newGame.setParam("wagerEth", value / $ethPrice)
   }
 

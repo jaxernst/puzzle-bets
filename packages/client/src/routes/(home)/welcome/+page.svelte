@@ -35,7 +35,7 @@
 >
   <div class="flex flex-col items-center gap-1">
     <div class="p-4">
-        <Puzzly class="fill-off-black h-28 w-28"/>
+      <Puzzly class="fill-off-black h-28 w-28" />
     </div>
     <div class="text-off-black relative text-xl font-bold sm:text-2xl">
       Welcome to Puzzle Bets.

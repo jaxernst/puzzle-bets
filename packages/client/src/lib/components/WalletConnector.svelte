@@ -56,7 +56,7 @@
   <div
     class="relative z-10 flex min-h-[200px] min-w-[220px] flex-col items-center gap-4 rounded-lg bg-neutral-800 p-6 text-neutral-100"
   >
-    <div class="flex items-center gap-2 self-start pr-4 text-lg font-bold">
+    <div class="flex items-center gap-2 self-start pr-4 text-base font-bold">
       <WalletIcon class="h-5 w-5 stroke-white" />
       {#if $walletStore.account}
         Welcome {shortenAddress($walletStore?.account.address ?? "")}

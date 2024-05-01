@@ -3,13 +3,13 @@
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import DotLoader from "$lib/components/DotLoader.svelte"
   import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
-  import Puzzly from "$lib/icons/Puzzly.svelte"
   import { walletStore } from "$lib/mud/connectWallet"
   import { mud } from "$lib/mud/mudStore"
   import { user } from "$lib/user"
   import { cubicOut } from "svelte/easing"
   import { fade } from "svelte/transition"
   import ButtonPrimary from "$lib/components/ButtonPrimary.svelte"
+  import Puzzly from "$lib/icons/_Puzzly.svelte"
 
   const loginAndConnect = async () => {
     const wallet = await promptConnectWallet()

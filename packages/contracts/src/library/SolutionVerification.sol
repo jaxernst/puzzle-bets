@@ -12,11 +12,11 @@ library SolutionVerificationLib {
   function verifyPuzzleMasterSignature(
     bytes32 gameId,
     address player,
-    uint32 solutionIndex,
+    uint32 score,
     address puzzleMaster,
     bytes memory puzzleMasterSignature
   ) public pure returns (bool) {
-    address recoveredAddress = _recoverSigner(abi.encodePacked(gameId, player, solutionIndex), puzzleMasterSignature);
+    address recoveredAddress = _recoverSigner(abi.encodePacked(gameId, player, score), puzzleMasterSignature);
     return recoveredAddress == puzzleMaster;
   }
 

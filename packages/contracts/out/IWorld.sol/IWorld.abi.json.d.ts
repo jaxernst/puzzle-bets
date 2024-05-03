@@ -1376,6 +1376,11 @@ declare const abi: [
         "internalType": "bytes32"
       },
       {
+        "name": "score",
+        "type": "uint32",
+        "internalType": "uint32"
+      },
+      {
         "name": "puzzleMasterSignature",
         "type": "bytes",
         "internalType": "bytes"

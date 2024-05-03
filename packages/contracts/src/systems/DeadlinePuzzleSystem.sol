@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.8.24;
 
 import { System } from "@latticexyz/world/src/System.sol";
 import { ResourceId } from "@latticexyz/store/src/ResourceId.sol";
@@ -7,7 +6,7 @@ import { RESOURCE_NAMESPACE } from "@latticexyz/world/src/worldResourceTypes.sol
 import { WorldResourceIdLib } from "@latticexyz/world/src/WorldResourceId.sol";
 import { ResourceIdLib } from "@latticexyz/store/src/ResourceId.sol";
 import { SolutionVerificationLib } from "../library/SolutionVerification.sol";
-import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch, ProtocolFeeBasisPoints, ProtocolFeeRecipient, GamePasswordHash } from "../codegen/index.sol";
+import { PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Score, Submitted, InviteExpiration, VoteRematch, ProtocolFeeBasisPoints, ProtocolFeeRecipient, GamePasswordHash } from "../codegen/index.sol";
 import { Status, Puzzle } from "../codegen/common.sol";
 import { IWorld } from "../codegen/world/IWorld.sol";
 import { getUniqueEntity } from "@latticexyz/world-modules/src/modules/uniqueentity/getUniqueEntity.sol";
@@ -108,9 +107,9 @@ contract DeadlinePuzzleSystem is System {
   }
 
   /**
-   * Verify the puzzle master solution and mark the puzzle as solved.
+   * Verify the score signed by the puzzle master
    */
-  function submitSolution(bytes32 gameId, bytes memory puzzleMasterSignature) public playerOnly(gameId) {
+  function submitSolution(bytes32 gameId, uint32 score, bytes memory puzzleMasterSignature) public playerOnly(gameId) {
     Status status = GameStatus.get(gameId);
     uint32 submissionWindow = SubmissionWindow.get(gameId);
     uint startTime = GameStartTime.get(gameId);
@@ -118,23 +117,30 @@ contract DeadlinePuzzleSystem is System {
     require(block.timestamp <= startTime + submissionWindow, "Submission window closed");
     require(status == Status.Active, "Game is not active");
 
-    bool solved = SolutionVerificationLib.verifyPuzzleMasterSignature({
+    Submitted.set(gameId, _msgSender(), true);
+
+    // No signature check necessary for a 0 score (essentially a forfeit)
+    if (score == 0) {
+      return;
+    }
+
+    bool isValid = SolutionVerificationLib.verifyPuzzleMasterSignature({
       gameId: gameId,
       player: _msgSender(),
-      solutionIndex: 1,
+      score: score,
       puzzleMaster: PuzzleMasterEoa.get(gameId),
       puzzleMasterSignature: puzzleMasterSignature
     });
 
-    require(solved, "Puzzle master signature invalid");
+    require(isValid, "Puzzle master signature invalid");
 
-    Solved.set(gameId, _msgSender(), true);
+    Score.set(gameId, _msgSender(), score);
   }
 
   /**
    * Check outcome of the game and distribute funds to players.
    * @notice Players can claim funds after the deadline has passed, but may claim before
-   * the deadline if both players have solved (tie game)
+   * the deadline if both players have submitted
    */
   function claim(bytes32 gameId) public playerOnly(gameId) {
     address p1 = Player1.get(gameId);
@@ -148,7 +154,7 @@ contract DeadlinePuzzleSystem is System {
   }
 
   function voteRematch(bytes32 gameId) public playerOnly(gameId) {
-    // Can't restart if either player has withdrawn
+    // Can't restart if either player has withdrawn (status is set to 'complete' once a claim occurs)
     Status status = GameStatus.get(gameId);
     require(status == Status.Active, "Game is not active");
 
@@ -158,8 +164,10 @@ contract DeadlinePuzzleSystem is System {
     address p2 = Player2.get(gameId);
 
     if (VoteRematch.get(gameId, p1) && VoteRematch.get(gameId, p2)) {
-      Solved.set(gameId, p1, false);
-      Solved.set(gameId, p2, false);
+      Score.set(gameId, p1, 0);
+      Score.set(gameId, p2, 0);
+      Submitted.set(gameId, p1, false);
+      Submitted.set(gameId, p2, false);
       VoteRematch.set(gameId, p1, false);
       VoteRematch.set(gameId, p2, false);
       RematchCount.set(gameId, RematchCount.get(gameId) + 1);
@@ -168,21 +176,22 @@ contract DeadlinePuzzleSystem is System {
   }
 
   function _claim(bytes32 gameId, address me, address them) private {
-    bool iSolved = Solved.get(gameId, me);
-    bool theySolved = Solved.get(gameId, them);
+    uint32 myScore = Score.get(gameId, me);
+    uint32 theirScore = Score.get(gameId, them);
     uint32 submissionWindow = SubmissionWindow.get(gameId);
     uint startTime = GameStartTime.get(gameId);
 
     // Can only claim before the submission window closes if both players solved in a tie game
-    bool canClaim = (block.timestamp > (startTime + submissionWindow)) || (iSolved && theySolved);
+    bool bothSubmitted = Submitted.get(gameId, me) && Submitted.get(gameId, them);
+    bool canClaim = (block.timestamp > (startTime + submissionWindow)) || (bothSubmitted);
     require(canClaim, "Cannot claim");
 
-    if (theySolved && !iSolved) {
+    if (theirScore > myScore) {
       revert("Nothing to claim");
     }
 
     // Distribute funds to winner
-    if (iSolved && !theySolved) {
+    if (myScore > theirScore) {
       _payWinner(gameId, me, them);
       GameStatus.set(gameId, Status.Complete);
       return;

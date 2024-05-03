@@ -1,6 +1,9 @@
 import { words, allowed } from "./words"
 
 export class Game {
+  MAX_GUESSES = 6
+  WORD_LENGTH = 5
+
   index: number
   guesses: string[]
   answers: string[]
@@ -34,14 +37,15 @@ export class Game {
     const letters = word.split("")
 
     if (!valid) return false
+    if (this.guesses.length >= this.MAX_GUESSES) return false
 
     this.guesses[this.answers.length] = word
 
     const available = Array.from(this.answer)
-    const answer = Array(5).fill("_")
+    const answer = Array(this.WORD_LENGTH).fill("_")
 
     // first, find exact matches
-    for (let i = 0; i < 5; i += 1) {
+    for (let i = 0; i < this.WORD_LENGTH; i += 1) {
       if (letters[i] === available[i]) {
         answer[i] = "x"
         available[i] = " "
@@ -51,7 +55,7 @@ export class Game {
     // then find close matches (this has to happen
     // in a second step, otherwise an early close
     // match can prevent a later exact match)
-    for (let i = 0; i < 5; i += 1) {
+    for (let i = 0; i < this.WORD_LENGTH; i += 1) {
       if (answer[i] === "_") {
         const index = available.indexOf(letters[i])
         if (index !== -1) {
@@ -80,13 +84,14 @@ export class Game {
   /**
    * Scoring:
    *  - 0 if not solved
-   *  - 5 if solved in 1
-   *  - 4 if solved in 2
+   *  - 6 if solved in 1
+   *  - 5 if solved in 2
+   *  - 4 ig solved in 3
    *  etc.
    */
   score() {
     if (this.won()) {
-      return 6 - this.guesses.length
+      return this.MAX_GUESSES + 1 - this.guesses.length
     }
     return 0
   }

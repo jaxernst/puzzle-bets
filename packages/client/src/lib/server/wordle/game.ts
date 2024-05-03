@@ -76,4 +76,18 @@ export class Game {
   won() {
     return this.answers.at(-1) === "xxxxx"
   }
+
+  /**
+   * Scoring:
+   *  - 0 if not solved
+   *  - 5 if solved in 1
+   *  - 4 if solved in 2
+   *  etc.
+   */
+  score() {
+    if (this.won()) {
+      return 6 - this.guesses.length
+    }
+    return 0
+  }
 }

@@ -11,11 +11,11 @@ export const puzzleMasterSigner = privateKeyToAccount(
 export async function signPlayerSolvedMessage(
   gameId: number,
   player: EvmAddress,
-  solutionIndex: number = 1, // Nonce that allows multiple solutions for a single game
+  gameScore: number,
 ) {
   const encodedMessage = encodePacked(
     ["bytes32", "address", "uint32"],
-    [intToEntity(gameId) as `0x${string}`, player, solutionIndex],
+    [intToEntity(gameId) as `0x${string}`, player, gameScore],
   )
 
   return await puzzleMasterSigner.signMessage({

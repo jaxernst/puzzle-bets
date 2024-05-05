@@ -74,10 +74,12 @@ export function createSystemCalls({
 
   const submitSolution = async (
     gameId: Entity,
+    score: number,
     solutionSignature: `0x${string}`,
   ) => {
     const tx = await worldContract.write.v1__submitSolution([
       gameId as `0x${string}`,
+      score,
       solutionSignature,
     ])
     await waitForTransaction(tx)

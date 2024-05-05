@@ -37,7 +37,7 @@ export class Game {
     const letters = word.split("")
 
     if (!valid) return false
-    if (this.guesses.length >= this.MAX_GUESSES) return false
+    if (this._numGuesses() >= this.MAX_GUESSES) return false
 
     this.guesses[this.answers.length] = word
 
@@ -91,8 +91,12 @@ export class Game {
    */
   score() {
     if (this.won()) {
-      return this.MAX_GUESSES + 1 - this.guesses.length
+      return this.MAX_GUESSES + 1 - this._numGuesses()
     }
     return 0
+  }
+
+  _numGuesses() {
+    return this.guesses.filter((x) => x.length).length
   }
 }

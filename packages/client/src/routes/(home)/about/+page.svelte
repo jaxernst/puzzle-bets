@@ -58,9 +58,9 @@
     <p class="py-1 font-medium text-neutral-600">
       Different puzzles will have different criteria to determine a victor.
       Currently, only <span class="font-bold">Wordle</span> is supported. In order
-      to win the Wordle pot, you must be the sole player to solve the Wordle in the
-      allotted time. In the event of a tie, the game may be restarted until a victor
-      emerges.
+      to win the Wordle pot, you must solve the Wordle before the deadline with the
+      fewest number of attempts. In the event of a tie, the game may be restarted
+      until a victor emerges.
     </p>
 
     <h1 class="mb-4 mt-6 text-2xl font-semibold text-neutral-800">

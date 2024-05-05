@@ -50,10 +50,10 @@
   $: gameIdTab = userGames.archived.some((g) => g.id === gameId)
     ? "archived"
     : userGames.completed.some((g) => g.id === gameId)
-    ? "completed"
-    : userGames.active.some((g) => g.id === gameId)
-    ? "active"
-    : "active"
+      ? "completed"
+      : userGames.active.some((g) => g.id === gameId)
+        ? "active"
+        : "active"
 
   $: selectedTab = gameIdTab as any
 
@@ -161,14 +161,6 @@
       </button>
     </div>
   </div>
-
-  {#if ["active", "completed", "archived"].includes(selectedTab)}
-    {#if userGames[selectedTab].length === 0}
-      <div class="px-4 py-1 text-xs italic text-neutral-400">
-        Your {selectedTab} games will show up here...
-      </div>
-    {/if}
-  {/if}
 
   {#if selectedTab === "lobby"}
     {#if $lobbyGames.length === 0}

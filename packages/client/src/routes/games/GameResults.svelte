@@ -64,7 +64,11 @@
 
     // In tie game, we've 'claimed' once our balance is 0
     if (gameOutcome === "tie") {
-      return userBalance === 0n
+      if (game.buyInAmount) {
+        return userBalance === 0n
+      } else {
+        return game.status === GameStatus.Complete
+      }
     }
 
     // Can't claim if we lost

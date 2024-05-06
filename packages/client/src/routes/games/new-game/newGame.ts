@@ -54,6 +54,7 @@ function makeNewGameStore(initialParams: NewGameParams) {
     } = $params as NewGameParams
 
     loading.set(true)
+    error.set(null)
 
     try {
       await $mud.systemCalls.newGame(

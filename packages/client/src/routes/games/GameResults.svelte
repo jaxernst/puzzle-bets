@@ -20,6 +20,8 @@
   export let onClaimed = () => {}
   export let onClose = () => {}
 
+  const PROTOCOL_FEE = 0.025
+
   $: game = $getGame(gameId, { expectStarted: true }) as StartedGame
   $: userPuzzleState = $puzzleStores[game.type]?.get(entityToInt(gameId))
 
@@ -207,7 +209,7 @@
           {#if claimLoading}
             <DotLoader />
           {:else if claimed || game.status === GameStatus.Complete}
-            {formatAsDollar(potSizeUsd)} claimed!
+            {formatAsDollar(potSizeUsd * (1 - PROTOCOL_FEE))} claimed!
           {:else}
             You won! Click to claim your winnings
           {/if}

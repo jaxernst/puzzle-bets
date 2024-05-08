@@ -57,6 +57,9 @@
       })
 
       const data = await res.json()
+      if (!data.won || !data.signature) {
+        throw { shortMessage: "Invalid solution" }
+      }
 
       await $mud.systemCalls.submitSolution(gameId, data.score, data.signature)
       submitted = true
@@ -78,7 +81,8 @@
   $: canViewResult =
     $liveStatus?.status === GameStatus.Complete ||
     $liveStatus?.submissionTimeLeft === 0 ||
-    submitted
+    submitted ||
+    puzzleState?.lost
 
   $: gameHidden = $userArchivedGames.some((g) => g === gameId)
   $: hideOrShowGame = () => {
@@ -192,6 +196,7 @@
         class={`${
           submitError ? "bg-red-500 italic hover:bg-red-400" : "bg-lime-500"
         } flex min-w-[70px] justify-center rounded-full `}
+        disabled={!puzzleState?.solved}
         on:click={verifyAndSubmitSolution}
       >
         {#if submitting}

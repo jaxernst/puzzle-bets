@@ -18,20 +18,17 @@ export const POST = async ({ request }): Promise<Response> => {
   const gameState = await supabaseGameStore.getGame("wordle", gameId, user)
   const game = new Game(gameState)
 
-  if (game.won()) {
-    const score = game.score()
-    return new Response(
-      JSON.stringify({
-        won: true,
+  const score = game.score()
+
+  return new Response(
+    JSON.stringify({
+      won: game.won(),
+      score: game.score(),
+      signature: await signPlayerSolvedMessage(
+        Number(gameId),
+        user as EvmAddress,
         score,
-        signature: await signPlayerSolvedMessage(
-          Number(gameId),
-          user as EvmAddress,
-          score,
-        ),
-      }),
-    )
-  } else {
-    return new Response(JSON.stringify({ won: false }))
-  }
+      ),
+    }),
+  )
 }

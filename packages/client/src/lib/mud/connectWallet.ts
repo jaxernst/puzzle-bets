@@ -20,9 +20,18 @@ export const walletStore = (() => {
   const wallet = writable<Wallet | undefined>()
   const connecting = writable(false)
 
+  let disconnected = false
+
   const connect = async (authMethod: "auto" | "google" | "apple" | "email") => {
+    const forcedDisconnect = Boolean(
+      localStorage.getItem("wallet-force-disconnect"),
+    )
+
     let account: TwAccount
     if (authMethod === "auto") {
+      // Forbid autoconnect if use user had manually disconnected
+      if (forcedDisconnect) throw new Error("Auto connect not allowed")
+
       account = await twWallet.autoConnect({ client: tw })
     } else if (authMethod !== "email") {
       account = await twWallet.connect({
@@ -31,6 +40,10 @@ export const walletStore = (() => {
       })
     } else {
       throw new Error("Email auth not yet supported")
+    }
+
+    if (forcedDisconnect) {
+      localStorage.removeItem("wallet-force-disconnect")
     }
 
     const walletClient = viemAdapter.walletClient.toViem({
@@ -78,6 +91,10 @@ export const walletStore = (() => {
     },
     disconnect: () => {
       twWallet.disconnect()
+
+      // Prevent from auto reconnecting
+      localStorage.setItem("wallet-force-disconnect", "true")
+
       wallet.set(undefined)
     },
   }

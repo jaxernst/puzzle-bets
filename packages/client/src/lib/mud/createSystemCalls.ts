@@ -30,9 +30,6 @@ export function createSystemCalls({
       ? hashString(password)
       : padHex("0x0", { size: 32 })
 
-    console.log("create with password:", password)
-    console.log("create with password hash:", passwordHash)
-
     const tx = await worldContract.write.v1__newGame(
       [
         gameTypeToNumber[gameType],
@@ -52,9 +49,6 @@ export function createSystemCalls({
     wagerEth: number,
     password?: string,
   ) => {
-    console.log("join with password", password)
-    console.log("password hash: ", hashString(password ?? ""))
-
     let tx: `0x${string}`
     if (password) {
       tx = await worldContract.write.v1__joinGame(

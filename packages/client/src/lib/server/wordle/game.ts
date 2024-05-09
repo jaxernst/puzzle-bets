@@ -1,6 +1,9 @@
 import { words, allowed } from "./words"
 
 export class Game {
+  MAX_GUESSES = 6
+  WORD_LENGTH = 5
+
   index: number
   guesses: string[]
   answers: string[]
@@ -34,14 +37,15 @@ export class Game {
     const letters = word.split("")
 
     if (!valid) return false
+    if (this._numGuesses() >= this.MAX_GUESSES) return false
 
     this.guesses[this.answers.length] = word
 
     const available = Array.from(this.answer)
-    const answer = Array(5).fill("_")
+    const answer = Array(this.WORD_LENGTH).fill("_")
 
     // first, find exact matches
-    for (let i = 0; i < 5; i += 1) {
+    for (let i = 0; i < this.WORD_LENGTH; i += 1) {
       if (letters[i] === available[i]) {
         answer[i] = "x"
         available[i] = " "
@@ -51,7 +55,7 @@ export class Game {
     // then find close matches (this has to happen
     // in a second step, otherwise an early close
     // match can prevent a later exact match)
-    for (let i = 0; i < 5; i += 1) {
+    for (let i = 0; i < this.WORD_LENGTH; i += 1) {
       if (answer[i] === "_") {
         const index = available.indexOf(letters[i])
         if (index !== -1) {
@@ -75,5 +79,24 @@ export class Game {
 
   won() {
     return this.answers.at(-1) === "xxxxx"
+  }
+
+  /**
+   * Scoring:
+   *  - 0 if not solved
+   *  - 6 if solved in 1
+   *  - 5 if solved in 2
+   *  - 4 ig solved in 3
+   *  etc.
+   */
+  score() {
+    if (this.won()) {
+      return this.MAX_GUESSES + 1 - this._numGuesses()
+    }
+    return 0
+  }
+
+  _numGuesses() {
+    return this.guesses.filter((x) => x.length).length
   }
 }

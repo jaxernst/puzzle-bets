@@ -31,7 +31,7 @@
       return `Waiting for opponent to accept invite...`
     },
     2: () => {
-      if ($userSolvedGame(gameId, $user.address)) {
+      if ($userSolvedGame(gameId, $user.address).submitted) {
         if (dueIn !== undefined && dueIn > 0) {
           return `Solution Received! Check back in ${formatTime(
             dueIn,
@@ -59,9 +59,9 @@
         {statusLabels[game.status]()}
       {/if}
       {#if dueIn !== undefined && dueIn > 0}
-      <div class="text-sm font-normal text-neutral-500">
-        - Win by being the sole player to solve + submit before the deadline
-      </div>
+        <div class="text-sm font-normal text-neutral-500">
+          - Win by solving with the fewest number of attempts
+        </div>
       {/if}
     </div>
 

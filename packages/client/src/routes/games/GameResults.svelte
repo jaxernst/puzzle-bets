@@ -20,6 +20,8 @@
   export let onClaimed = () => {}
   export let onClose = () => {}
 
+  const PROTOCOL_FEE = 0.025
+
   $: game = $getGame(gameId, { expectStarted: true }) as StartedGame
   $: userPuzzleState = $puzzleStores[game.type]?.get(entityToInt(gameId))
 
@@ -27,37 +29,54 @@
 
   $: liveStatus = liveGameStatus(gameId)
 
-  $: p1Submitted = $userSolvedGame(gameId, game?.p1)
-  $: p2Submitted = $userSolvedGame(gameId, game?.p2)
+  $: ({ submitted: p1Submitted, score: p1Score } = $userSolvedGame(
+    gameId,
+    game?.p1,
+  ))
 
-  $: playerResults = (p: "1" | "2") => {
-    const addr = p === "1" ? game.p1 : game.p2
-    const submitted = p === "1" ? p1Submitted : p2Submitted
-    if (submitted) return "✅"
-    if ($user.address === addr && userPuzzleState?.lost) return "❌"
-    return ($liveStatus?.submissionTimeLeft ?? 0) > 0 ? "(pending)" : "❌"
-  }
-
-  $: p1Results = playerResults("1")
-  $: p2Results = playerResults("2")
+  $: ({ submitted: p2Submitted, score: p2Score } = $userSolvedGame(
+    gameId,
+    game?.p2,
+  ))
 
   $: gameActive = ($liveStatus?.submissionTimeLeft ?? 0) > 0
-  $: gameOutcome = (() => {
-    if (p1Submitted && p2Submitted) return "tie"
-    if (($liveStatus?.submissionTimeLeft ?? 0) > 0) return null
 
-    if (!p1Submitted && !p2Submitted) return "tie"
-    if (p1Submitted) return $user.address === game.p1 ? "won" : "lost"
-    if (p2Submitted) return $user.address === game.p2 ? "won" : "lost"
-    return null
+  $: gameOutcome = (() => {
+    const bothSubmitted = p1Submitted && p2Submitted
+    const timeRemaining = ($liveStatus?.submissionTimeLeft ?? 0) > 0
+    if (timeRemaining && !bothSubmitted) return null
+
+    if (p1Score === p2Score) {
+      return "tie"
+    } else if (p1Score > p2Score) {
+      return $user.address === game.p1 ? "won" : "lost"
+    } else {
+      return $user.address === game.p1 ? "lost" : "won"
+    }
   })()
 
   $: userBalance = $user.address === game.p1 ? game.p1Balance : game.p2Balance
   $: opponentBalance =
     $user.address === game.p1 ? game.p2Balance : game.p1Balance
-  $: claimed = Boolean(
-    game.buyInAmount && gameOutcome !== "lost" && userBalance === 0n,
-  )
+
+  $: claimed = (() => {
+    // If we won, we know we have 'claimed' once game status is complete
+    if (gameOutcome === "won" && game.status === GameStatus.Complete)
+      return true
+
+    // In tie game, we've 'claimed' once our balance is 0
+    if (gameOutcome === "tie") {
+      if (game.buyInAmount) {
+        return userBalance === 0n
+      } else {
+        return game.status === GameStatus.Complete
+      }
+    }
+
+    // Can't claim if we lost
+    return false
+  })()
+
   $: opponentClaimed = Boolean(
     game.buyInAmount && gameOutcome !== "won" && opponentBalance === 0n,
   )
@@ -124,7 +143,7 @@
 </script>
 
 <div
-  class="flex min-w-[350px] max-w-[450px] flex-col gap-2 rounded-xl bg-neutral-800 p-5"
+  class="flex min-w-[350px] max-w-[450px] flex-col gap-2 rounded-xl bg-neutral-800 p-4 sm:p-5"
 >
   <div class="flex flex-col gap-7 font-semibold">
     <div class="flex items-center justify-between gap-5">
@@ -135,47 +154,40 @@
         ${potSizeUsd.toFixed(2)} pot
       </div>
     </div>
-    <div class=" self-center text-sm">
+    <div class="self-center text-sm">
       <div
-        class={`grid justify-items-center ${
+        class={`grid justify-items-center rounded-lg bg-neutral-700 p-2 ${
           game.p1Rematch || game.p2Rematch
-            ? "grid-cols-[auto_1fr_1fr_1fr]"
-            : "grid-cols-[auto_1fr_1fr]"
+            ? "grid-cols-[auto_1fr_1fr_1fr_1fr]"
+            : "grid-cols-[auto_1fr_1fr_1fr]"
         } gap-3`}
       >
-        <div></div>
-        <div class="justify-self-center text-sm font-bold text-neutral-400">
-          Solved
-        </div>
-        <div class="justify-self-center text-sm font-bold text-neutral-400">
-          Balance
-        </div>
+        <div class="font-semibold text-neutral-400">Player</div>
+        <div class="font-semibold text-neutral-400">Submitted</div>
+        <div class="font-semibold text-neutral-400">Attempts</div>
+        <div class="font-semibold text-neutral-400">Balance</div>
         {#if game.p1Rematch || game.p2Rematch}
-          <div class="justify-self-center text-sm font-bold text-neutral-400">
-            Rematch
-          </div>
+          <div class="font-semibold text-neutral-400">Rematch</div>
         {/if}
 
-        <div class="">
-          Player 1 {$user.address === game.p1 ? "(you)" : ""}
+        <div class="whitespace-nowrap text-xs sm:text-sm">
+          #1 {$user.address === game.p1 ? "(you)" : ""}
         </div>
-        <div class="justify-self-center">{p1Results}</div>
-        <div class="justify-self-center">
-          {weiToDollar(game.p1Balance, $ethPrice)}
-        </div>
+        <div>{p1Submitted ? "✅" : "❌"}</div>
+        <div>{p1Score === 0 ? "-" : 7 - p1Score}</div>
+        <div>{weiToDollar(game.p1Balance, $ethPrice)}</div>
         {#if game.p1Rematch || game.p2Rematch}
-          <div class="justify-self-center">{game.p1Rematch ? "✅" : ""}</div>
+          <div>{game.p1Rematch ? "✅" : ""}</div>
         {/if}
 
-        <div class="">
-          Player 2 {$user.address === game.p2 ? "(you)" : ""}
+        <div class="whitespace-nowrap text-xs sm:text-sm">
+          #2 {$user.address === game.p2 ? "(you)" : ""}
         </div>
-        <div class="justify-self-center">{p2Results}</div>
-        <div class="justify-self-center">
-          {weiToDollar(game.p2Balance, $ethPrice)}
-        </div>
+        <div>{p2Submitted ? "✅" : "❌"}</div>
+        <div>{p2Score === 0 ? "-" : 7 - p2Score}</div>
+        <div>{weiToDollar(game.p2Balance, $ethPrice)}</div>
         {#if game.p2Rematch || game.p1Rematch}
-          <div class="justify-self-center">{game.p2Rematch ? "✅" : ""}</div>
+          <div>{game.p2Rematch ? "✅" : ""}</div>
         {/if}
       </div>
     </div>
@@ -197,7 +209,7 @@
           {#if claimLoading}
             <DotLoader />
           {:else if claimed || game.status === GameStatus.Complete}
-            {formatAsDollar(potSizeUsd)} claimed!
+            {formatAsDollar(potSizeUsd * (1 - PROTOCOL_FEE))} claimed!
           {:else}
             You won! Click to claim your winnings
           {/if}
@@ -248,6 +260,7 @@
         </div>
       {/if}
     </div>
+
     {#if claimError || voteRematchError}
       <div class="text-sm text-red-500">{claimError ?? voteRematchError}</div>
     {/if}

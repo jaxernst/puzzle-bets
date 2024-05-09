@@ -73,10 +73,7 @@
 
     {#if gameType === "wordle"}
       <ul class="flex list-disc flex-col gap-2 px-4 pb-2 pt-4 text-sm">
-        <li>
-          Be the sole player to solve and submit the Wordle before the deadline
-        </li>
-        <li>Players may vote to rematch in the event of a tie</li>
+        <li>Solve the wordle in the fewest amount of tries to win</li>
       </ul>
     {/if}
 
@@ -90,7 +87,7 @@
         <div class="">Bet Amount</div>
         <div class="">
           {#if $ethPrice}
-            {formatSigFig(buyIn, 3)} eth ({formatAsDollar(buyIn * $ethPrice)} USD)}
+            {formatSigFig(buyIn, 3)} eth ({formatAsDollar(buyIn * $ethPrice)} USD)
           {:else}
             {formatEther(game.buyInAmount)} eth
           {/if}

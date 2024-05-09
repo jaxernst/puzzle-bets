@@ -19,12 +19,15 @@ export const POST = async ({ request }): Promise<Response> => {
   const game = new Game(gameState)
 
   if (game.won()) {
+    const score = game.score()
     return new Response(
       JSON.stringify({
         won: true,
+        score,
         signature: await signPlayerSolvedMessage(
           Number(gameId),
           user as EvmAddress,
+          score,
         ),
       }),
     )

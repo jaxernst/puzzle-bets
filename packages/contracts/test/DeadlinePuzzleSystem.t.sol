@@ -4,7 +4,7 @@ pragma solidity >=0.8.21;
 import { IWorld } from "../src/codegen/world/IWorld.sol";
 import { Puzzle, Status } from "../src/codegen/common.sol";
 import { MudTest } from "@latticexyz/world/test/MudTest.t.sol";
-import { GamePasswordHash, PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Solved, InviteExpiration, VoteRematch, ProtocolFeeBasisPoints, ProtocolFeeRecipient } from "../src/codegen/index.sol";
+import { GamePasswordHash, PuzzleMasterEoa, RematchCount, Balance, BuyIn, PuzzleType, Player1, Player2, GameStatus, SubmissionWindow, GameStartTime, Score, Submitted, InviteExpiration, VoteRematch, ProtocolFeeBasisPoints, ProtocolFeeRecipient } from "../src/codegen/index.sol";
 import "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
 
 import "forge-std/Test.sol";
@@ -114,7 +114,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
     IWorld(worldAddress).v1__cancelPendingGame(gameId);
   }
 
-  function test_submitSolution_MarksPlayerAsSolved() public {
+  function test_submitSolution_RecordsPlayersScoreWithValidSignature() public {
     (address master, uint256 masterKey) = makeAddrAndKey("master");
     address opponent = address(0x123);
     address creator = address(0x999);
@@ -131,22 +131,56 @@ contract DeadlinePuzzleSystemTest is MudTest {
     vm.prank(opponent);
     IWorld(worldAddress).v1__joinGame(gameId);
 
-    assertEq(Solved.get(gameId, creator), false);
-    assertEq(Solved.get(gameId, opponent), false);
+    assertEq(Submitted.get(gameId, creator), false);
+    assertEq(Score.get(gameId, creator), 0);
+    assertEq(Submitted.get(gameId, opponent), false);
+    assertEq(Score.get(gameId, opponent), 0);
 
     // Sign game solved message with puzzleMaster key for p1
-    bytes memory creatorSignature = signPuzzleSolved(masterKey, gameId, creator, 1);
+    uint32 score = 24;
+    bytes memory creatorSignature = signPuzzleSolved(masterKey, gameId, creator, score);
 
     vm.prank(creator);
-    IWorld(worldAddress).v1__submitSolution(gameId, creatorSignature);
-    assertEq(Solved.get(gameId, creator), true);
+    IWorld(worldAddress).v1__submitSolution(gameId, score, creatorSignature);
+    assertEq(Score.get(gameId, creator), score);
+    assertEq(Submitted.get(gameId, creator), true);
 
     // Sign game solved message with puzzleMaster key for p2
-    bytes memory opponentSignature = signPuzzleSolved(masterKey, gameId, opponent, 1);
+    bytes memory opponentSignature = signPuzzleSolved(masterKey, gameId, opponent, score);
 
     vm.prank(opponent);
-    IWorld(worldAddress).v1__submitSolution(gameId, opponentSignature);
-    assertEq(Solved.get(gameId, opponent), true);
+    IWorld(worldAddress).v1__submitSolution(gameId, score, opponentSignature);
+    assertEq(Score.get(gameId, opponent), score);
+    assertEq(Submitted.get(gameId, opponent), true);
+  }
+
+  function test_submitSolution_DoesNotRequireSignatureWithZeroValueScore() public {
+    address opponent = address(0x123);
+    address creator = address(0x999);
+
+    vm.prank(creator);
+    bytes32 gameId = IWorld(worldAddress).v1__newGame({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: 1,
+      inviteExpirationTimestamp: block.timestamp + 100,
+      puzzleMaster: address(0x0),
+      passwordHash: bytes32(0)
+    });
+
+    vm.prank(opponent);
+    IWorld(worldAddress).v1__joinGame(gameId);
+
+    bytes memory badSignature = bytes("");
+
+    vm.prank(creator);
+    IWorld(worldAddress).v1__submitSolution(gameId, 0, badSignature);
+    assertEq(Submitted.get(gameId, creator), true);
+    assertEq(Score.get(gameId, creator), 0);
+
+    vm.prank(opponent);
+    IWorld(worldAddress).v1__submitSolution(gameId, 0, badSignature);
+    assertEq(Submitted.get(gameId, opponent), true);
+    assertEq(Score.get(gameId, opponent), 0);
   }
 
   function test_submitSolution_RevertsWhen_PuzzleMasterSignatureIsInvalid() public {
@@ -170,12 +204,13 @@ contract DeadlinePuzzleSystemTest is MudTest {
     bytes memory creatorSignature = signPuzzleSolved(masterKey, gameId, creator, 1);
 
     vm.prank(creator);
-    IWorld(worldAddress).v1__submitSolution(gameId, creatorSignature);
-    assertEq(Solved.get(gameId, creator), true);
+    IWorld(worldAddress).v1__submitSolution(gameId, 1, creatorSignature);
+    assertEq(Submitted.get(gameId, creator), true);
+    assertEq(Score.get(gameId, creator), 1);
 
     vm.prank(opponent);
     vm.expectRevert("Puzzle master signature invalid");
-    IWorld(worldAddress).v1__submitSolution(gameId, creatorSignature);
+    IWorld(worldAddress).v1__submitSolution(gameId, 1, creatorSignature);
   }
 
   function test_submitSolution_RevertsWhen_SubmissionWindowHasClosed() public {
@@ -186,10 +221,10 @@ contract DeadlinePuzzleSystemTest is MudTest {
 
     bytes memory sig = "ahhhh";
     vm.expectRevert("Submission window closed");
-    IWorld(worldAddress).v1__submitSolution(gameId, sig);
+    IWorld(worldAddress).v1__submitSolution(gameId, 0, sig);
   }
 
-  function test_claim_ReturnsEachPlayersDepositIfNeitherSolveAfterTheDeadline() public {
+  function test_claim_ReturnsEachPlayersDepositIfNeitherSubmitAfterTheDeadline() public {
     address p1 = address(0x123);
     address p2 = address(0x456);
     vm.deal(p1, 2 ether);
@@ -215,7 +250,7 @@ contract DeadlinePuzzleSystemTest is MudTest {
     assertEq(p2.balance, 2 ether);
   }
 
-  function test_claim_ReturnsEachPlayersDepositIfBothSolveBeforeTheDeadline() public {
+  function test_claim_ReturnsEachPlayersDepositIfBothSubmitBeforeTheDeadline() public {
     (address master, uint256 masterKey) = makeAddrAndKey("master");
     uint32 submissionWindow = 1000;
     address p1 = address(0x123);
@@ -244,9 +279,9 @@ contract DeadlinePuzzleSystemTest is MudTest {
     bytes memory sig2 = signPuzzleSolved(masterKey, gameId, p2, 1);
 
     vm.prank(p1);
-    IWorld(worldAddress).v1__submitSolution(gameId, sig1);
+    IWorld(worldAddress).v1__submitSolution(gameId, 0, sig1);
     vm.prank(p2);
-    IWorld(worldAddress).v1__submitSolution(gameId, sig2);
+    IWorld(worldAddress).v1__submitSolution(gameId, 0, sig2);
 
     // Assert that we're still in the submission window
     assertTrue(block.timestamp < GameStartTime.get(gameId) + submissionWindow);
@@ -284,10 +319,11 @@ contract DeadlinePuzzleSystemTest is MudTest {
     IWorld(worldAddress).v1__joinGame{ value: 1 ether }(gameId);
 
     // Both players successfully solve
-    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, 1);
+    uint32 score = 1;
+    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, score);
 
     vm.startPrank(p1);
-    IWorld(worldAddress).v1__submitSolution(gameId, sig1);
+    IWorld(worldAddress).v1__submitSolution(gameId, score, sig1);
 
     skip(100);
 
@@ -324,10 +360,11 @@ contract DeadlinePuzzleSystemTest is MudTest {
     IWorld(worldAddress).v1__joinGame{ value: 1 ether }(gameId);
 
     // Both players successfully solve
-    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, 1);
+    uint32 score = 32;
+    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, score);
 
     vm.startPrank(p1);
-    IWorld(worldAddress).v1__submitSolution(gameId, sig1);
+    IWorld(worldAddress).v1__submitSolution(gameId, score, sig1);
 
     skip(100);
 
@@ -358,10 +395,11 @@ contract DeadlinePuzzleSystemTest is MudTest {
     IWorld(worldAddress).v1__joinGame{ value: 1 ether }(gameId);
 
     // Both players successfully solve
-    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, 1);
+    uint32 score = 10;
+    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, p1, score);
 
     vm.prank(p1);
-    IWorld(worldAddress).v1__submitSolution(gameId, sig1);
+    IWorld(worldAddress).v1__submitSolution(gameId, score, sig1);
 
     skip(100);
 
@@ -392,16 +430,19 @@ contract DeadlinePuzzleSystemTest is MudTest {
     IWorld(worldAddress).v1__joinGame(gameId);
 
     // Both players successfully solve
-    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, creator, 1);
-    bytes memory sig2 = signPuzzleSolved(masterKey, gameId, opponent, 1);
+    uint32 score = 1;
+    bytes memory sig1 = signPuzzleSolved(masterKey, gameId, creator, score);
+    bytes memory sig2 = signPuzzleSolved(masterKey, gameId, opponent, score);
 
     vm.prank(creator);
-    IWorld(worldAddress).v1__submitSolution(gameId, sig1);
+    IWorld(worldAddress).v1__submitSolution(gameId, score, sig1);
     vm.prank(opponent);
-    IWorld(worldAddress).v1__submitSolution(gameId, sig2);
+    IWorld(worldAddress).v1__submitSolution(gameId, score, sig2);
 
-    assertEq(Solved.get(gameId, creator), true);
-    assertEq(Solved.get(gameId, opponent), true);
+    assertEq(Submitted.get(gameId, creator), true);
+    assertEq(Submitted.get(gameId, opponent), true);
+    assertEq(Score.get(gameId, creator), score);
+    assertEq(Score.get(gameId, creator), score);
 
     vm.prank(creator);
     IWorld(worldAddress).v1__voteRematch(gameId);
@@ -414,8 +455,10 @@ contract DeadlinePuzzleSystemTest is MudTest {
     assertEq(VoteRematch.get(gameId, opponent), false);
     assertEq(RematchCount.get(gameId), 1);
     assertEq(uint(GameStatus.get(gameId)), uint(Status.Active));
-    assertEq(Solved.get(gameId, creator), false);
-    assertEq(Solved.get(gameId, opponent), false);
+    assertEq(Score.get(gameId, creator), 0);
+    assertEq(Score.get(gameId, creator), 0);
+    assertEq(Submitted.get(gameId, creator), false);
+    assertEq(Submitted.get(gameId, opponent), false);
     assertEq(GameStartTime.get(gameId), block.timestamp);
   }
 
@@ -453,9 +496,9 @@ contract DeadlinePuzzleSystemTest is MudTest {
     uint puzzleMasterPk,
     bytes32 gameId,
     address playerAddr,
-    uint32 solutionIndex
+    uint32 score
   ) private pure returns (bytes memory) {
-    bytes memory data = abi.encodePacked(gameId, playerAddr, solutionIndex);
+    bytes memory data = abi.encodePacked(gameId, playerAddr, score);
     bytes32 messageHash = data.toEthSignedMessageHash();
     (uint8 v, bytes32 r, bytes32 s) = vm.sign(puzzleMasterPk, messageHash);
     return abi.encodePacked(r, s, v);

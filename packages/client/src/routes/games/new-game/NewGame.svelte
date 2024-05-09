@@ -45,7 +45,7 @@
     <ul class="ml-4 list-disc">
       <li>Choose your wager and bet parameters</li>
       <li>Invite a friend to your game or post it to the public lobby</li>
-      <li>The sole player to solve + submit before the deadline wins.</li>
+      <li>Solve the Wordle in the fewest tries to win!</li>
     </ul>
     <InputPage onConfirm={() => (showConfirm = true)} />
   {/if}

@@ -38,7 +38,7 @@
 
   let submitting = false
   let submitError: null | string = null
-  $: submitted = gameId && $userSolvedGame(gameId, $user.address)
+  $: submitted = gameId && $userSolvedGame(gameId, $user.address).submitted
   const verifyAndSubmitSolution = async () => {
     if (!gameId || !$mud.systemCalls) return
 
@@ -61,7 +61,7 @@
         throw { shortMessage: "Invalid solution" }
       }
 
-      await $mud.systemCalls.submitSolution(gameId, data.signature)
+      await $mud.systemCalls.submitSolution(gameId, data.score, data.signature)
       submitted = true
     } catch (e: any) {
       console.error("Failed to submit solution")

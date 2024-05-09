@@ -6,9 +6,9 @@
     liveGameStatus,
     userArchivedGames,
     userSolvedGame,
-  } from "$lib/gameStores";
-  import { user } from "$lib/user";
-  import { GameStatus, type Game, type PuzzleType } from "$lib/types";
+  } from "$lib/gameStores"
+  import { user } from "$lib/user"
+  import { GameStatus, type Game, type PuzzleType } from "$lib/types"
   import {
     capitalized,
     entityToInt,
@@ -22,13 +22,13 @@
 
   $: ({ id, type, status } = game)
 
-  $: solved = $userSolvedGame(id, $user.address)
+  $: solved = $userSolvedGame(id, $user.address).submitted
 
   $: active = $page.params.gameId === parseInt(id, 16).toString()
 
   $: gameRoute = (id: Entity, gameType: PuzzleType) => {
-    return `/games/${gameType}/${parseInt(id, 16)}`;
-  };
+    return `/games/${gameType}/${parseInt(id, 16)}`
+  }
 
   $: betAmount = (id: string) => {
     const ethValue = Number(

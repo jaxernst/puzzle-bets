@@ -19,11 +19,20 @@ export default defineWorld({
     Player2: "address",
     RematchCount: "uint16",
 
-    Solved: {
+    Submitted: {
       schema: {
         gameId: "bytes32",
         player: "address",
         value: "bool",
+      },
+      key: ["gameId", "player"],
+    },
+
+    Score: {
+      schema: {
+        gameId: "bytes32",
+        player: "address",
+        value: "uint32",
       },
       key: ["gameId", "player"],
     },

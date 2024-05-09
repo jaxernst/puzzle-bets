@@ -84,17 +84,22 @@ export const getGame = derived(mud, ($mud) => {
 
 export const userSolvedGame = derived(mud, ($mud) => {
   return (gameId: Entity, user: EvmAddress | undefined) => {
-    if (!$mud?.ready || !user || !$mud.components) return false
+    if (!$mud?.ready || !user || !$mud.components) {
+      return { submitted: false, score: 0 }
+    }
 
-    const solved = getComponentValue(
-      $mud.components.Solved,
-      encodeEntity(
-        { gameId: "bytes32", player: "address" },
-        { gameId: gameId as `0x${string}`, player: user },
-      ),
+    const userGameKey = encodeEntity(
+      { gameId: "bytes32", player: "address" },
+      { gameId: gameId as `0x${string}`, player: user },
     )
 
-    return solved?.value ?? false
+    const submitted = getComponentValue($mud.components.Submitted, userGameKey)
+    const score = getComponentValue($mud.components.Score, userGameKey)
+
+    return {
+      submitted: submitted?.value ?? false,
+      score: score?.value ?? 0,
+    }
   }
 })
 

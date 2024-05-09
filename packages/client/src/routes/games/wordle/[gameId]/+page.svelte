@@ -3,7 +3,7 @@
   import WordleGame from "../WordleGame.svelte"
   import { user } from "$lib/user"
   import { liveGameStatus, userGames, userSolvedGame } from "$lib/gameStores"
-  import { GameStatus, type EvmAddress } from "$lib/types"
+  import { GameStatus } from "$lib/types"
   import { launchConfetti } from "$lib/components/Confetti.svelte"
   import { wordleGameStates } from "../../puzzleGameStates"
   import { exportWordleBoard } from "../exportBoard"
@@ -39,7 +39,9 @@
   }
 
   $: gameOver = puzzleState?.solved || puzzleState?.lost
-  $: submitted = onchainGame && $userSolvedGame(onchainGame.id, $user.address)
+  $: submitted =
+    onchainGame && $userSolvedGame(onchainGame.id, $user.address).submitted
+
   $: liveStatus = onchainGame && liveGameStatus(onchainGame.id)
   $: expired = liveStatus && !$liveStatus?.submissionTimeLeft
 

@@ -81,8 +81,17 @@
           temporary wallet auto-funded with testnet Ethereum (ETH).
         </div>
 
+        <div class="max-w-[300px] border-l border-neutral-400 px-3">
+          <div class="text-red-600">🚧🚧🚧 Under Construction 🚧🚧🚧</div>
+          <div class="max-w-[250px] text-sm text-neutral-400">
+            A new Puzzle Bets testnet deployment is underway. Connecting is
+            currently disabled. Stay tuned.
+          </div>
+        </div>
+
         <ButtonPrimary
-          class="mb-2 mt-3 self-center rounded-full px-3 py-1"
+          class="mb-2 mt-3 self-center rounded-full px-3 py-1 disabled:opacity-60"
+          disabled={true}
           on:click={() => {
             walletStore.tryConnect("auto")
             showModal.set(false)

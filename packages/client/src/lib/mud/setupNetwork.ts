@@ -36,12 +36,12 @@ import type { WaitForTransactionResult } from "@latticexyz/store-sync/src/common
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>
 export type Wallet = WalletClient<Transport, Chain, Account>
 
-export async function setupNetwork(wallet: Wallet) {
-  const publicClient = createPublicClient({
-    ...networkConfig,
-    pollingInterval: 1000,
-  })
+export const publicClient = createPublicClient({
+  ...networkConfig,
+  pollingInterval: 1000,
+})
 
+export async function setupNetwork(wallet: Wallet) {
   /*
    * Create an observable for contract writes that we can
    * pass into MUD dev tools for transaction observability.

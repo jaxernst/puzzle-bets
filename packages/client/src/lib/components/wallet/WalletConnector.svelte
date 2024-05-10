@@ -17,6 +17,10 @@
   export const loginAndConnect = async () => {
     const wallet = await promptConnectWallet()
     await mud.setup(wallet)
+
+    if (wallet.account && networkConfig.connectMode === "burner") {
+      fetch(`api/drip/${wallet.account.address}`, { method: "POST" })
+    }
   }
 
   export async function promptConnectWallet() {

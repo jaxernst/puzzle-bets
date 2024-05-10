@@ -3,7 +3,7 @@
   import { user } from "$lib/user"
   import WalletIcon from "$lib/icons/Wallet.svelte"
   import { walletStore } from "$lib/mud/connectWallet"
-  import { promptConnectWallet } from "$lib/components/wallet/WalletConnector.svelte"
+  import { loginAndConnect } from "$lib/components/wallet/WalletConnector.svelte"
   import Puzzly from "$lib/icons/Puzzly.svelte"
   import EthSymbol from "$lib/icons/EthSymbol.svelte"
   import CopyableAddress from "$lib/components/CopyableAddress.svelte"
@@ -12,11 +12,6 @@
   import { getPWADisplayMode, isIosSafari } from "$lib/util"
   import { browser } from "$app/environment"
   import DotLoader from "$lib/components/DotLoader.svelte"
-
-  const loginAndConnect = async () => {
-    const wallet = await promptConnectWallet()
-    mud.setup(wallet)
-  }
 
   $: maybeToggleNotifications = () => {
     if (!browser) return

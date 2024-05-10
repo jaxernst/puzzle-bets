@@ -83,10 +83,7 @@ export async function setupNetwork(wallet: Wallet) {
     publicClient,
     startBlock: BigInt(networkConfig.initialBlockNumber),
     // Only running an indexer on 4242 currently
-    indexerUrl:
-      browser && networkConfig.chainId === 4242
-        ? window.location.origin
-        : undefined,
+    indexerUrl: browser ? window.location.origin : undefined,
   })
 
   if (networkConfig.faucetServiceUrl) {

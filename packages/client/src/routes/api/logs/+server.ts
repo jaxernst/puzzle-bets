@@ -7,15 +7,16 @@ const fallbackHex = (str?: string) => {
 }
 
 export const GET = async ({ request }) => {
-  if (PUBLIC_CHAIN_ID !== "4242") {
+  if (PUBLIC_CHAIN_ID === "31337") {
     return new Response("Not on public chain", { status: 400 })
   }
 
   const { data, error } = await indexerClient.rpc("get_indexer_records", {
-    chain: 4242,
+    chain: PUBLIC_CHAIN_ID,
   })
 
   if (error) {
+    console.log(error)
     return new Response("Error fetching records", { status: 500 })
   }
 

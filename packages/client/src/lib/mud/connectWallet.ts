@@ -77,11 +77,10 @@ export const walletStore = (() => {
 
   return {
     subscribe,
+    tryConnectBurner: async () => connectBurner(),
     tryConnect: async (
       method: "auto" | "google" | "apple" | "email",
     ): Promise<Wallet> => {
-      if (chain.id === 31337 || chain.id === 4242) return connectBurner()
-
       connecting.set(true)
       try {
         return await connect(method)

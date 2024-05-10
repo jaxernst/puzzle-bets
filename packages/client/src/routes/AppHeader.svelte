@@ -3,7 +3,7 @@
   import { user } from "$lib/user"
   import WalletIcon from "$lib/icons/Wallet.svelte"
   import { walletStore } from "$lib/mud/connectWallet"
-  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
+  import { promptConnectWallet } from "$lib/components/wallet/WalletConnector.svelte"
   import Puzzly from "$lib/icons/Puzzly.svelte"
   import EthSymbol from "$lib/icons/EthSymbol.svelte"
   import CopyableAddress from "$lib/components/CopyableAddress.svelte"

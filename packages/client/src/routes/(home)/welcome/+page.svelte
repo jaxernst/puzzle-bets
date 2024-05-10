@@ -2,7 +2,7 @@
   import { page } from "$app/stores"
   import AnimatedArrow from "$lib/components/AnimatedArrow.svelte"
   import DotLoader from "$lib/components/DotLoader.svelte"
-  import { promptConnectWallet } from "$lib/components/WalletConnector.svelte"
+  import { promptConnectWallet } from "$lib/components/wallet/WalletConnector.svelte"
   import { walletStore } from "$lib/mud/connectWallet"
   import { mud } from "$lib/mud/mudStore"
   import { user } from "$lib/user"

@@ -4,7 +4,6 @@ packages/contracts/deploys/
 packages/contracts/cache/
 packages/contracts/broadcast/
 
-packages/client-v2
 
 pnpm-lock.yaml
 .vscode

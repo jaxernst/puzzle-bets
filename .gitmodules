@@ -1,0 +1,3 @@
+[submodule "packages/v2-client"]
+	path = packages/v2-client
+	url = git@github.com:jaxernst/puzzle-bets-v2-client.git

@@ -14,6 +14,8 @@ import { PuzzleMasterEoa } from "./tables/PuzzleMasterEoa.sol";
 import { Player1 } from "./tables/Player1.sol";
 import { Player2 } from "./tables/Player2.sol";
 import { RematchCount } from "./tables/RematchCount.sol";
+import { PlaybackWindow } from "./tables/PlaybackWindow.sol";
+import { GamePlayerStartTime } from "./tables/GamePlayerStartTime.sol";
 import { Submitted } from "./tables/Submitted.sol";
 import { Score } from "./tables/Score.sol";
 import { Balance } from "./tables/Balance.sol";

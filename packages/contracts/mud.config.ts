@@ -19,6 +19,18 @@ export default defineWorld({
     Player2: "address",
     RematchCount: "uint16",
 
+    // Amount of time a player has to start their turn after their opponent starts
+    PlaybackWindow: "uint32",
+
+    GamePlayerStartTime: {
+      schema: {
+        gameId: "bytes32",
+        player: "address",
+        value: "uint256",
+      },
+      key: ["gameId", "player"],
+    },
+
     Submitted: {
       schema: {
         gameId: "bytes32",

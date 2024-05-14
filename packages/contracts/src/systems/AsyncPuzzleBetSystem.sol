@@ -269,21 +269,19 @@ contract AsyncPuzzleBetSystem is System {
 
   function _playbackWindowOpen(bytes32 gameId, address me) private view returns (bool) {
     address p1 = Player1.get(gameId);
-    address p2 = Player1.get(gameId);
+    address p2 = Player2.get(gameId);
 
-    address opponent;
+    uint opponentStartTime;
     if (p1 == me) {
-      opponent = p2;
+      opponentStartTime = GamePlayerStartTime.get(gameId, p2);
     } else {
-      opponent = p1;
+      opponentStartTime = GamePlayerStartTime.get(gameId, p1);
     }
-
-    uint opponentStartTime = GamePlayerStartTime.get(gameId, opponent);
 
     // Playback window defaults to 'open' when opponent has started their turn yet
     if (opponentStartTime == 0) return true;
 
-    return opponentStartTime + PlaybackWindow.get(gameId) > block.timestamp;
+    return (opponentStartTime + PlaybackWindow.get(gameId)) > block.timestamp;
   }
 
   function _returnPlayerDeposit(bytes32 gameId) private {

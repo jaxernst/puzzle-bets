@@ -1,8 +1,6 @@
-import { networkConfig } from "$lib/mud/networkConfig.js"
 import { publicClient } from "$lib/mud/setupNetwork.js"
 import { dripClient } from "$lib/server/dripClient.js"
 import { formatEther, isAddress, parseEther } from "viem"
-import { waitForTransactionReceipt } from "viem/actions"
 
 export const POST = async ({ params }) => {
   const { user } = params

@@ -118,13 +118,122 @@ contract DeadlinePuzzleSystemTest is MudTest {
     IWorld(worldAddress).v1__cancelPendingGame2(gameId);
   }
 
-  function test_startTurn_CreatorCantStartUntilOpponentJoins() public {}
+  function test_startTurn_SetsGameStartTimeForEachPlayer() public {
+    address p1 = address(0x1234);
+    address p2 = address(0x123);
 
-  function test_startTurn_CreatorCannotStartTurnIfThePlaybackWindowHasPassed() public {}
+    vm.prank(p1);
+    bytes32 gameId = newDefaultGame(0 ether);
 
-  function test_startTurn_APlayerCanStartTheirTurnAfterARematch() public {}
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame2(gameId);
 
-  function test_submitSolution_CannotSubmitBeforeStartingTurn() public {}
+    vm.prank(p1);
+    IWorld(worldAddress).v1__startTurn2(gameId);
+
+    assertEq(GamePlayerStartTime.get(gameId, p1), block.timestamp);
+    assertEq(GamePlayerStartTime.get(gameId, p2), block.timestamp);
+  }
+
+  function test_startTurn_CreatorCantStartUntilOpponentJoins() public {
+    address p2 = address(0x123);
+    bytes32 gameId = newDefaultGame(0 ether);
+
+    vm.expectRevert("Game must be active");
+    IWorld(worldAddress).v1__startTurn2(gameId);
+
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame2(gameId);
+
+    IWorld(worldAddress).v1__startTurn2(gameId);
+  }
+
+  function test_startTurn_CreatorCannotStartTurnIfThePlaybackWindowHasPassed() public {
+    uint32 playbackWindow = 60;
+    address p2 = address(0x123);
+
+    bytes32 gameId = IWorld(worldAddress).v1__newGame2({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: 1,
+      playbackWindowSeconds: playbackWindow,
+      inviteExpirationTimestamp: block.timestamp + DEFAULT_INVITE_WINDOW_DURATION,
+      puzzleMaster: address(0x456),
+      passwordHash: bytes32(0)
+    });
+
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame2(gameId);
+
+    skip(playbackWindow + 1);
+
+    vm.expectRevert();
+    IWorld(worldAddress).v1__startTurn2(gameId);
+  }
+
+  function test_startTurn_APlayerCanStartTheirTurnAfterARematch() public {
+    address p1 = address(0x123);
+    address p2 = address(0x456);
+
+    vm.prank(p1);
+    bytes32 gameId = newDefaultGame(0 ether);
+
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame2(gameId);
+
+    vm.prank(p1);
+    IWorld(worldAddress).v1__startTurn2(gameId);
+    vm.prank(p1);
+    IWorld(worldAddress).v1__voteRematch2(gameId);
+
+    vm.prank(p2);
+    IWorld(worldAddress).v1__voteRematch2(gameId);
+
+    vm.prank(p1);
+    // Now that game is rematched, p2 should be able to start their turn
+    IWorld(worldAddress).v1__startTurn2(gameId);
+  }
+
+  function test_startTurn_RevertsWhen_PlayerNotJoined() public {
+    address p2 = address(0x123);
+    bytes32 gameId = newDefaultGame(0 ether);
+
+    vm.prank(p2);
+    vm.expectRevert("Not game player");
+    IWorld(worldAddress).v1__startTurn2(gameId);
+  }
+
+  function test_startTurn_RevertsWhen_PlayerAlreadyStarted() public {
+    address p2 = address(0x123);
+    bytes32 gameId = newDefaultGame(0 ether);
+
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame2(gameId);
+
+    vm.prank(p2);
+    vm.expectRevert("Player already started");
+    IWorld(worldAddress).v1__startTurn2(gameId);
+
+    IWorld(worldAddress).v1__startTurn2(gameId);
+
+    vm.expectRevert("Player already started");
+    IWorld(worldAddress).v1__startTurn2(gameId);
+  }
+
+  function test_submitSolution_CannotSubmitBeforeStartingTurn() public {
+    address p2 = address(0x123a);
+    bytes32 gameId = newDefaultGame(0 ether);
+
+    bytes memory sig = "dummy";
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame2(gameId);
+
+    vm.expectRevert("Player not started");
+    IWorld(worldAddress).v1__submitSolution2(gameId, 0, sig);
+
+    // Show that we can submit after starting the turn
+    IWorld(worldAddress).v1__startTurn2(gameId);
+    IWorld(worldAddress).v1__submitSolution2(gameId, 0, sig);
+  }
 
   function test_submitSolution_RecordsPlayersScoreWithValidSignature() public {
     (address master, uint256 masterKey) = makeAddrAndKey("master");
@@ -455,9 +564,117 @@ contract DeadlinePuzzleSystemTest is MudTest {
     IWorld(worldAddress).v1__claim2(gameId);
   }
 
-  function test_claim_PlayerWinsIfOpponentHasNotStartedTurnAfterThePlaybackWindowExpires() public {}
+  function test_claim_PlayerWinsIfOpponentHasNotStartedTurnAfterThePlaybackWindowExpires() public {
+    address p2 = address(0x1234);
+    uint buyIn = 1 ether;
+    uint32 playbackWindow = 10000;
 
-  function test_claim_RevertsWhen_AttempToClaimBeforeOpponentHasStartedTurn() public {}
+    bytes32 gameId = IWorld(worldAddress).v1__newGame2{ value: buyIn }({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: 1,
+      playbackWindowSeconds: playbackWindow,
+      inviteExpirationTimestamp: block.timestamp + DEFAULT_INVITE_WINDOW_DURATION,
+      puzzleMaster: address(0x456),
+      passwordHash: bytes32(0)
+    });
+
+    vm.deal(p2, buyIn);
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame2{ value: buyIn }(gameId);
+
+    skip(playbackWindow + 1);
+
+    vm.prank(p2);
+    IWorld(worldAddress).v1__claim2(gameId);
+
+    assertEq(Balance.get(gameId, address(this)), 0);
+    assertEq(Balance.get(gameId, p2), 0);
+    assertTrue(p2.balance > buyIn);
+  }
+
+  function test_claim_RevertsWhen_AttemptToClaimBeforeStartingTurn() public {
+    address p2 = address(0x123);
+    bytes32 gameId = newDefaultGame(0 ether);
+
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame2(gameId);
+
+    vm.expectRevert("Cannot claim before starting");
+    IWorld(worldAddress).v1__claim2(gameId);
+  }
+
+  function test_claim_RevertsWhen_AttempToClaimBeforeOpponentHasStartedTurn() public {
+    address p2 = address(0x1234);
+    uint buyIn = 1 ether;
+    uint32 playbackWindow = 10000;
+
+    bytes32 gameId = IWorld(worldAddress).v1__newGame2{ value: buyIn }({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: 1,
+      playbackWindowSeconds: playbackWindow,
+      inviteExpirationTimestamp: block.timestamp + DEFAULT_INVITE_WINDOW_DURATION,
+      puzzleMaster: address(0x456),
+      passwordHash: bytes32(0)
+    });
+
+    vm.deal(p2, buyIn);
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame2{ value: buyIn }(gameId);
+
+    skip(playbackWindow - 1);
+
+    vm.prank(p2);
+    vm.expectRevert("Waiting for opponent to start their turn");
+    IWorld(worldAddress).v1__claim2(gameId);
+  }
+
+  function test_claim_RevertsWhen_OpponentHasntSubmittedWithAnOpenSubmissionWindow() public {
+    address p2 = address(0x1234);
+    uint buyIn = 1 ether;
+    uint32 playbackWindow = 1000;
+    uint32 submissionWindow = 100;
+
+    bytes32 gameId = IWorld(worldAddress).v1__newGame2{ value: buyIn }({
+      puzzleType: Puzzle.Wordle,
+      submissionWindowSeconds: submissionWindow,
+      playbackWindowSeconds: playbackWindow,
+      inviteExpirationTimestamp: block.timestamp + DEFAULT_INVITE_WINDOW_DURATION,
+      puzzleMaster: address(0x456),
+      passwordHash: bytes32(0)
+    });
+
+    vm.deal(p2, buyIn);
+    vm.prank(p2);
+    IWorld(worldAddress).v1__joinGame2{ value: buyIn }(gameId);
+
+    bytes memory sig = "dummy";
+    vm.prank(p2);
+    IWorld(worldAddress).v1__submitSolution2(gameId, 0, sig);
+
+    // Skip to just before the playback window closes
+    skip(playbackWindow - 1);
+    IWorld(worldAddress).v1__startTurn2(gameId);
+
+    vm.prank(p2);
+    vm.expectRevert("Cannot claim");
+    IWorld(worldAddress).v1__claim2(gameId);
+
+    // Skip to just before the submission window closes
+    skip(submissionWindow);
+
+    vm.prank(p2);
+    vm.expectRevert("Cannot claim");
+    IWorld(worldAddress).v1__claim2(gameId);
+
+    skip(1);
+
+    // Expect to have won - p1 missed submission window
+    vm.prank(p2);
+    IWorld(worldAddress).v1__claim2(gameId);
+
+    // Tie game (both players have 0 score at the end)
+    assertEq(p2.balance, buyIn);
+  }
 
   function test_voteRematch_ResetsGameStateOnceBothPlayersVote() public {
     (address master, uint256 masterKey) = makeAddrAndKey("master");

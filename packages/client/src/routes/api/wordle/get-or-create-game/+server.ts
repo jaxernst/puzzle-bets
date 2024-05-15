@@ -14,6 +14,12 @@ export const POST = async ({ request, cookies }): Promise<Response> => {
     user?: string
   }
 
+  // Check user is authenticated
+
+  // Make a query to the tables to get the player1 and player2 value and check that
+  // they match the provided addresses. Also check that the gameId is active?
+  // Should match a batch call to the world contract
+
   // If a user is provided, this implies a non-demo game and thus the opponent
   // must be provided too
   if (!isDemo && !(opponent && user)) {

@@ -85,7 +85,7 @@ export const networkConfig = (() => {
     : world?.blockNumber ?? 0n
 
   const connectMode = (() => {
-    if (chainId === 84532) return "embedded"
+    if (chainId === 84532) return "burner"
     if (chainId === 31337) return "burner"
     return "burner"
   })() as SignInMode

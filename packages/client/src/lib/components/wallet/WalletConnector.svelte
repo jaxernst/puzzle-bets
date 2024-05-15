@@ -42,7 +42,7 @@
 
 <Modal show={$showModal} on:close={() => ($showModal = false)} title="">
   <div
-    class="relative z-10 flex min-h-[200px] min-w-[220px] flex-col items-center gap-4 rounded-lg bg-neutral-800 p-6 text-neutral-100"
+    class="relative z-10 flex min-h-[200px] min-w-[220px] max-w-[380px] flex-col items-center gap-4 rounded-lg bg-neutral-800 p-6 text-neutral-100"
   >
     <div class="flex items-center gap-2 self-start pr-4 text-base font-bold">
       <WalletIcon class="h-5 w-5 stroke-white" />
@@ -89,7 +89,15 @@
           Connect
         </ButtonPrimary>
       {:else if networkConfig.connectMode === "embedded"}
-        <EmbeddedWalletConnect onConnect={() => showModal.set(false)} />
+        <div class="text-sm text-neutral-200">
+          Puzzle Bets is a onchain application. Sign in to create or access your
+          in-app wallet.
+        </div>
+        <div class="flex w-full justify-center py-3">
+          <div class="max-w-[300px]">
+            <EmbeddedWalletConnect onConnect={() => showModal.set(false)} />
+          </div>
+        </div>
       {/if}
     </div>
   </div>

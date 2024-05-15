@@ -32,6 +32,11 @@ import type { MUDChain } from "@latticexyz/common/chains"
 
 export type SignInMode = "burner" | "embedded"
 
+const chainConnectMethod = {
+  31337: "burner",
+  84532: "embedded",
+} as const
+
 export const networkConfig = (() => {
   const params = new URLSearchParams("") // window.location.search);
 
@@ -80,7 +85,7 @@ export const networkConfig = (() => {
     : world?.blockNumber ?? 0n
 
   const connectMode = (() => {
-    if (chainId === 84532) return "burner"
+    if (chainId === 84532) return "embedded"
     if (chainId === 31337) return "burner"
     return "burner"
   })() as SignInMode
@@ -91,7 +96,7 @@ export const networkConfig = (() => {
     faucetServiceUrl: params.get("faucet") ?? (chain as MUDChain).faucetUrl,
     worldAddress,
     initialBlockNumber,
-    connectMode,
+    connectMode: (chainConnectMethod as any)[chainId],
     transport: transportObserver(fallback([http()])),
   }
 })()

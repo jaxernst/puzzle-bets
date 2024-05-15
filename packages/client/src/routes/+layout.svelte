@@ -12,8 +12,10 @@
   import { walletStore } from "$lib/mud/connectWallet"
   import { mud } from "$lib/mud/mudStore"
   import { PUBLIC_CHAIN_ID } from "$env/static/public"
+  import { networkConfig } from "$lib/mud/networkConfig"
 
   const gameNames = ["Wordle", "Connections", "Crossword", "Sudoku"]
+
   $: gameRoute = gameNames.find((game) =>
     $page.url.pathname.includes("games/" + game.toLowerCase()),
   )
@@ -21,6 +23,8 @@
   const homeRoutes = ["/", "/welcome", "/about"]
 
   onMount(async () => {
+    if (networkConfig.connectMode === "burner") return
+
     console.log("Attempting to connect with chainId", PUBLIC_CHAIN_ID)
     try {
       const w = await walletStore.tryConnect("auto")

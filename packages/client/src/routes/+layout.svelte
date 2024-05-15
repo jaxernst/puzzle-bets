@@ -8,6 +8,10 @@
   import { user } from "$lib/user"
   import { slide } from "svelte/transition"
   import GameDropdownControls from "./GameDropdownControls.svelte"
+  import { onMount } from "svelte"
+  import { walletStore } from "$lib/mud/connectWallet"
+  import { mud } from "$lib/mud/mudStore"
+  import { PUBLIC_CHAIN_ID } from "$env/static/public"
 
   const gameNames = ["Wordle", "Connections", "Crossword", "Sudoku"]
   $: gameRoute = gameNames.find((game) =>
@@ -15,6 +19,16 @@
   )
 
   const homeRoutes = ["/", "/welcome", "/about"]
+
+  onMount(async () => {
+    console.log("Attempting to connect with chainId", PUBLIC_CHAIN_ID)
+    try {
+      const w = await walletStore.tryConnect("auto")
+      mud.setup(w)
+    } catch {
+      console.log("Auto connect failed")
+    }
+  })
 </script>
 
 <WalletConnector />

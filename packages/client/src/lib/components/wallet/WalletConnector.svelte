@@ -89,7 +89,7 @@
       {:else if networkConfig.connectMode === "embedded"}
         <div class="border-l border-neutral-400 pl-3 text-sm text-neutral-300">
           This is a testnet preview of Puzzle Bets. Sign in to create or access
-          your testnet wallet auto-funded with testnet Etereum (eth).
+          your testnet wallet auto-funded with testnet Ethereum (eth).
         </div>
         <div class="flex w-full justify-center py-3">
           <div class="max-w-[300px]">

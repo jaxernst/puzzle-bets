@@ -93,7 +93,12 @@ export const walletStore = (() => {
       method: "auto" | "google" | "apple" | "email",
       payload?: { email: string; verificationCode: string },
     ): Promise<Wallet> => {
-      connecting.set(true)
+      // Kinda hacky, but don't want the loading spinners to show when loading the apge and an auto
+      // connect is attempted
+      if (method !== "auto") {
+        connecting.set(true)
+      }
+
       try {
         return await connect(method, payload)
       } finally {

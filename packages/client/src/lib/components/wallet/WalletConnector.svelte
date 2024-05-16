@@ -42,7 +42,7 @@
 
 <Modal show={$showModal} on:close={() => ($showModal = false)} title="">
   <div
-    class="relative z-10 flex min-h-[200px] min-w-[220px] max-w-[380px] flex-col items-center gap-4 rounded-lg bg-neutral-800 p-6 text-neutral-100"
+    class="relative z-10 flex min-h-[200px] min-w-[220px] max-w-[360px] flex-col items-center gap-4 rounded-lg bg-neutral-800 p-6 text-neutral-100"
   >
     <div class="flex items-center gap-2 self-start pr-4 text-base font-bold">
       <WalletIcon class="h-5 w-5 stroke-white" />
@@ -72,9 +72,7 @@
       {:else if $walletStore.connecting}
         <DotLoader class="fill-neutral-400" />
       {:else if networkConfig.connectMode === "burner"}
-        <div
-          class="max-w-[300px] border-l border-neutral-400 px-3 text-sm text-neutral-400"
-        >
+        <div class="border-l border-neutral-400 px-3 text-sm text-neutral-400">
           This is a testnet preview of Puzzle Bets. Click 'Connect' to create a
           temporary wallet auto-funded with testnet Ethereum (ETH).
         </div>
@@ -89,9 +87,9 @@
           Connect
         </ButtonPrimary>
       {:else if networkConfig.connectMode === "embedded"}
-        <div class="text-sm text-neutral-200">
-          Puzzle Bets is a onchain application. Sign in to create or access your
-          in-app wallet.
+        <div class="border-l border-neutral-400 pl-2 text-sm text-neutral-300">
+          This is a testnet preview of Puzzle Bets. Sign in to create or access
+          your testnet wallet auto-funded receive testnet Ethereum (eth).
         </div>
         <div class="flex w-full justify-center py-3">
           <div class="max-w-[300px]">

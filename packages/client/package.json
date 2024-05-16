@@ -49,6 +49,7 @@
   },
   "type": "module",
   "dependencies": {
+    "siwe": "^2.3.2",
     "tailwind-merge": "^2.3.0"
   }
 }

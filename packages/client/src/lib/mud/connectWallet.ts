@@ -8,6 +8,7 @@ import { viemAdapter } from "thirdweb/adapters/viem"
 import { createWalletClient, type Chain } from "viem"
 import { networkConfig } from "./networkConfig"
 import { type Wallet } from "./setupNetwork"
+import { signInWithEthereum } from "$lib/user"
 
 export const tw = createThirdwebClient({
   clientId: PUBLIC_THIRDWEB_CLIENT_ID,
@@ -56,6 +57,11 @@ export const walletStore = (() => {
     if (forcedDisconnect) {
       localStorage.removeItem("wallet-force-disconnect")
     }
+
+    signInWithEthereum(
+      account.address,
+      async (msg) => await account.signMessage({ message: msg }),
+    )
 
     const walletClient = viemAdapter.walletClient.toViem({
       client: tw,

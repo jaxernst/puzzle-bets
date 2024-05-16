@@ -87,7 +87,7 @@
           Connect
         </ButtonPrimary>
       {:else if networkConfig.connectMode === "embedded"}
-        <div class="border-l border-neutral-400 pl-2 text-sm text-neutral-300">
+        <div class="border-l border-neutral-400 pl-3 text-sm text-neutral-300">
           This is a testnet preview of Puzzle Bets. Sign in to create or access
           your testnet wallet auto-funded receive testnet Ethereum (eth).
         </div>

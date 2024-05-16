@@ -1,8 +1,9 @@
 import { createBurnerAccount, getBurnerPrivateKey } from "@latticexyz/common"
 import { derived, writable } from "svelte/store"
-import { createThirdwebClient, defineChain, getRpcClient } from "thirdweb"
+import { createThirdwebClient, defineChain } from "thirdweb"
 import { PUBLIC_CHAIN_ID, PUBLIC_THIRDWEB_CLIENT_ID } from "$env/static/public"
 import { createWallet, type Account as TwAccount } from "thirdweb/wallets"
+import { preAuthenticate } from "thirdweb/wallets/embedded"
 import { viemAdapter } from "thirdweb/adapters/viem"
 import { createWalletClient, type Chain } from "viem"
 import { networkConfig } from "./networkConfig"
@@ -22,7 +23,10 @@ export const walletStore = (() => {
 
   let disconnected = false
 
-  const connect = async (authMethod: "auto" | "google" | "apple" | "email") => {
+  const connect = async (
+    authMethod: "auto" | "google" | "apple" | "email",
+    payload?: { email: string; verificationCode: string },
+  ) => {
     const forcedDisconnect = Boolean(
       localStorage.getItem("wallet-force-disconnect"),
     )
@@ -39,7 +43,14 @@ export const walletStore = (() => {
         strategy: authMethod,
       })
     } else {
-      throw new Error("Email auth not yet supported")
+      if (!payload) throw new Error("Payload required for email auth")
+
+      account = await twWallet.connect({
+        client: tw,
+        strategy: "email",
+        email: payload.email,
+        verificationCode: payload.verificationCode,
+      })
     }
 
     if (forcedDisconnect) {
@@ -80,10 +91,11 @@ export const walletStore = (() => {
     tryConnectBurner: async () => connectBurner(),
     tryConnect: async (
       method: "auto" | "google" | "apple" | "email",
+      payload?: { email: string; verificationCode: string },
     ): Promise<Wallet> => {
       connecting.set(true)
       try {
-        return await connect(method)
+        return await connect(method, payload)
       } finally {
         connecting.set(false)
       }

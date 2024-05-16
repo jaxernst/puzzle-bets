@@ -84,12 +84,6 @@ export const networkConfig = (() => {
     ? Number(params.get("initialBlockNumber"))
     : world?.blockNumber ?? 0n
 
-  const connectMode = (() => {
-    if (chainId === 84532) return "burner"
-    if (chainId === 31337) return "burner"
-    return "burner"
-  })() as SignInMode
-
   return {
     chainId,
     chain,

@@ -70,7 +70,7 @@
           Disconnect
         </ButtonPrimary>
       {:else if $walletStore.connecting}
-        <DotLoader />
+        <DotLoader class="fill-neutral-400" />
       {:else if networkConfig.connectMode === "burner"}
         <div
           class="max-w-[300px] border-l border-neutral-400 px-3 text-sm text-neutral-400"

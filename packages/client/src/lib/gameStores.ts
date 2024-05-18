@@ -1,6 +1,6 @@
 import { derived, get, writable } from "svelte/store"
 import { mud } from "./mud/mudStore"
-import { user } from "./user"
+import { user } from "./user/userStore"
 import {
   Has,
   HasValue,

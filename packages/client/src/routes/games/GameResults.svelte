@@ -3,7 +3,7 @@
   import { ethPrice } from "$lib/ethPrice"
   import { getGame, liveGameStatus, userSolvedGame } from "$lib/gameStores"
   import { mud } from "$lib/mud/mudStore"
-  import { user } from "$lib/user"
+  import { user } from "$lib/user/userStore"
   import { GameStatus, type StartedGame } from "$lib/types"
   import {
     entityToInt,

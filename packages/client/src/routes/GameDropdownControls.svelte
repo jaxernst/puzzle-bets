@@ -2,7 +2,7 @@
   import { page } from "$app/stores"
   import Dropdown from "$lib/components/Dropdown.svelte"
   import { goto } from "$app/navigation"
-  import { user } from "$lib/user"
+  import { user } from "$lib/user/userStore"
   import { type PuzzleType } from "$lib/types"
   import { SUPPORTED_GAME_TYPES } from "$lib/constants"
   import { clickOutside } from "$lib/actions/clickOutside"

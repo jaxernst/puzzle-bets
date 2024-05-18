@@ -1,6 +1,6 @@
 <script lang="ts">
   import { mud } from "$lib/mud/mudStore"
-  import { user } from "$lib/user"
+  import { user } from "$lib/user/userStore"
   import { type Entity } from "@latticexyz/recs"
   import NewGameModal from "./new-game/NewGame.svelte"
   import { GameStatus, type Game, type PuzzleType } from "$lib/types"

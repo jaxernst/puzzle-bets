@@ -13,7 +13,7 @@ import {
   type Wallet,
 } from "./setupNetwork"
 import { createSystemCalls } from "./createSystemCalls"
-import { walletStore } from "$lib/user/walletStore"
+import { walletStore } from "$lib/walletStore"
 import { PUBLIC_CHAIN_ID } from "$env/static/public"
 import { formatEther, type Account } from "viem"
 import { browser } from "$app/environment"

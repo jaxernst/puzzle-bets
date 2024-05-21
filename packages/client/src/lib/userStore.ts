@@ -1,8 +1,8 @@
 import { writable, get } from "svelte/store"
 import { walletStore } from "./walletStore"
 import { formatEther, type Account } from "viem"
-import { mud } from "../mud/mudStore"
-import type { EvmAddress } from "../types"
+import { mud } from "./mud/mudStore"
+import type { EvmAddress } from "./types"
 import { signInWithEthereum } from "./siwe"
 
 const initialState = {
@@ -87,7 +87,7 @@ export const user = (() => {
 
       signInWithEthereum(
         walletAddress,
-        async (message) => await signMessage({ message }),
+        { signMessage },
       ).then((authenticated) =>
         userState.update((s) => ({ ...s, authenticated })),
       )

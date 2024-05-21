@@ -4,9 +4,15 @@ import { createWallet, type Account as TwAccount } from "thirdweb/wallets"
 import { viemAdapter } from "thirdweb/adapters/viem"
 import type { Chain } from "viem"
 import type { Wallet } from "$lib/mud/setupNetwork"
+import { createAuth } from "thirdweb/auth"
 
 export const tw = createThirdwebClient({
   clientId: PUBLIC_THIRDWEB_CLIENT_ID,
+})
+
+export const twAuth = createAuth({
+  domain: "localhost:5173",
+  client: tw
 })
 
 export const twWallet = createWallet("embedded")
@@ -16,15 +22,9 @@ export async function connect(
   authMethod: "auto" | "google" | "apple" | "email",
   payload?: { email: string; verificationCode: string },
 ) {
-  const forcedDisconnect = Boolean(
-    localStorage.getItem("wallet-force-disconnect"),
-  )
 
   let account: TwAccount
   if (authMethod === "auto") {
-    // Forbid autoconnect if use user had manually disconnected
-    if (forcedDisconnect) throw new Error("Auto connect not allowed")
-
     account = await twWallet.autoConnect({ client: tw })
   } else if (authMethod !== "email") {
     account = await twWallet.connect({
@@ -42,9 +42,6 @@ export async function connect(
     })
   }
 
-  if (forcedDisconnect) {
-    localStorage.removeItem("wallet-force-disconnect")
-  }
 
   const walletClient = viemAdapter.walletClient.toViem({
     client: tw,

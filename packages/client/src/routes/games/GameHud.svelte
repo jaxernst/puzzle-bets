@@ -4,7 +4,7 @@
   import { type Entity } from "@latticexyz/recs"
   import { formatEther } from "viem"
   import { ethPrice } from "$lib/ethPrice"
-  import { user } from "$lib/user/userStore"
+  import { user } from "$lib/userStore"
   import { puzzleStores } from "./puzzleGameStates"
   import { GameStatus } from "$lib/types"
 

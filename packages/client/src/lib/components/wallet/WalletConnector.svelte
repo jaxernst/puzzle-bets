@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-  import { walletStore } from "$lib/user/walletStore"
+  import { walletStore } from "$lib/walletStore"
   import { mud } from "$lib/mud/mudStore"
   import { shortenAddress } from "$lib/util"
   import { get, writable } from "svelte/store"

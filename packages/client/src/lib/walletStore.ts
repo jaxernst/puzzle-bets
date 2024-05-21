@@ -1,12 +1,13 @@
 import { createBurnerAccount, getBurnerPrivateKey } from "@latticexyz/common"
 import { derived, writable } from "svelte/store"
-import { createWalletClient, type Chain } from "viem"
-import { networkConfig } from "../mud/networkConfig"
-import { type Wallet } from "../mud/setupNetwork"
+import { createWalletClient, recoverMessageAddress, type Chain } from "viem"
+import { networkConfig } from "./mud/networkConfig"
+import { type Wallet } from "./mud/setupNetwork"
 import {
   connect as connectThirdweb,
   disconnect as disconnectThirdweb,
-} from "./connectors/connectThirdweb"
+} from "./thirdweb"
+import { privateKeyToAccount } from "viem/accounts"
 
 export const chain = networkConfig.chain
 

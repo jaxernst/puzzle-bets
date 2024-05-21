@@ -7,7 +7,7 @@
     userArchivedGames,
     userSolvedGame,
   } from "$lib/gameStores"
-  import { user } from "$lib/user/userStore"
+  import { user } from "$lib/userStore"
   import { GameStatus, type Game, type PuzzleType } from "$lib/types"
   import {
     capitalized,

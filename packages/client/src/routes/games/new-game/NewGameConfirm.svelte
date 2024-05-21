@@ -4,7 +4,7 @@
   import DotLoader from "$lib/components/DotLoader.svelte"
   import { gameInviteUrls } from "$lib/inviteUrls"
   import { mud } from "$lib/mud/mudStore"
-  import { user } from "$lib/user/userStore"
+  import { user } from "$lib/userStore"
   import { HasValue, runQuery } from "@latticexyz/recs"
   import { cubicOut } from "svelte/easing"
   import { slide } from "svelte/transition"

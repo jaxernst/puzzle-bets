@@ -8,12 +8,12 @@
 <script lang="ts">
   import Apple from "$lib/icons/Apple.svelte"
   import Google from "$lib/icons/Google.svelte"
-  import { walletStore } from "$lib/user/walletStore"
+  import { walletStore } from "$lib/walletStore"
   import AnimatedArrow from "../AnimatedArrow.svelte"
   import ConfirmationCodeInput from "./ConfirmationCodeInput.svelte"
   import ButtonPrimary from "../ButtonPrimary.svelte"
   import { preAuthenticate } from "thirdweb/wallets/embedded"
-  import { tw } from "$lib/user/connectors/connectThirdweb"
+  import { tw } from "$lib/thirdweb"
 
   export let onConnect: () => void = () => {}
 

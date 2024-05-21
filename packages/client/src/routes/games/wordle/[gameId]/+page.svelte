@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/stores"
   import WordleGame from "../WordleGame.svelte"
-  import { user } from "$lib/user/userStore"
+  import { user } from "$lib/userStore"
   import { liveGameStatus, userGames, userSolvedGame } from "$lib/gameStores"
   import { GameStatus } from "$lib/types"
   import { launchConfetti } from "$lib/components/Confetti.svelte"

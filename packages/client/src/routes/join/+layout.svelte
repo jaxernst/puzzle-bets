@@ -7,7 +7,7 @@
   import { goto } from "$app/navigation"
   import { onMount } from "svelte"
   import { loginAndConnect } from "$lib/components/wallet/WalletConnector.svelte"
-  import { user } from "$lib/user/userStore"
+  import { user } from "$lib/userStore"
   import { getGame } from "$lib/gameStores"
   import { GameStatus } from "$lib/types"
   import DotLoader from "$lib/components/DotLoader.svelte"

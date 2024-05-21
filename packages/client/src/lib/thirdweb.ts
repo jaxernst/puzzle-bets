@@ -4,7 +4,7 @@ import { createWallet, type Account as TwAccount } from "thirdweb/wallets"
 import { viemAdapter } from "thirdweb/adapters/viem"
 import type { Chain } from "viem"
 import type { Wallet } from "$lib/mud/setupNetwork"
-import { createAuth } from "thirdweb/auth"
+import { createAuth, signLoginPayload } from "thirdweb/auth"
 
 export const tw = createThirdwebClient({
   clientId: PUBLIC_THIRDWEB_CLIENT_ID,

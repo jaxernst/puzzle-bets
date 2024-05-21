@@ -1,26 +1,24 @@
 import { SiweMessage } from "siwe"
 import type { RequestHandler } from "./$types"
-import { recoverAddress } from "viem"
+import { twAuth } from "$lib/thirdweb"
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
-  const { message, signature } = await request.json()
+  const { payload, signature } = await request.json()
 
   try {
-    const siweMessage = new SiweMessage(message)
+    const verifiedPayload = await twAuth.verifyPayload({
+      payload,
+      signature,
+    });
 
-    const sessionNonce = cookies.get("session-nonce")
-    if (siweMessage.nonce !== cookies.get("session-nonce")) {
-      return new Response("Invalid nonce", { status: 422 })
-    }
-
-    const res = await siweMessage.verify({
-      signature: signature,
-      nonce: sessionNonce,
-    })
-
-    if (res.success) {
+    console.log(verifiedPayload)
+     
+    if (verifiedPayload.valid) {
       return new Response(null, { status: 200 })
+    } else {
+      return new Response(null, { status: 403})
     }
+
   } catch (e) {
     console.log("error", e)
     return new Response("Unknown error occurred", { status: 500 })

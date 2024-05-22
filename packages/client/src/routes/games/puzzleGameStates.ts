@@ -1,7 +1,7 @@
-import { getGame } from "$lib/gameStores";
-import { user } from "$lib/user";
-import type { EvmAddress, PuzzleType } from "$lib/types";
-import { intToEntity } from "$lib/util";
+import { getGame } from "$lib/gameStores"
+import { user } from "$lib/userStore"
+import type { EvmAddress, PuzzleType } from "$lib/types"
+import { intToEntity } from "$lib/util"
 
 import { derived, get, writable, type Readable } from "svelte/store"
 
@@ -162,6 +162,6 @@ export const puzzleStores = derived(
       connections: new Map(),
       crossword: new Map(),
       sudoku: new Map(),
-    };
-  }
-) as Readable<Record<PuzzleType, Map<GameId, PuzzleState>>>;
+    }
+  },
+) as Readable<Record<PuzzleType, Map<GameId, PuzzleState>>>

@@ -11,7 +11,7 @@ export async function signInWithEthereum(
 
   const message = createSiweMessage({
     address,
-    nonce: "ffff6f6f6f6f6f6f6",
+    nonce,
     chainId: Number(PUBLIC_CHAIN_ID),
     domain: "example.com",
     uri: "https://example.com/path",

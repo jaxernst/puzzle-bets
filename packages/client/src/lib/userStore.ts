@@ -87,7 +87,7 @@ export const user = (() => {
 
       signInWithEthereum(
         walletAddress,
-        { signMessage },
+        signMessage,
       ).then((authenticated) =>
         userState.update((s) => ({ ...s, authenticated })),
       )

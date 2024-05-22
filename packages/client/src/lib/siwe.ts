@@ -1,35 +1,29 @@
 import { PUBLIC_CHAIN_ID } from "$env/static/public"
 import type { EvmAddress } from "$lib/types"
-import { SiweMessage } from "siwe"
-import { recoverMessageAddress, type Account } from "viem"
-import { twAuth } from "./thirdweb"
-import { signLoginPayload } from "thirdweb/auth"
+import { createSiweMessage, verifySiweMessage } from "viem/siwe"
+import { publicClient } from "./mud/setupNetwork"
 
 export async function signInWithEthereum(
   address: EvmAddress,
-  account: Account
+  signMessage: ({ message }: { message: string }) => Promise<string>,
 ) {
-  const payload = await (
-    await fetch("/api/auth/generate-payload", {
-      credentials: "include",
-      method: "POST",
-      body: JSON.stringify({ address })
-    })
-  ).json()
+  const nonce = await (await fetch("/api/siwe/nonce")).text()
 
-  const signature = await signLoginPayload({
-    payload,
-    account,
-  });
-
-  const result = await fetch("/api/auth/verify", {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json",
-    },
-    body: JSON.stringify({ signature, payload }),
-    credentials: "include",
+  const message = createSiweMessage({
+    address,
+    nonce: "ffff6f6f6f6f6f6f6",
+    chainId: Number(PUBLIC_CHAIN_ID),
+    domain: "example.com",
+    uri: "https://example.com/path",
+    version: "1",
   })
 
-  return result.ok
+  const signature = await signMessage({ message })
+
+  const result = await fetch("/api/siwe/verify", {
+    method: "POST",
+    body: JSON.stringify({ message, signature }),
+  })
+
+  return true
 }

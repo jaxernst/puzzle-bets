@@ -28,6 +28,7 @@
     "@sveltejs/adapter-vercel": "^5.1.0",
     "@sveltejs/kit": "^2.5.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.0",
+    "@types/jsonwebtoken": "^9.0.6",
     "@types/web-push": "^3.6.3",
     "@vercel/analytics": "^1.2.2",
     "autoprefixer": "^10.4.19",
@@ -42,13 +43,14 @@
     "tailwindcss": "^3.4.0",
     "thirdweb": "5.1.1-nightly-e4d243ef34ee7881ecbcc8ef02084105c0ee5a03-20240403024744",
     "tslib": "^2.4.1",
-    "viem": "^2.9.20",
+    "viem": "^2.12.0",
     "vite": "^5.0.3",
     "wait-port": "^1.0.4",
     "web-push": "^3.6.7"
   },
   "type": "module",
   "dependencies": {
+    "jsonwebtoken": "^9.0.2",
     "siwe": "^2.3.2",
     "tailwind-merge": "^2.3.0"
   }

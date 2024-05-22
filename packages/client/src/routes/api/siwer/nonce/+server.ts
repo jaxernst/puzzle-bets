@@ -1,5 +1,5 @@
 import { twAuth } from "$lib/thirdweb"
-import type { RequestHandler } from "./$types"
+import type { RequestHandler } from "../../siwer/nonce/$types"
 
 export const POST: RequestHandler = async ({ request }) => {
   const { address } = await request.json()

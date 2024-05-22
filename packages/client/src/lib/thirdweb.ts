@@ -43,29 +43,13 @@ export async function connect(
     })
   }
 
-  const twWalletAccount = account
-
   const walletClient = viemAdapter.walletClient.toViem({
     client: tw,
     account,
     chain: defineChain(chain as any),
   }) as Wallet
 
-  const message = "Hello"
-  const twAccountSigned = await twWalletAccount.signMessage({ message })
-  const twViemClientSigned = await walletClient.signMessage({ message })
-
-  console.log("TW wallet account address", twWalletAccount.address)
-
-  console.log(
-    "TW wallet account signature recovery ",
-    await recoverMessageAddress({ message, signature: twAccountSigned }),
-  )
-
-  console.log(
-    "TW viem client adapter signed",
-    await recoverMessageAddress({ message, signature: twViemClientSigned }),
-  )
+  walletClient.signMessage = account.signMessage
 
   return walletClient
 }

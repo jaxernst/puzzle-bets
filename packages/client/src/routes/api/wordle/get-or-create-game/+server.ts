@@ -11,17 +11,12 @@ export const POST = async ({ request, cookies }): Promise<Response> => {
     // be trusted to provided the correct opponent)
     isDemo?: boolean
     opponent?: string
-    user?: string
+    user?: string // Can remove this paramter
   }
 
-  // Check user is authenticated
+  // Get authed user from locals.user
+  // Check for gameId and verify opponent
 
-  // Make a query to the tables to get the player1 and player2 value and check that
-  // they match the provided addresses. Also check that the gameId is active?
-  // Should match a batch call to the world contract
-
-  // If a user is provided, this implies a non-demo game and thus the opponent
-  // must be provided too
   if (!isDemo && !(opponent && user)) {
     return new Response("Missing parameter", { status: 400 })
   }

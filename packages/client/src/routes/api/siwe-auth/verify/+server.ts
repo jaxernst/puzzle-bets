@@ -11,11 +11,13 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
   const { address: user, nonce: messageNonce } = parseSiweMessage(message)
   if (!user) return new Response("No address provided", { status: 400 })
 
-  const token = cookies.get("siwe-nonce")
+  const token = cookies.get("siwe_nonce")
   if (!token) return new Response("No token provided", { status: 400 })
 
+  // Decode cookie-stored nonce and verify it matches signed message nonce
   const decoded = jwt.verify(token, JWT_SECRET)
   const { nonce: jwtNonce } = decoded as { nonce: string }
+
   if (messageNonce !== jwtNonce) {
     throw new Error("Nonce does not match")
   }
@@ -26,15 +28,16 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
   })
 
   if (valid) {
-    // Remove nonce from headers
+    // Remove nonce from headers once verified
     const headers = new Headers()
     headers.append(
       "Set-Cookie",
-      "siwe-nonce=; HttpOnly; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Strict",
+      "siwe_nonce=; HttpOnly; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; SameSite=Strict",
     )
 
     // Set session
     const token = createSessionToken(user)
+
     headers.append(
       "Set-Cookie",
       `session_token=${token}; HttpOnly; Secure; Path=/; SameSite=Strict`,

@@ -4,11 +4,12 @@ export async function handle({ event, resolve }) {
   const token = event.cookies.get("session_token")
   if (token) {
     const verified = verifyUserToken(token)
+
     if (verified) {
       // Attach user info to the event context if token is valid
       event.locals.user = verified.user
     } else {
-      // Optional: clear the session cookie if the token is invalid
+      // Clear the session cookie if the token is invalid
       event.cookies.set("session_token", "", {
         path: "/",
         httpOnly: true,

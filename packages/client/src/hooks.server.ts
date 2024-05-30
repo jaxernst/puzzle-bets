@@ -1,6 +1,7 @@
 import { verifyUserToken } from "$lib/server/auth"
+import type { Handle } from "@sveltejs/kit"
 
-export async function handle({ event, resolve }) {
+export const handle: Handle = async ({ event, resolve }) => {
   const token = event.cookies.get("session_token")
   if (token) {
     const verified = verifyUserToken(token)

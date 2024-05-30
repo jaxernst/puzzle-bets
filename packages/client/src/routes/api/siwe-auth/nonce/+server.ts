@@ -10,7 +10,7 @@ export const GET: RequestHandler = (req) => {
   const headers = new Headers()
   headers.append(
     "Set-Cookie",
-    `siwe-nonce=${token}; HttpOnly; Path=/; Secure; SameSite=Strict`,
+    `siwe_nonce=${token}; HttpOnly; Path=/; Secure; SameSite=Strict`,
   )
 
   return new Response(nonce, { status: 200, headers })

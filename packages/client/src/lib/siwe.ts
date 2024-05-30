@@ -6,7 +6,7 @@ export async function signInWithEthereum(
   address: EvmAddress,
   signMessage: ({ message }: { message: string }) => Promise<string>,
 ) {
-  const nonce = await (await fetch("/api/siwe/nonce")).text()
+  const nonce = await (await fetch("/api/siwe-auth/nonce")).text()
 
   const message = createSiweMessage({
     address,

@@ -40,13 +40,13 @@ export const wordleGameStates = (() => {
     opponent?: EvmAddress,
   ) => {
     if (getOrCreateLoading) return
-    const $user = get(user)
+
     getOrCreateLoading = true
 
     try {
       const res = await fetch("/api/wordle/get-or-create-game", {
         method: "POST",
-        body: JSON.stringify({ gameId, user: $user.address, opponent, isDemo }),
+        body: JSON.stringify({ gameId, opponent, isDemo }),
       })
 
       if (!res.ok) return

@@ -1,20 +1,22 @@
 import { wordleGameCacheKey } from "$lib/server/gameCacheKeys"
 import { getGameResetCount } from "$lib/server/gameStateStorage"
+import type { EvmAddress } from "$lib/types"
 import { Game } from "../../../../lib/server/wordle/game"
 import { getOrCreateDemo, getOrCreateLiveGame } from "./getOrCreate"
 
-export const POST = async ({ request, cookies }): Promise<Response> => {
-  const { gameId, user, opponent, isDemo } = (await request.json()) as {
+export const POST = async ({ request, cookies, locals }): Promise<Response> => {
+  const { gameId, opponent, isDemo } = (await request.json()) as {
     gameId: string
     // Temporarily get the opponent from the client as a param.
     // TODO: Query the smart contracts to get opponent for security (client can't
     // be trusted to provided the correct opponent)
     isDemo?: boolean
     opponent?: string
-    user?: string // Can remove this paramter
   }
 
-  // Get authed user from locals.user
+  const user = locals.user as EvmAddress | undefined
+  if (!user && !isDemo) return new Response("No user", { status: 401 })
+
   // Check for gameId and verify opponent
 
   if (!isDemo && !(opponent && user)) {

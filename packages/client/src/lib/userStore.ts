@@ -25,7 +25,7 @@ const makeBalanceSync = (set: (balance: string) => any) => {
   }
 
   return {
-    start: async (address: string, interval = 2000) => {
+    start: async (address: string, interval = 4000) => {
       if (started) return
       started = true
 
@@ -50,7 +50,7 @@ const makeBalanceSync = (set: (balance: string) => any) => {
 
     stop: () => {
       if (syncInterval) clearInterval(syncInterval)
-      if (started) started = false
+      started = false
     },
   }
 }
@@ -85,10 +85,7 @@ export const user = (() => {
       balanceSync.start(walletAddress)
       userState.update((s) => ({ ...s, address: walletAddress }))
 
-      signInWithEthereum(
-        walletAddress,
-        signMessage,
-      ).then((authenticated) =>
+      signInWithEthereum(walletAddress, signMessage).then((authenticated) =>
         userState.update((s) => ({ ...s, authenticated })),
       )
     }

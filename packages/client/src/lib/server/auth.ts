@@ -12,10 +12,8 @@ export function createSessionToken(user: string) {
 
 export function verifyUserToken(token: string): { user: string } | null {
   try {
-    // todo: validate this
     return jwt.verify(token, JWT_SECRET) as { user: string }
   } catch (error) {
-    console.error("Token verification failed:", error)
     return null
   }
 }

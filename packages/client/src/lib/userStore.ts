@@ -11,7 +11,7 @@ const initialState = {
   balance: "0.00",
 }
 
-const makeBalanceSync = (set: (balance: string) => any) => {
+const makeBalanceSync = (setBalance: (balance: string) => any) => {
   let started = false
   let syncInterval: NodeJS.Timer | null = null
 
@@ -21,7 +21,7 @@ const makeBalanceSync = (set: (balance: string) => any) => {
 
     const balance = await publicClient.getBalance({ address })
     const formattedBalance = Number(formatEther(balance)).toFixed(4)
-    set(formattedBalance)
+    setBalance(formattedBalance)
   }
 
   return {
@@ -63,27 +63,30 @@ export const user = (() => {
   }>(initialState)
 
   const balanceSync = makeBalanceSync((balance: string) => {
-    userState.update((s) => ({ ...s, balance }))
+    // Only update store when balance has changed
+    if (balance !== balance) {
+      userState.update((s) => ({ ...s, balance }))
+    }
   })
 
   walletStore.subscribe(({ account, signMessage }) => {
     const walletAddress = account?.address as EvmAddress | undefined
+
     if (!walletAddress) {
       balanceSync.stop()
       userState.set(initialState)
-      return initialState
+      return
     }
 
-    if (!signMessage) {
-      throw new Error("No SIWE signer available")
-    }
+    if (!signMessage) throw new Error("No SIWE signer available")
 
     const curState = get(userState)
 
     if (curState.address !== walletAddress) {
       balanceSync.stop()
+
+      userState.set({ ...initialState, address: walletAddress })
       balanceSync.start(walletAddress)
-      userState.update((s) => ({ ...s, address: walletAddress }))
 
       signInWithEthereum(walletAddress, signMessage).then((authenticated) =>
         userState.update((s) => ({ ...s, authenticated })),
@@ -91,7 +94,7 @@ export const user = (() => {
     }
   })
 
-  // Publicly expose only the subscribe method to prevent external updates
+  // Only the subscribe method to prevent external updates
   return {
     subscribe: userState.subscribe,
   }

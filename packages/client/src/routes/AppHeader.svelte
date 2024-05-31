@@ -14,7 +14,6 @@
   import DotLoader from "$lib/components/DotLoader.svelte"
 
   $: maybeToggleNotifications = () => {
-    if (!browser) return
     if ($notifications.enabled) return $notifications.toggle()
 
     // Before enabling notifications, make sure device supports it. If we're on
@@ -28,6 +27,8 @@
 
     $notifications.toggle()
   }
+
+  $: console.log($user, $walletStore, $mud.ready)
 </script>
 
 <div class="flex w-full items-center justify-between">
@@ -76,10 +77,10 @@
         {/if}
       {:else}
         <WalletIcon class="stroke-off-black h-6 w-6" />
-        {#if $walletStore && $mud.ready}
+        {#if $walletStore && $mud.ready && $user.authenticated}
           <div
             class="h-[.4rem] w-[.4rem] self-start rounded-full bg-green-500"
-          ></div>
+          />
         {/if}
       {/if}
     </button>

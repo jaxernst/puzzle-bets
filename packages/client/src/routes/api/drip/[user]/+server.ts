@@ -2,6 +2,8 @@ import { publicClient } from "$lib/mud/setupNetwork.js"
 import { dripClient } from "$lib/server/dripClient.js"
 import { formatEther, isAddress, parseEther } from "viem"
 
+// TODO: Auth endpoint
+
 export const POST = async ({ params }) => {
   const { user } = params
 

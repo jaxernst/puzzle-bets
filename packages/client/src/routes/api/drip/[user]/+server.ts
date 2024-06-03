@@ -2,7 +2,8 @@ import { publicClient } from "$lib/mud/setupNetwork"
 import { dripClient } from "$lib/server/dripClient"
 import { formatEther, isAddress, parseEther } from "viem"
 
-// TODO: Auth endpoint
+// TODO: Add protection against abuse
+// (Kinda curious to see how long it will take to get drained)
 
 export const POST = async ({ params }) => {
   const { user } = params

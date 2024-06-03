@@ -26,7 +26,7 @@ import worlds from "contracts/worlds.json"
 
 import { supportedChains } from "./supportedChains"
 import { PUBLIC_CHAIN_ID } from "$env/static/public"
-import { fallback, http, webSocket } from "viem"
+import { fallback, http } from "viem"
 import { transportObserver } from "@latticexyz/common"
 import type { MUDChain } from "@latticexyz/common/chains"
 

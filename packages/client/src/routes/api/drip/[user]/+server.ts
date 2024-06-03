@@ -1,5 +1,5 @@
-import { publicClient } from "$lib/mud/setupNetwork.js"
-import { dripClient } from "$lib/server/dripClient.js"
+import { publicClient } from "$lib/mud/setupNetwork"
+import { dripClient } from "$lib/server/dripClient"
 import { formatEther, isAddress, parseEther } from "viem"
 
 // TODO: Auth endpoint

@@ -23,7 +23,6 @@
   }
 
   async function startEmailVerification() {
-    console.log("sending email to", $emailInput)
     if (!$emailInput.length) {
       $emailError = "Please enter a valid email"
       return

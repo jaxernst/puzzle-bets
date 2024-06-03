@@ -27,8 +27,6 @@
 
     $notifications.toggle()
   }
-
-  $: console.log($user, $walletStore, $mud.ready)
 </script>
 
 <div class="flex w-full items-center justify-between">

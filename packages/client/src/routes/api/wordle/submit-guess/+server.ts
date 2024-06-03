@@ -1,14 +1,23 @@
 import { wordleGameCacheKey } from "$lib/server/gameCacheKeys"
 import { supabaseGameStore } from "$lib/server/gameStateStorage"
+import type { EvmAddress } from "$lib/types"
 import { Game } from "../../../../lib/server/wordle/game"
+import type { RequestHandler } from "./$types"
 
-export const POST = async ({ request, cookies }): Promise<Response> => {
-  const { guess, gameId, user, isDemo } = (await request.json()) as {
+export const POST: RequestHandler = async ({
+  request,
+  cookies,
+  locals,
+}): Promise<Response> => {
+  const { guess, gameId, isDemo } = (await request.json()) as {
     guess: string
     gameId: string
     user?: string
     isDemo?: boolean
   }
+
+  const user = locals.user as EvmAddress | undefined
+  if (!user && !isDemo) return new Response("No user", { status: 401 })
 
   if (!gameId || !guess) {
     return new Response("Missing params", { status: 400 })

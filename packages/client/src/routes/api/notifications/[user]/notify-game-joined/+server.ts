@@ -6,7 +6,7 @@ export const POST = async ({ params }) => {
   const user = params.user
   if (!isAddress(user)) return new Response("No user", { status: 404 })
 
-  const { data: subscriptions, error } = await supabase
+  const { data: subscriptions } = await supabase
     .from("notifications")
     .select("subscription")
     .eq("user_address", user)

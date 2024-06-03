@@ -52,7 +52,6 @@
         },
         body: JSON.stringify({
           gameId: parseInt(gameId, 16),
-          user: $user.address,
         }),
       })
 

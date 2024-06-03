@@ -1,17 +1,20 @@
 import { wordleGameCacheKey } from "$lib/server/gameCacheKeys"
 import { supabaseGameStore } from "$lib/server/gameStateStorage.js"
+import type { EvmAddress } from "$lib/types"
 import { Game } from "../../../../lib/server/wordle/game"
+import type { RequestHandler } from "./$types"
 
-/** @type {import('./$types').RequestHandler} */
-export const POST = async ({ request, cookies }) => {
-  const { gameId, user, otherPlayer, chainRematchCount, isDemo } =
+export const POST: RequestHandler = async ({ locals, request, cookies }) => {
+  const { gameId, otherPlayer, chainRematchCount, isDemo } =
     (await request.json()) as {
       gameId: string
       isDemo?: boolean
-      user?: string
       otherPlayer?: string
       chainRematchCount?: number
     }
+
+  const user = locals.user as EvmAddress | undefined
+  if (!user && !isDemo) return new Response("No user", { status: 401 })
 
   if (!gameId) return new Response("Missing game ID", { status: 400 })
 

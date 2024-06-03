@@ -62,8 +62,6 @@ export const wordleGameStates = (() => {
   const enterGuess = async (gameId: GameId, guess: string, isDemo: boolean) => {
     if (guessEntering) return
 
-    const $user = get(user)
-
     guessEntering = true
     try {
       const res = await fetch("/api/wordle/submit-guess", {
@@ -71,7 +69,6 @@ export const wordleGameStates = (() => {
         body: JSON.stringify({
           guess,
           gameId,
-          user: $user.address,
           isDemo,
         }),
       })
@@ -125,7 +122,6 @@ export const wordleGameStates = (() => {
         method: "POST",
         body: JSON.stringify({
           gameId,
-          user: $user.address,
           otherPlayer: opponent,
           chainRematchCount: game?.rematchCount,
           isDemo,

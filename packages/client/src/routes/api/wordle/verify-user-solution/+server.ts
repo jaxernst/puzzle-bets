@@ -2,16 +2,21 @@ import { supabaseGameStore } from "$lib/server/gameStateStorage"
 import { signPlayerSolvedMessage } from "$lib/server/puzzleMaster"
 import type { EvmAddress } from "$lib/types"
 import { Game } from "../../../../lib/server/wordle/game"
+import type { RequestHandler } from "./$types"
 
 // Will need to add authentication to this endpoint to ensure players can't
 // 'steal' attestations from each other
-export const POST = async ({ request }): Promise<Response> => {
-  const { gameId, user } = (await request.json()) as {
+export const POST: RequestHandler = async ({
+  request,
+  locals,
+}): Promise<Response> => {
+  const { gameId } = (await request.json()) as {
     gameId: string
-    user: string
   }
 
-  if (!gameId || !user) {
+  const user = locals.user as EvmAddress | undefined
+  if (!user) return new Response("No user", { status: 401 })
+  if (!gameId) {
     return new Response("Missing params", { status: 400 })
   }
 

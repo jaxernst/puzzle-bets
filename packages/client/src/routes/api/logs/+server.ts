@@ -6,7 +6,7 @@ const fallbackHex = (str?: string) => {
   return (str ?? "0x").replace("\\x", "0x") as `0x${string}`
 }
 
-export const GET = async ({ request }) => {
+export const GET = async () => {
   if (PUBLIC_CHAIN_ID === "31337") {
     return new Response("Not on public chain", { status: 400 })
   }

@@ -31,7 +31,7 @@ export const world = createWorld()
  */
 import mudConfig from "contracts/mud.config"
 import { browser } from "$app/environment"
-import type { WaitForTransactionResult } from "@latticexyz/store-sync/src/common"
+import { type WaitForTransactionResult } from "@latticexyz/store-sync"
 
 export type SetupNetworkResult = Awaited<ReturnType<typeof setupNetwork>>
 export type Wallet = WalletClient<Transport, Chain, Account>
@@ -39,6 +39,15 @@ export type Wallet = WalletClient<Transport, Chain, Account>
 export const publicClient = createPublicClient({
   ...networkConfig,
   pollingInterval: 1000,
+})
+
+// Create a readonly instance of the world contract (for backend verifications)
+export const worldContract = getContract({
+  address: networkConfig.worldAddress as Hex,
+  abi: IWorldAbi,
+  client: {
+    public: publicClient,
+  },
 })
 
 export async function setupNetwork(wallet: Wallet) {

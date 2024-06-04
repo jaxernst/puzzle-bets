@@ -9,12 +9,15 @@ function isAuthPath(urlPathname: string) {
 
 export const handle: Handle = async ({ event, resolve }) => {
   const token = event.cookies.get("session_token")
+
+  let authenticated = false
   if (token) {
     const verified = verifyUserToken(token)
 
     if (verified) {
       // Attach user info to the event context if token is valid
       event.locals.user = verified.user
+      authenticated = true
     } else {
       // Clear the session cookie if the token is invalid
       event.cookies.set("session_token", "", {
@@ -27,8 +30,8 @@ export const handle: Handle = async ({ event, resolve }) => {
     }
   }
 
-  console.log(event.url.pathname, isAuthPath(event.url.pathname))
-  if (event.url.pathname && !event.locals.user) {
+  if (isAuthPath(event.url.pathname) && !authenticated) {
+    return new Response("Not Authenticated", { status: 401})
   }
 
   const response = await resolve(event)

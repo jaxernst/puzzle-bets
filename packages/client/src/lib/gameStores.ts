@@ -215,7 +215,7 @@ export const userArchivedGames = (() => {
   user.subscribe(async ($user) => {
     if (!$user.address) return
 
-    const res = await fetch(`/api/game-settings/${$user.address}/archived`)
+    const res = await fetch(`/api/game-settings/archived`)
     if (res.ok) {
       const data = (await res.json()) as number[]
       store.set(data.map((g) => intToEntity(g, true)!))
@@ -226,17 +226,14 @@ export const userArchivedGames = (() => {
     const $user = get(user)
     if (!$user.address) return
 
-    const res = await fetch(
-      `/api/game-settings/${$user.address}/update-archived`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          gameId: parseInt(gameId, 16),
-          archived: archiveState,
-        }),
-      },
-    )
+    const res = await fetch(`/api/game-settings/update-archived`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        gameId: parseInt(gameId, 16),
+        archived: archiveState,
+      }),
+    })
 
     if (res.ok) {
       store.update((games) => {

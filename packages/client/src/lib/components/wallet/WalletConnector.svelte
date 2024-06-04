@@ -19,7 +19,7 @@
     await mud.setup(wallet)
 
     if (wallet.account && networkConfig.connectMode === "burner") {
-      fetch(`api/drip/${wallet.account.address}`, { method: "POST" })
+      fetch(`api/drip`, { method: "POST" })
     }
   }
 

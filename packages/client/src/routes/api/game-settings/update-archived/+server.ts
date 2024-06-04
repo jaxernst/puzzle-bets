@@ -1,7 +1,7 @@
 import { supabaseGameSettingsStore } from "$lib/server/gameStateStorage"
 
-export const POST = async ({ request, params }) => {
-  const { user } = params
+export const POST = async ({ request, locals }) => {
+  const user = locals.user
   const { gameId, archived } = (await request.json()) as {
     gameId: number
     archived: boolean

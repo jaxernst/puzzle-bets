@@ -6,6 +6,7 @@ export type AlarmSubscriptionBody = PushSubscription
 
 export async function POST({ request, params }: RequestEvent) {
   const { user: userAddress, deviceId } = params
+
   const subscription: AlarmSubscriptionBody = await request.json()
 
   // Save subscription to "alarm_notifications" table

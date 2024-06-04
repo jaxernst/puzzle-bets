@@ -5,8 +5,8 @@ import { formatEther, isAddress, parseEther } from "viem"
 // TODO: Add protection against abuse
 // (Kinda curious to see how long it will take to get drained)
 
-export const POST = async ({ params }) => {
-  const { user } = params
+export const POST = async ({ locals }) => {
+  const user = locals.user
 
   if (!isAddress(user)) return new Response(null, { status: 403 })
 

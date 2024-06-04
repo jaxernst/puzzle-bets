@@ -1,6 +1,12 @@
 import { verifyUserToken } from "$lib/server/auth"
 import type { Handle } from "@sveltejs/kit"
 
+const authPaths = ["api/drip", "api/game-settings", "api/notifications"]
+
+function isAuthPath(urlPathname: string) {
+  return authPaths.some((pathSegment) => urlPathname.includes(pathSegment))
+}
+
 export const handle: Handle = async ({ event, resolve }) => {
   const token = event.cookies.get("session_token")
   if (token) {
@@ -21,8 +27,11 @@ export const handle: Handle = async ({ event, resolve }) => {
     }
   }
 
+  console.log(event.url.pathname, isAuthPath(event.url.pathname))
+  if (event.url.pathname && !event.locals.user) {
+  }
+
   const response = await resolve(event)
 
-  // Optionally add headers or perform other response manipulations here
   return response
 }

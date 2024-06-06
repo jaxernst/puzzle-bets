@@ -41,7 +41,7 @@
     "svelte": "^4.2.7",
     "svelte-check": "^3.6.0",
     "tailwindcss": "^3.4.0",
-    "thirdweb": "5.1.1-nightly-e4d243ef34ee7881ecbcc8ef02084105c0ee5a03-20240403024744",
+    "thirdweb": "5.27.0",
     "tslib": "^2.4.1",
     "viem": "^2.12.0",
     "vite": "^5.0.3",

@@ -12,11 +12,6 @@ export const tw = createThirdwebClient({
   clientId: PUBLIC_THIRDWEB_CLIENT_ID,
 })
 
-export const twAuth = createAuth({
-  domain: "localhost:5173",
-  client: tw,
-})
-
 export const twWallet = createWallet("embedded")
 
 export async function connect(

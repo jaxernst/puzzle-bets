@@ -2,11 +2,8 @@ import { createThirdwebClient, defineChain } from "thirdweb"
 import { PUBLIC_THIRDWEB_CLIENT_ID } from "$env/static/public"
 import { createWallet, type Account as TwAccount } from "thirdweb/wallets"
 import { viemAdapter } from "thirdweb/adapters/viem"
-import { recoverAddress, recoverMessageAddress, type Chain } from "viem"
+import { type Chain } from "viem"
 import type { Wallet } from "$lib/mud/setupNetwork"
-import { createAuth, signLoginPayload } from "thirdweb/auth"
-import { getBurnerPrivateKey } from "@latticexyz/common"
-import { privateKeyToAccount } from "viem/accounts"
 
 export const tw = createThirdwebClient({
   clientId: PUBLIC_THIRDWEB_CLIENT_ID,

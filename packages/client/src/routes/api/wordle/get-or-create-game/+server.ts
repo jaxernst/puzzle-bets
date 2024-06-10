@@ -1,9 +1,6 @@
-import { networkConfig } from "$lib/mud/networkConfig"
-import { publicClient, worldContract } from "$lib/mud/setupNetwork"
 import { wordleGameCacheKey } from "$lib/server/gameCacheKeys"
 import { getGameResetCount } from "$lib/server/gameStateStorage"
 import type { EvmAddress } from "$lib/types"
-import { resourceToHex, resourceTypeIds } from "@latticexyz/common"
 import { Game } from "../../../../lib/server/wordle/game"
 import { getOrCreateDemo, getOrCreateLiveGame } from "./getOrCreate"
 import { verifyGameParticipants } from "$lib/server/onchainChecks"
@@ -25,7 +22,7 @@ export const POST = async ({ request, cookies, locals }): Promise<Response> => {
 
   // For non-demo games, ensure that the onchain gameId matches
   if (!isDemo) {
-    const inputParamsValid = verifyGameParticipants(
+    const inputParamsValid = await verifyGameParticipants(
       Number(gameId),
       user,
       opponent!,

@@ -13,7 +13,7 @@ const Player1 = resourceToHex({
 const Player2 = resourceToHex({
   type: "table",
   namespace: "v1",
-  name: "Plaer2",
+  name: "Player2",
 })
 
 const RematchCount = resourceToHex({
@@ -50,9 +50,11 @@ export async function verifyGameParticipants(
 }
 
 export async function getGameRematchCount(gameId: number) {
-  return await worldContract.read.getField([
+  const hexStr = await worldContract.read.getField([
     RematchCount,
     entityToHexKeyTuple(intToEntity(gameId, true)),
     0,
   ])
+
+  return parseInt(hexStr, 16)
 }

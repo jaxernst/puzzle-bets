@@ -7,7 +7,7 @@ import {
   connect as connectThirdweb,
   disconnect as disconnectThirdweb,
 } from "./thirdweb"
-import { privateKeyToAccount } from "viem/accounts"
+import { clearCookie } from "./util"
 
 export const chain = networkConfig.chain
 
@@ -87,6 +87,8 @@ export const walletStore = (() => {
 
       // Prevent from auto reconnecting
       localStorage.setItem("wallet-force-disconnect", "true")
+      // Kill backend session
+      clearCookie("session_token")
 
       wallet.set(undefined)
     },

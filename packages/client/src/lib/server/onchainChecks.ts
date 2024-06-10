@@ -16,6 +16,12 @@ const Player2 = resourceToHex({
   name: "Plaer2",
 })
 
+const RematchCount = resourceToHex({
+  type: "table",
+  namespace: "v1",
+  name: "RematchCount",
+})
+
 export async function verifyGameParticipants(
   gameId: number,
   p1: EvmAddress,
@@ -41,4 +47,12 @@ export async function verifyGameParticipants(
     onchainPlayers.includes(p1.toLowerCase()) &&
     onchainPlayers.includes(p2.toLowerCase())
   )
+}
+
+export async function getGameRematchCount(gameId: number) {
+  return await worldContract.read.getField([
+    RematchCount,
+    entityToHexKeyTuple(intToEntity(gameId, true)),
+    0,
+  ])
 }

@@ -123,7 +123,6 @@ export const wordleGameStates = (() => {
         body: JSON.stringify({
           gameId,
           otherPlayer: opponent,
-          chainRematchCount: game?.rematchCount,
           isDemo,
         }),
       })

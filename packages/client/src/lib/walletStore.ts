@@ -7,7 +7,6 @@ import {
   connect as connectThirdweb,
   disconnect as disconnectThirdweb,
 } from "./thirdweb"
-import { clearCookie } from "./util"
 
 export const chain = networkConfig.chain
 
@@ -85,10 +84,10 @@ export const walletStore = (() => {
     disconnect: async () => {
       await disconnectThirdweb()
 
+      fetch("/api/siwe-auth/logout", { method: "POST" })
+
       // Prevent from auto reconnecting
       localStorage.setItem("wallet-force-disconnect", "true")
-      // Kill backend session
-      clearCookie("session_token")
 
       wallet.set(undefined)
     },

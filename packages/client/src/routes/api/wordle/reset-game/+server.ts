@@ -8,34 +8,7 @@ import type { EvmAddress } from "$lib/types"
 import { Game } from "../../../../lib/server/wordle/game"
 import type { RequestHandler } from "./$types"
 
-export const POST: RequestHandler = async ({ locals, request, cookies }) => {
-  const { gameId, isDemo, otherPlayer } = (await request.json()) as {
-    gameId: string
-    isDemo?: boolean
-    otherPlayer?: EvmAddress
-    chainRematchCount?: number
-  }
-
-  if (!gameId) return new Response("Missing game ID", { status: 400 })
-
-  // Optimistically clear cookie cache for game
-  const cachedGame = cookies.get(wordleGameCacheKey(gameId))
-  if (cachedGame) {
-    cookies.delete(wordleGameCacheKey(gameId), { path: "/" })
-  }
-
-  if (isDemo) {
-    return resetDemoGame(gameId)
-  } else {
-    const user = locals.user as EvmAddress | undefined
-    if (!user) return new Response("No user", { status: 401 })
-    if (!otherPlayer) return new Response("No opponent", { status: 401 })
-
-    return resetLiveGame(gameId, user, otherPlayer)
-  }
-}
-
-const initialGameState = (gameId: string, resetCount: number | null) => ({
+const initialGameState = (gameId: string) => ({
   gameId,
   guesses: [],
   answers: [],
@@ -58,7 +31,7 @@ const resetDemoGame = async (gameId: string) => {
     true,
   )
 
-  return new Response(JSON.stringify(initialGameState(gameId, null)))
+  return new Response(JSON.stringify(initialGameState(gameId)))
 }
 
 const resetLiveGame = async (
@@ -90,8 +63,35 @@ const resetLiveGame = async (
 
   return new Response(
     JSON.stringify({
-      ...initialGameState(gameId, null),
+      ...initialGameState(gameId),
       resetCount: onchainResetCount,
     }),
   )
+}
+
+export const POST: RequestHandler = async ({ locals, request, cookies }) => {
+  const { gameId, isDemo, otherPlayer } = (await request.json()) as {
+    gameId: string
+    isDemo?: boolean
+    otherPlayer?: EvmAddress
+    chainRematchCount?: number
+  }
+
+  if (!gameId) return new Response("Missing game ID", { status: 400 })
+
+  // Optimistically clear cookie cache for game
+  const cachedGame = cookies.get(wordleGameCacheKey(gameId))
+  if (cachedGame) {
+    cookies.delete(wordleGameCacheKey(gameId), { path: "/" })
+  }
+
+  if (isDemo) {
+    return resetDemoGame(gameId)
+  } else {
+    const user = locals.user as EvmAddress | undefined
+    if (!user) return new Response("No user", { status: 401 })
+    if (!otherPlayer) return new Response("No opponent", { status: 401 })
+
+    return resetLiveGame(gameId, user, otherPlayer)
+  }
 }

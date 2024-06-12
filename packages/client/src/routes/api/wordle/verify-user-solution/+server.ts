@@ -4,8 +4,6 @@ import type { EvmAddress } from "$lib/types"
 import { Game } from "../../../../lib/server/wordle/game"
 import type { RequestHandler } from "./$types"
 
-// Will need to add authentication to this endpoint to ensure players can't
-// 'steal' attestations from each other
 export const POST: RequestHandler = async ({
   request,
   locals,

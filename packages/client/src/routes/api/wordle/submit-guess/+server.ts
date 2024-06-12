@@ -12,7 +12,6 @@ export const POST: RequestHandler = async ({
   const { guess, gameId, isDemo } = (await request.json()) as {
     guess: string
     gameId: string
-    user?: string
     isDemo?: boolean
   }
 
@@ -43,6 +42,7 @@ export const POST: RequestHandler = async ({
 
   const game = new Game(gameState)
   const valid = game.enter(guess)
+
   await supabaseGameStore.setGame(
     game.toString(),
     "wordle",

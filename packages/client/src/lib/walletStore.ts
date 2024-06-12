@@ -1,6 +1,6 @@
 import { createBurnerAccount, getBurnerPrivateKey } from "@latticexyz/common"
 import { derived, writable } from "svelte/store"
-import { createWalletClient, recoverMessageAddress, type Chain } from "viem"
+import { createWalletClient } from "viem"
 import { networkConfig } from "./mud/networkConfig"
 import { type Wallet } from "./mud/setupNetwork"
 import {
